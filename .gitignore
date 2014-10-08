@@ -1,8 +1,2 @@
-GradleWatsonTest/MyPersonalWatsonQA/app/build/
-GradleWatsonTest/MyPersonalWatsonQA/.idea/
-GradleWatsonTest/MyPersonalWatsonQA/local.properties
-GradleWatsonTest/MyPersonalWatsonQA/import-summary.txt
-GradleWatsonTest/MyPersonalWatsonQA/gradlew.bat
-*.iml
-GradleWatsonTest/MyPersonalWatsonQA/.gradle/
-GradleWatsonTest/MyPersonalWatsonQA/build/intermediates/
+WatsonPlatformSDK-20140321-1046/
+MyPersonalWatsonQA/

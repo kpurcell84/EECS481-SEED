@@ -1,1 +1,2 @@
-include ':app'
+include ':app', ':seed'
+project(':seed').projectDir = new File('api_v0.1/seed')
