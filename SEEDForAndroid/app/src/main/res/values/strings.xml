@@ -6,4 +6,8 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_my">MyActivity</string>
 
+    <!-- Shared Preferences Keys -->
+    <string name="shared_prefs_filename">SEED_SHARED_PREFS</string>
+    <string name="shared_prefs_chosen_account">CHOSEN_ACCOUNT</string>
+
 </resources>

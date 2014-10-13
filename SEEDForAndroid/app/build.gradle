@@ -31,6 +31,9 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    // For @Nullable/@NonNull
+    compile 'com.android.support:support-annotations:+'
+
     // BEGIN Google APIs
     // Play Services will validate the application prior to allowing OAuth2 access.
     compile 'com.google.android.gms:play-services:4.0.30'
