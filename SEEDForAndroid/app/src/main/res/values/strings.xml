@@ -9,5 +9,11 @@
     <!-- Shared Preferences Keys -->
     <string name="shared_prefs_filename">SEED_SHARED_PREFS</string>
     <string name="shared_prefs_chosen_account">CHOSEN_ACCOUNT</string>
+    <string name="title_activity_sample_api">SampleApiActivity</string>
+
+    <!-- Google Accounts Audience -->
+    <string name="google_account_audience_prefix">server:client_id</string>
+    <string name="server_web_client_id">1-web-app.apps.googleusercontent.com</string>
+    <string name="google_account_audience_format">%1$s:%2$s</string>
 
 </resources>

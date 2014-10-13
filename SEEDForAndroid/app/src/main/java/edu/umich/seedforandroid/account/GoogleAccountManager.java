@@ -13,13 +13,13 @@ import edu.umich.seedforandroid.R;
 /**
  * Created by Dominic on 10/13/2014.
  */
-public class AccountManager {
+public class GoogleAccountManager {
 
     private Context mContext;
     private SharedPreferences mPrefs;
     private GoogleAccountCredential mCredential;
 
-    public AccountManager(@NonNull Context context, @NonNull String audience) {
+    public GoogleAccountManager(@NonNull Context context, @NonNull String audience) {
 
         mContext = context;
         String filename = mContext.getString(R.string.shared_prefs_filename);
