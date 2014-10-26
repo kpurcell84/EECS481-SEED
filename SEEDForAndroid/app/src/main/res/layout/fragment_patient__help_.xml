@@ -1,0 +1,10 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/seed_background"
+    tools:context="seed.um.com.seed_andy.patient.fragments.Patient_Help_Frag">
+
+
+
+</FrameLayout>

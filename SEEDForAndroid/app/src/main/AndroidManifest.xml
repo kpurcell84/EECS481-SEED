@@ -19,7 +19,19 @@
             android:label="@string/title_activity_my" >
         </activity>
         <activity
-            android:name=".api.SampleApiActivity"
+            android:name=".doctor.MainActivity_Doctor"
+            android:label="@string/title_activity_my" >
+        </activity>
+        <activity
+            android:name=".patient.MainActivity_Patient"
+            android:label="@string/title_activity_my" >
+        </activity>
+        <activity
+            android:name=".main.MainActivity"
+            android:label="@string/title_activity_my" >
+        </activity>
+        <activity
+            android:name=".main.Splash"
             android:label="@string/title_activity_sample_api" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

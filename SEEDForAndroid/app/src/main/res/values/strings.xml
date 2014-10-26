@@ -21,4 +21,17 @@
     <string name="watson_password">GmwVKMFY</string>
     <string name="watson_server_instance">https://watson-wdc01.ihost.com/instance/509/deepqa/v1/question</string>
 
+    <string name="patient_title_section1">Profile</string>
+    <string name="patient_title_section2">My Health Data</string>
+    <string name="patient_title_section3">My Sepsis Nurse</string>
+    <string name="patient_title_section4">Settings</string>
+    <string name="patient_title_section5">Help</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_activity_main_activity__doctor">MainActivity_Doctor</string>
+    <string name="title_activity_main_activity__patient">MainActivity_Patient</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_splash">Splash</string>
+
 </resources>
