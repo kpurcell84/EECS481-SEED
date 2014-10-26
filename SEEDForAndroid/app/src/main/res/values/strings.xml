@@ -13,7 +13,12 @@
 
     <!-- Google Accounts Audience -->
     <string name="google_account_audience_prefix">server:client_id</string>
-    <string name="server_web_client_id">1-web-app.apps.googleusercontent.com</string>
+    <string name="server_web_client_id">264671521534-evjhe6al5t2ahsba3eq2tf8jj78olpei.apps.googleusercontent.com</string>
     <string name="google_account_audience_format">%1$s:%2$s</string>
+
+    <!-- Watson Data -->
+    <string name="watson_id">um_student7</string>
+    <string name="watson_password">GmwVKMFY</string>
+    <string name="watson_server_instance">https://watson-wdc01.ihost.com/instance/509/deepqa/v1/question</string>
 
 </resources>

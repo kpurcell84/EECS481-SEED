@@ -4,7 +4,6 @@ import android.accounts.Account;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
 
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 
@@ -19,7 +18,7 @@ public class GoogleAccountManager {
     private SharedPreferences mPrefs;
     private GoogleAccountCredential mCredential;
 
-    public GoogleAccountManager(@NonNull Context context, @NonNull String audience) {
+    public GoogleAccountManager(Context context, String audience) {
 
         mContext = context;
         String filename = mContext.getString(R.string.shared_prefs_filename);

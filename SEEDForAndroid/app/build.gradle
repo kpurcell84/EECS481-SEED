@@ -31,13 +31,12 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    // For @Nullable/@NonNull
-    compile 'com.android.support:support-annotations:+'
+
+    compile 'com.loopj.android:android-async-http:1.4.5'
 
     // BEGIN Google APIs
     // Play Services will validate the application prior to allowing OAuth2 access.
     compile 'com.google.android.gms:play-services:4.0.30'
-
     // The following lines implement maven imports as defined at:
     // https://code.google.com/p/google-api-java-client/wiki/Setup
     // Add the Google API client library.
@@ -54,12 +53,10 @@ dependencies {
     // Add the Android extensions for the Google API client library.
     compile('com.google.api-client:google-api-client-android:1.17.0-rc') {
         // Exclude play services, since we're not using this yet.
-        exclude(group: 'com.google.android.google-play-services', module: 'google-play-services')
+        // exclude(group: 'com.google.android.google-play-services', module: 'google-play-services')
     }
-
     //Add GSON
     compile 'com.google.api-client:google-api-client-gson:1.18.0-rc'
-
     // END Google APIs
     // The following client libraries make HTTP/JSON on Android easier.
     // Android extensions for Google HTTP Client.
@@ -67,6 +64,8 @@ dependencies {
         exclude(group: 'com.google.android', module: 'android')
     }
     // This is used by the Google HTTP client library.
-    compile 'com.google.guava:guava:14.0.+'
+    /*compile ('com.google.guava:guava:14.0.+') {
+        exclude module: 'annotations'
+    }*/
     compile project(':seed')
 }
