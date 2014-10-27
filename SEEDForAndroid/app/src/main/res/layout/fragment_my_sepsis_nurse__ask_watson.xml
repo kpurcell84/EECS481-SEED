@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="20dp"
+    android:layout_marginTop="50dp"
     android:background="@drawable/seed_background"
     tools:context="seed.um.com.seed_andy.patient.fragments.mysepsisnurse.MySepsisNurse_AskWatson">
 

@@ -63,7 +63,7 @@ public class MainActivity_Doctor extends FragmentActivity implements ActionBar.T
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00274c")));
         actionBar.setStackedBackgroundDrawable(new ColorDrawable(Color.parseColor("#FAFAFA")));
- //       actionBar.setIcon(R.drawable.fixel_abbreviated_logo);
+        actionBar.setIcon(R.drawable.seed_system_letter_icon);
         actionBar.setTitle((Html.fromHtml("<font color=\"#FFFFFF\">" + "SEED System" + "</font>")));
 
         ActionBar.Tab tab1 = actionBar.newTab();

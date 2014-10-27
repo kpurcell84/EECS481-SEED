@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import com.appspot.umichseed.seed.Seed;
 import com.appspot.umichseed.seed.SeedRequest;
-import com.appspot.umichseed.seed.model.SeedApiMessagesDoctorPut;
 import com.appspot.umichseed.seed.model.SeedApiMessagesWatsonQuestionPut;
 
 import java.io.IOException;
@@ -34,19 +33,21 @@ public class MySepsisNurse_AskWatson extends Fragment implements View.OnClickLis
 
     private ApiThread mApiThread;
     
-    public MySepsisNurse_AskWatson() {
+    public MySepsisNurse_AskWatson()  {
 
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)  {
+
         super.onCreate(savedInstanceState);
 
         mApiThread = new ApiThread();
     }
 
     @Override
-    public void onDestroyView() {
+    public void onDestroyView()  {
+
         super.onDestroyView();
 
         mApiThread.stop();
@@ -91,30 +92,13 @@ public class MySepsisNurse_AskWatson extends Fragment implements View.OnClickLis
 
     private void askWatson()  {
 
-        Seed testApi = SeedApi.getUnauthenticatedApi();
-        try {
-            SeedRequest req = testApi.doctor().get().setEmail("smeagol@lotr.com");
-            mApiThread.enqueRequest(req, new ApiThread.ApiResultAction() {
-                @Override
-                public void onApiResult(Object result) {
-                    if (result != null) {
-
-                        SeedApiMessagesDoctorPut doctor = (SeedApiMessagesDoctorPut)result;
-                        Log.i(TAG, "got doctor: " + doctor.getFirstName() + " " + doctor.getLastName());
-                    }
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         WatsonManager watsonManager = new WatsonManager(this.getActivity());
 
         final String query = etAskWatsonQuestion.getText().toString();
-        watsonManager.executeQuery(query, new WatsonManager.IWatsonResponseListener() {
+        watsonManager.executeQuery(query, new WatsonManager.IWatsonResponseListener()  {
 
             @Override
-            public void onResponseReceived(String response, double confidence) {
+            public void onResponseReceived(String response, double confidence)  {
 
                 tvAnswer.setText(response);
 
@@ -138,6 +122,5 @@ public class MySepsisNurse_AskWatson extends Fragment implements View.OnClickLis
                 Log.e(TAG, "Error on Watson Request: " + httpErrorCode);
             }
         });
-
     }
 }
