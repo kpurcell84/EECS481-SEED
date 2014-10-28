@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ExpandableListView;
 
 import com.appspot.umichseed.seed.Seed;
 import com.appspot.umichseed.seed.SeedRequest;
@@ -14,15 +15,23 @@ import com.appspot.umichseed.seed.model.SeedApiMessagesWatsonQuestionsListRespon
 import com.appspot.umichseed.seed.model.SeedApiMessagesWatsonQuestionsRequest;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import edu.umich.seedforandroid.R;
 import edu.umich.seedforandroid.api.ApiThread;
 import edu.umich.seedforandroid.api.SeedApi;
+import edu.umich.seedforandroid.patient.fragments.mysepsisnurse.raq.RAQ_Adapter;
+import edu.umich.seedforandroid.patient.fragments.mysepsisnurse.raq.RAQ_Data_Provider;
 
 public class MySepsisNurse_RAQ_Frag extends Fragment  {
 
     private static final long NUM_QUESTIONS = 10;
+    private HashMap<String, List<String>> recentlyAskedQuestions;
+    private List<String> questionsList;
+    private ExpandableListView expList;
+    private RAQ_Adapter adapter;
 
     private ApiThread mApiThread;
 
@@ -31,7 +40,8 @@ public class MySepsisNurse_RAQ_Frag extends Fragment  {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)  {
+
         super.onCreate(savedInstanceState);
 
         mApiThread = new ApiThread();
@@ -49,8 +59,21 @@ public class MySepsisNurse_RAQ_Frag extends Fragment  {
 
         View view = inflater.inflate(R.layout.fragment_my_sepsis_nurse__raq_, container, false);
 
+        view = initialSetup(view);
+
+        return view;
+    }
+
+    private View initialSetup(View view)  {
+
         ActionBar actionBar = getActivity().getActionBar();
         actionBar.setTitle("Recently Asked Questions");
+
+        expList = (ExpandableListView) view.findViewById(R.id.exp_list);
+        recentlyAskedQuestions = RAQ_Data_Provider.getInfo();
+        questionsList = new ArrayList<String>(recentlyAskedQuestions.keySet());
+        adapter = new RAQ_Adapter(getActivity().getApplicationContext(), recentlyAskedQuestions, questionsList);
+        expList.setAdapter(adapter);
 
         return view;
     }

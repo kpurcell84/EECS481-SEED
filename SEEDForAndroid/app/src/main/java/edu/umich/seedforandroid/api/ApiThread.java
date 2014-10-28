@@ -7,8 +7,6 @@ import android.os.Message;
 import com.appspot.umichseed.seed.SeedRequest;
 
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
@@ -174,7 +172,11 @@ public class ApiThread {
             try {
 
                 result = task.getRequest().execute();
-                task.getResultAction().setResult(result);
+
+                if (task.getResultAction() != null) {
+
+                    task.getResultAction().setResult(result);
+                }
             }
             catch (IOException e) {/*continue*/}
 

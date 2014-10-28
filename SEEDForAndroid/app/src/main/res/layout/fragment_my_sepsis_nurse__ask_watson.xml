@@ -55,8 +55,9 @@
             android:layout_margin="5dp"
             android:gravity="left"
             android:textSize="18sp"
+            android:padding="10dp"
             android:paddingStart="5dp"
-            android:text="New Text" />
+            android:text="" />
 
     </ScrollView>
 
