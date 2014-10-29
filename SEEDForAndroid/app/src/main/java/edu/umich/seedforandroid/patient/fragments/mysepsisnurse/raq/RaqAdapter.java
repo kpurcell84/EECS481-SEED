@@ -8,45 +8,55 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.umich.seedforandroid.R;
 
-public class RAQ_Adapter extends BaseExpandableListAdapter  {
+public class RaqAdapter extends BaseExpandableListAdapter  {
 
-    private Context context;
-    private HashMap<String, List<String>> questions;
-    private List<String> answers_List;
+    private Context mContext;
+    private Map<String, List<String>> mQaMap;
+    private List<String> mQuestions;
 
-    public RAQ_Adapter(Context context, HashMap<String, List<String>> questions,
-                       List<String> answers_List)  {
+    public RaqAdapter(Context context, Map<String, List<String>> qaMap)  {
 
-        this.context = context;
-        this.questions = questions;
-        this.answers_List = answers_List;
+        mContext = context;
+        mQaMap = qaMap;
+        mQuestions = new ArrayList<String>(qaMap.keySet());
     }
+
+    public void replaceBackingData(Map<String, List<String>> qaMap) {
+
+        notifyDataSetInvalidated();
+        mQaMap = qaMap;
+        mQuestions = new ArrayList<String>(qaMap.keySet());
+        notifyDataSetChanged();
+    }
+
 
     @Override
     public int getGroupCount() {
-        return answers_List.size();
+        return mQuestions.size();
     }
 
     @Override
     public int getChildrenCount(int groupPosition) {
 
-        return questions.get(answers_List.get(groupPosition)).size();
+        return mQaMap.get(mQuestions.get(groupPosition)).size();
     }
 
     @Override
     public Object getGroup(int groupPosition) {
-        return answers_List.get(groupPosition);
+        return mQuestions.get(groupPosition);
     }
 
     @Override
     public Object getChild(int groupPosition, int childPosition)  {
 
-        return questions.get(answers_List.get(groupPosition)).get(childPosition);
+        return mQaMap.get(mQuestions.get(groupPosition)).get(childPosition);
     }
 
     @Override
@@ -72,7 +82,7 @@ public class RAQ_Adapter extends BaseExpandableListAdapter  {
 
         if (convertView == null)  {
 
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.raq_expandable_listview_parent, parent, false);
         }
 
@@ -90,7 +100,7 @@ public class RAQ_Adapter extends BaseExpandableListAdapter  {
 
         if (convertView == null)  {
 
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.raq_expandable_listview_child, parent, false);
         }
 

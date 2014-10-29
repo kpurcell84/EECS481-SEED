@@ -4,17 +4,12 @@ import android.content.Context;
 import android.util.Log;
 
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.BaseJsonHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.apache.http.Header;
-import org.apache.http.HeaderElement;
-import org.apache.http.ParseException;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -62,7 +57,7 @@ public class WatsonManager {
         mHttpClient.setBasicAuth(mUser, mPassword);
     }
 
-    public void executeQuery(final String query, final IWatsonResponseListener listener) {
+    public void executeQuery(final String query, final IResponseListener listener) {
 
         try {
 
@@ -110,7 +105,7 @@ public class WatsonManager {
         catch (UnsupportedEncodingException uee) { /*unexpected*/ uee.printStackTrace(); }
     }
 
-    public interface IWatsonResponseListener {
+    public interface IResponseListener {
 
         public void onResponseReceived(String response, double confidence);
         public void onErrorReceived(int httpErrorCode);

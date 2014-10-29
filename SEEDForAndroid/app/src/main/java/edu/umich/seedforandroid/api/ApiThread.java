@@ -17,17 +17,28 @@ import java.util.concurrent.TimeUnit;
 public class ApiThread {
 
     private static final int API_RESULT_MESSAGE = 100;
+    private static final int API_ERROR_MESSAGE = -100;
 
     // we run API calls 1 at a time, these are the objects needed to do that
     // note that all BlockingQueue types are thread safe
     private BlockingDeque<ApiTask> mPendingTasks;
-    private Thread mApiThread;
     private Handler mHandler;
+    private Thread mApiThread;
 
     public ApiThread() {
 
+        create(Looper.getMainLooper());
+    }
+
+    public ApiThread(Looper looper) {
+
+        create(looper);
+    }
+
+    private void create(Looper looper) {
+
         mPendingTasks = new LinkedBlockingDeque<ApiTask>();
-        mHandler = new ApiHandler(Looper.getMainLooper());
+        mHandler = new ApiHandler(looper);
         mApiThread = new Thread(new ApiRunnable(mHandler, mPendingTasks));
     }
 
@@ -84,14 +95,13 @@ public class ApiThread {
         public Object getResult() { return mmResult; }
 
         private void dispatchResult() { onApiResult(getResult()); }
+        private void dispatchError() { onApiError((Throwable)getResult()); }
 
+        public Object doInBackground(Object result) { return result; }
         public abstract void onApiResult(Object result);
+        public abstract void onApiError(Throwable error);
     }
 
-    public static abstract class ApiListener {
-
-        public abstract void onRequestResult(Object result, int requestCode);
-    }
     // endregion
 
     /**
@@ -102,7 +112,7 @@ public class ApiThread {
      * @param action the {@Link ApiResultListener} you'd like to receive this result. You may pass null if you don't need the result
      * @return true if the request is successfully added to the process queue. False otherwise.
      */
-    public boolean enqueRequest(final SeedRequest request, final ApiResultAction action) {
+    public boolean enqueueRequest(SeedRequest request, ApiResultAction action) {
 
         ApiTask task = new ApiTask(request, action);
         boolean result = mPendingTasks.offer(task);
@@ -130,16 +140,16 @@ public class ApiThread {
 
                 case API_RESULT_MESSAGE:
 
-                    ApiTask task = (ApiTask)msg.obj;
+                    ((ApiResultAction)msg.obj)
+                            .dispatchResult();
+                    break;
 
-                    if (task.getResultAction() != null) {
+                case API_ERROR_MESSAGE:
 
-                        task.getResultAction().dispatchResult();
-                    }
-
+                    ((ApiResultAction)msg.obj)
+                            .dispatchError();
                     break;
             }
-
         }
     }
 
@@ -151,7 +161,7 @@ public class ApiThread {
         private Handler mmHandler;
         private BlockingDeque<ApiTask> mmPendingTasks;
 
-        protected ApiRunnable(Handler handler, BlockingDeque<ApiTask> pendingTasks) {
+        private ApiRunnable(Handler handler, BlockingDeque<ApiTask> pendingTasks) {
 
             mmHandler = handler;
             mmPendingTasks = pendingTasks;
@@ -172,15 +182,25 @@ public class ApiThread {
             try {
 
                 result = task.getRequest().execute();
+                ApiResultAction action = task.getResultAction();
 
-                if (task.getResultAction() != null) {
+                if (action != null) {
 
-                    task.getResultAction().setResult(result);
+                    result = action.doInBackground(result);
+                    action.setResult(result);
+                    mmHandler.obtainMessage(API_RESULT_MESSAGE, action).sendToTarget();
                 }
             }
-            catch (IOException e) {/*continue*/}
+            catch (IOException e) {
 
-            mmHandler.obtainMessage(API_RESULT_MESSAGE, task).sendToTarget();
+                ApiResultAction action = task.getResultAction();
+
+                if (action != null) {
+
+                    action.setResult(e);
+                    mmHandler.obtainMessage(API_ERROR_MESSAGE, action).sendToTarget();
+                }
+            }
         }
 
         @Override
@@ -216,14 +236,14 @@ public class ApiThread {
         private final SeedRequest mmRequest;
         private final ApiResultAction mmAction;
 
-        protected ApiTask(final SeedRequest request, final ApiResultAction requestCode) {
+        private ApiTask(SeedRequest request, ApiResultAction resultAction) {
 
             mmRequest = request;
-            mmAction = requestCode;
+            mmAction = resultAction;
         }
 
-        protected SeedRequest getRequest() { return mmRequest; }
-        protected ApiResultAction getResultAction() { return mmAction; }
+        private SeedRequest getRequest() { return mmRequest; }
+        private ApiResultAction getResultAction() { return mmAction; }
     }
     // endregion
 }

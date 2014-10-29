@@ -12,9 +12,9 @@ import com.google.api.client.json.gson.GsonFactory;
  */
 public class SeedApi {
 
-    public static final JsonFactory JSON_FACTORY = new GsonFactory();
+    private static final JsonFactory JSON_FACTORY = new GsonFactory();
 
-    public static final HttpTransport HTTP_TRANSPORT = AndroidHttp.newCompatibleTransport();
+    private static final HttpTransport HTTP_TRANSPORT = AndroidHttp.newCompatibleTransport();
 
     public static Seed getUnauthenticatedApi() {
 

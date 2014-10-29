@@ -95,7 +95,7 @@ public class MySepsisNurse_AskWatson extends Fragment implements View.OnClickLis
         WatsonManager watsonManager = new WatsonManager(this.getActivity());
 
         final String query = etAskWatsonQuestion.getText().toString();
-        watsonManager.executeQuery(query, new WatsonManager.IWatsonResponseListener()  {
+        watsonManager.executeQuery(query, new WatsonManager.IResponseListener()  {
 
             @Override
             public void onResponseReceived(String response, double confidence)  {
@@ -116,7 +116,7 @@ public class MySepsisNurse_AskWatson extends Fragment implements View.OnClickLis
                     question.setQuestion(query);
                     question.setAnswer(response);
                     SeedRequest request = api.watsonQuestion().put(question);
-                    mApiThread.enqueRequest(request, null);
+                    mApiThread.enqueueRequest(request, null);
                 }
                 catch (IOException e) {
 

@@ -4,13 +4,9 @@ import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.appspot.umichseed.seed.Seed;
 import com.appspot.umichseed.seed.SeedRequest;
-import com.appspot.umichseed.seed.model.SeedApiMessagesDoctorPut;
 
 import java.io.IOException;
 
@@ -51,7 +47,7 @@ public class SampleApiActivity extends Activity {
     private void makeSampleWatsonCall() {
 
         WatsonManager wManager = new WatsonManager(this);
-        wManager.executeQuery("What is sepsis?", new WatsonManager.IWatsonResponseListener() {
+        wManager.executeQuery("What is sepsis?", new WatsonManager.IResponseListener() {
             @Override
             public void onResponseReceived(String response, double confidence) {
 
@@ -73,7 +69,7 @@ public class SampleApiActivity extends Activity {
             SeedRequest request = api.doctor().get().setEmail("smeagol@lotr.com");
 
             // this call implicitly starts the thread
-            mApiThread.enqueRequest(request, new ApiThread.ApiResultAction() {
+            /*mApiThread.enqueRequest(request, new ApiThread.ApiResultAction() {
 
                 @Override
                 public void onApiResult(Object result) {
@@ -86,7 +82,7 @@ public class SampleApiActivity extends Activity {
                         Log.i(TAG, "Doctor name: " + doctor.getFirstName() + " " + doctor.getLastName());
                     }
                 }
-            });
+            });*/
         }
         catch (IOException e) {
             // an exception occurred while trying to get the SeedRequest

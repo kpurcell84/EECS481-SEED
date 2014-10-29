@@ -12,9 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import edu.umich.seedforandroid.R;
+import edu.umich.seedforandroid.patient.fragments.mysepsisnurse.RecentlyAskedQuestionsFragment;
 import edu.umich.seedforandroid.patient.fragments.mysepsisnurse.MySepsisNurse_AskWatson;
 import edu.umich.seedforandroid.patient.fragments.mysepsisnurse.MySepsisNurse_FAQ_Frag;
-import edu.umich.seedforandroid.patient.fragments.mysepsisnurse.MySepsisNurse_RAQ_Frag;
 
 public class MySepsisNurse_Frag extends Fragment  {
 
@@ -47,7 +47,7 @@ public class MySepsisNurse_Frag extends Fragment  {
                         .getDrawable(R.drawable.mysepsisnurse_faq_icon)), MySepsisNurse_FAQ_Frag.class, null);
         mTabHost.addTab(mTabHost.newTabSpec("fragmentd")
                 .setIndicator("", getResources()
-                        .getDrawable(R.drawable.mysepsisnurse_raq_icon)), MySepsisNurse_RAQ_Frag.class, null);
+                        .getDrawable(R.drawable.mysepsisnurse_raq_icon)), RecentlyAskedQuestionsFragment.class, null);
 
         ActionBar actionBar = getActivity().getActionBar();
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00274c")));

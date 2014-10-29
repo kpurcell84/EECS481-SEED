@@ -16,32 +16,25 @@ import com.appspot.umichseed.seed.model.SeedApiMessagesWatsonQuestionsRequest;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.umich.seedforandroid.R;
 import edu.umich.seedforandroid.api.ApiThread;
 import edu.umich.seedforandroid.api.SeedApi;
-import edu.umich.seedforandroid.patient.fragments.mysepsisnurse.raq.RAQ_Adapter;
-import edu.umich.seedforandroid.patient.fragments.mysepsisnurse.raq.RAQ_Data_Provider;
+import edu.umich.seedforandroid.patient.fragments.mysepsisnurse.raq.RaqAdapter;
 
-public class MySepsisNurse_RAQ_Frag extends Fragment  {
+public class RecentlyAskedQuestionsFragment extends Fragment  {
 
     private static final long NUM_QUESTIONS = 10;
-    private HashMap<String, List<String>> recentlyAskedQuestions;
-    private List<String> questionsList;
-    private ExpandableListView expList;
-    private RAQ_Adapter adapter;
 
+    private ExpandableListView mExpandableListView;
+    private RaqAdapter mAdapter;
     private ApiThread mApiThread;
-
-    public MySepsisNurse_RAQ_Frag() {
-
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState)  {
-
         super.onCreate(savedInstanceState);
 
         mApiThread = new ApiThread();
@@ -54,13 +47,12 @@ public class MySepsisNurse_RAQ_Frag extends Fragment  {
         mApiThread.stop();
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)  {
 
         View view = inflater.inflate(R.layout.fragment_my_sepsis_nurse__raq_, container, false);
-
         view = initialSetup(view);
-
         return view;
     }
 
@@ -69,11 +61,12 @@ public class MySepsisNurse_RAQ_Frag extends Fragment  {
         ActionBar actionBar = getActivity().getActionBar();
         actionBar.setTitle("Recently Asked Questions");
 
-        expList = (ExpandableListView) view.findViewById(R.id.exp_list);
-        recentlyAskedQuestions = RAQ_Data_Provider.getInfo();
-        questionsList = new ArrayList<String>(recentlyAskedQuestions.keySet());
-        adapter = new RAQ_Adapter(getActivity().getApplicationContext(), recentlyAskedQuestions, questionsList);
-        expList.setAdapter(adapter);
+        mExpandableListView = (ExpandableListView) view.findViewById(R.id.exp_list);
+        mAdapter = new RaqAdapter(getActivity().getApplicationContext(),
+                new LinkedHashMap<String, List<String>>());
+        mExpandableListView.setAdapter(mAdapter);
+
+        getQuestions();
 
         return view;
     }
@@ -101,30 +94,54 @@ public class MySepsisNurse_RAQ_Frag extends Fragment  {
                             .setNumQuestions(NUM_QUESTIONS)
                     );
 
-            mApiThread.enqueRequest(request, new ApiThread.ApiResultAction() {
+            mApiThread.enqueueRequest(request, new ApiThread.ApiResultAction() {
+
+                @Override
+                public Object doInBackground(Object result) {
+
+                    return processRequestResult(result);
+                }
+
                 @Override
                 public void onApiResult(Object result) {
 
                     if (result != null) {
 
-                        SeedApiMessagesWatsonQuestionsListResponse response
-                                = (SeedApiMessagesWatsonQuestionsListResponse)result;
-
-                        populateListView(response.getQuestions());
+                        updateListView((Map<String, List<String>>)result);
                     }
                 }
+
+                @Override
+                public void onApiError(Throwable error) {/*ignore for now*/}
             });
         }
         catch (IOException ioe) { /*unexpected*/ hideLoader(); ioe.printStackTrace(); }
     }
 
-    private void populateListView(List<SeedApiMessagesWatsonQuestionPut> questions) {
+    private Map<String, List<String>> processRequestResult(Object result) {
 
-        /*==============================
-            Put the data into the listview
-            here
-          ==============================*/
+        if (result != null) {
 
+            SeedApiMessagesWatsonQuestionsListResponse response
+                    = (SeedApiMessagesWatsonQuestionsListResponse) result;
+
+            Map<String, List<String>> questionMap = new LinkedHashMap<String, List<String>>();
+
+            for (SeedApiMessagesWatsonQuestionPut q : response.getQuestions()) {
+
+                List<String> answers = new ArrayList<String>();
+                answers.add(q.getAnswer());
+                questionMap.put(q.getQuestion(), answers);
+            }
+
+            return questionMap;
+        }
+        else return null;
+    }
+
+    private void updateListView(Map<String, List<String>> questionMap) {
+
+        mAdapter.replaceBackingData(questionMap);
         hideLoader();
     }
 }
