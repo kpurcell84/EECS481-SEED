@@ -12,27 +12,27 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="edu.umich.seedforandroid.TestActivity"
+            android:name=".TestActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name="edu.umich.seedforandroid.MyActivity"
+            android:name=".MyActivity"
             android:label="@string/title_activity_my" >
         </activity>
         <activity
-            android:name="edu.umich.seedforandroid.doctor.MainActivity_Doctor"
+            android:name=".doctor.MainActivity_Doctor"
             android:label="@string/title_activity_my" >
         </activity>
         <activity
-            android:name="edu.umich.seedforandroid.patient.MainActivity_Patient"
+            android:name=".patient.MainActivity_Patient"
             android:label="@string/title_activity_my" >
         </activity>
         <activity
-            android:name="edu.umich.seedforandroid.main.MainActivity"
+            android:name=".main.MainActivity"
             android:label="@string/title_activity_my" >
         </activity>
         <activity
-            android:name="edu.umich.seedforandroid.main.Splash"
+            android:name=".main.Splash"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" >
             <intent-filter>
@@ -42,13 +42,20 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="edu.umich.seedforandroid.account.SampleAuthActivity"
+            android:name=".account.SampleAuthActivity"
             android:label="@string/title_activity_sample_auth" >
-            <!--<intent-filter>
+
+            <!--
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
+            -->
+        </activity>
+        <activity
+            android:name=".patient.EnterNewHealthData"
+            android:label="@string/title_activity_enter_new_health_data" >
         </activity>
     </application>
 

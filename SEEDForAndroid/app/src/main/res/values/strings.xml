@@ -31,5 +31,6 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_splash">Splash</string>
     <string name="title_activity_sample_auth">SampleAuthActivity</string>
+    <string name="title_activity_enter_new_health_data">EnterNewHealthData</string>
 
 </resources>

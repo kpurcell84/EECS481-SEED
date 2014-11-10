@@ -10,9 +10,11 @@ import android.widget.ExpandableListView;
 
 import com.appspot.umichseed.seed.Seed;
 import com.appspot.umichseed.seed.SeedRequest;
+import com.appspot.umichseed.seed.model.SeedApiMessagesPQuantDataRequest;
 import com.appspot.umichseed.seed.model.SeedApiMessagesWatsonQuestionPut;
 import com.appspot.umichseed.seed.model.SeedApiMessagesWatsonQuestionsListResponse;
 import com.appspot.umichseed.seed.model.SeedApiMessagesWatsonQuestionsRequest;
+import com.google.api.client.util.DateTime;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ import edu.umich.seedforandroid.api.ApiThread;
 import edu.umich.seedforandroid.api.SeedApi;
 import edu.umich.seedforandroid.patient.fragments.mysepsisnurse.raq.RaqAdapter;
 
-public class RecentlyAskedQuestionsFragment extends Fragment  {
+public class PatientRecentlyAskedQuestionsFragment extends Fragment  {
 
     private static final long NUM_QUESTIONS = 10;
 
@@ -94,6 +96,16 @@ public class RecentlyAskedQuestionsFragment extends Fragment  {
                             .setNumQuestions(NUM_QUESTIONS)
                     );
 
+
+            final Seed.PQuantData.Get request2 =
+                    api.pQuantData().get(
+
+                        new SeedApiMessagesPQuantDataRequest()
+                                .setEmail("jinseok@umich.edu")
+                                .setStartTime(new DateTime(System.currentTimeMillis() - 10000))
+                                .setEndTime(new DateTime(System.currentTimeMillis()))
+                    );
+
             mApiThread.enqueueRequest(request, new ApiThread.ApiResultAction() {
 
                 @Override
@@ -109,6 +121,13 @@ public class RecentlyAskedQuestionsFragment extends Fragment  {
 
                         updateListView((Map<String, List<String>>)result);
                     }
+
+                    /*
+
+                    SeedApiMessagesPQuantDataListResponse test = (SeedApiMessagesPQuantDataListResponse)result;
+                    test.getPdataList().get(0).
+
+                     */
                 }
 
                 @Override

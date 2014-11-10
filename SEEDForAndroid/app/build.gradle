@@ -66,5 +66,6 @@ dependencies {
                 exclude module: 'annotations'
             }*/
     compile 'com.android.support:support-v13:20.0.0'
+    compile "com.androidplot:androidplot-core:0.6.1"
     compile project(':seed')
 }

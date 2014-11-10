@@ -9,9 +9,9 @@ import android.view.ViewGroup;
 
 import edu.umich.seedforandroid.R;
 
-public class MySepsisNurse_FAQ_Frag extends Fragment  {
+public class PatientFrequentlyAskedQuestionsFragment extends Fragment  {
 
-    public MySepsisNurse_FAQ_Frag()  {
+    public PatientFrequentlyAskedQuestionsFragment()  {
 
     }
 

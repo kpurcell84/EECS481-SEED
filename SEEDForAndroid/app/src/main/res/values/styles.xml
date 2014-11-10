@@ -2,7 +2,12 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+        <item name="android:tabWidgetStyle">@style/ActionBarTabStyle</item>
+    </style>
+
+    <style name="ActionBarTabStyle" parent="AppTheme">
+        <item name="android:background">@drawable/tab_indicator_custom</item>
+        <item name="android:gravity">center</item>
     </style>
 
 </resources>

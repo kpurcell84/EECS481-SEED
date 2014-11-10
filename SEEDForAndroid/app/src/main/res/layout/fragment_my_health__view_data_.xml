@@ -5,6 +5,244 @@
     android:layout_height="match_parent"
     tools:context="seed.um.com.seed_andy.patient.fragments.myhealth.MyHealth_ViewData_Frag">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:paddingLeft="@dimen/default_padding"
+        android:paddingRight="@dimen/default_padding"
+        android:layout_marginTop="@dimen/default_navigated_tab_fragment_margin_top"
+        android:layout_height="wrap_content">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:id="@+id/relativelayout1"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Heart Rate"
+                    android:textSize="25sp"
+                    android:textStyle="bold"
+                    android:id="@+id/tvHeartRateGraphTitle"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true" />
+
+                <com.androidplot.xy.XYPlot
+                    android:id="@+id/gHeartRate_Patient"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_below="@+id/tvHeartRateGraphTitle"
+                    android:layout_marginTop="10dp"
+                    androidPlot.domainLabelWidget.labelPaint.textSize="@dimen/domain_label_font_size"
+                    androidPlot.graphWidget.domainLabelPaint.textSize="@dimen/domain_tick_label_font_size"
+                    androidPlot.graphWidget.domainOriginLabelPaint.textSize="@dimen/domain_tick_label_font_size"
+                    androidPlot.graphWidget.marginBottom="40dp"
+                    androidPlot.graphWidget.marginLeft="16dp"
+                    androidPlot.graphWidget.marginRight="12dp"
+                    androidPlot.graphWidget.marginTop="1dp"
+                    androidPlot.graphWidget.rangeLabelPaint.textSize="@dimen/range_tick_label_font_size"
+                    androidPlot.graphWidget.rangeOriginLabelPaint.textSize="@dimen/range_tick_label_font_size"
+                    androidPlot.rangeLabelWidget.labelPaint.textSize="@dimen/range_label_font_size"
+                    androidPlot.titleWidget.labelPaint.textSize="@dimen/title_font_size" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin_top"
+                android:layout_below="@+id/relativelayout1"
+                android:id="@+id/relativeLayout2">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Activities Engaged"
+                    android:textSize="25sp"
+                    android:textStyle="bold"
+                    android:id="@+id/tvActivityGraphTitle"
+                    android:layout_marginTop="10dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true" />
+
+                <com.androidplot.xy.XYPlot
+                    android:id="@+id/gActivity_Patient"
+                    android:layout_width="match_parent"
+                    android:layout_below="@+id/tvActivityGraphTitle"
+                    android:layout_height="200dp"
+                    android:layout_marginTop="10dp"
+                    androidPlot.domainLabelWidget.labelPaint.textSize="@dimen/domain_label_font_size"
+                    androidPlot.graphWidget.domainLabelPaint.textSize="@dimen/domain_tick_label_font_size"
+                    androidPlot.graphWidget.domainOriginLabelPaint.textSize="@dimen/domain_tick_label_font_size"
+                    androidPlot.graphWidget.marginBottom="40dp"
+                    androidPlot.graphWidget.marginLeft="16dp"
+                    androidPlot.graphWidget.marginRight="12dp"
+                    androidPlot.graphWidget.marginTop="1dp"
+                    androidPlot.graphWidget.rangeLabelPaint.textSize="@dimen/range_tick_label_font_size"
+                    androidPlot.graphWidget.rangeOriginLabelPaint.textSize="@dimen/range_tick_label_font_size"
+                    androidPlot.rangeLabelWidget.labelPaint.textSize="@dimen/range_label_font_size"
+                    androidPlot.titleWidget.labelPaint.textSize="@dimen/title_font_size" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin_top"
+                android:layout_below="@+id/relativeLayout2"
+                android:id="@+id/relativeLayout3">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Perspiration"
+                    android:textSize="25sp"
+                    android:textStyle="bold"
+                    android:id="@+id/tvPerspirationGraphTitle"
+                    android:layout_marginTop="10dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true" />
+
+                <com.androidplot.xy.XYPlot
+                    android:id="@+id/gPerspiration_Patient"
+                    android:layout_width="match_parent"
+                    android:layout_below="@+id/tvPerspirationGraphTitle"
+                    android:layout_height="200dp"
+                    android:layout_marginTop="10dp"
+                    androidPlot.domainLabelWidget.labelPaint.textSize="@dimen/domain_label_font_size"
+                    androidPlot.graphWidget.domainLabelPaint.textSize="@dimen/domain_tick_label_font_size"
+                    androidPlot.graphWidget.domainOriginLabelPaint.textSize="@dimen/domain_tick_label_font_size"
+                    androidPlot.graphWidget.marginBottom="40dp"
+                    androidPlot.graphWidget.marginLeft="16dp"
+                    androidPlot.graphWidget.marginRight="12dp"
+                    androidPlot.graphWidget.marginTop="1dp"
+                    androidPlot.graphWidget.rangeLabelPaint.textSize="@dimen/range_tick_label_font_size"
+                    androidPlot.graphWidget.rangeOriginLabelPaint.textSize="@dimen/range_tick_label_font_size"
+                    androidPlot.rangeLabelWidget.labelPaint.textSize="@dimen/range_label_font_size"
+                    androidPlot.titleWidget.labelPaint.textSize="@dimen/title_font_size" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin_top"
+                android:layout_below="@+id/relativeLayout3"
+                android:id="@+id/relativeLayout4">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Skin Temperature"
+                    android:textSize="25sp"
+                    android:textStyle="bold"
+                    android:id="@+id/tvSkinTempGraphTitle"
+                    android:layout_marginTop="10dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true" />
+
+                <com.androidplot.xy.XYPlot
+                    android:id="@+id/gASkinTemp_Patient"
+                    android:layout_width="match_parent"
+                    android:layout_below="@+id/tvSkinTempGraphTitle"
+                    android:layout_height="200dp"
+                    android:layout_marginTop="10dp"
+                    androidPlot.domainLabelWidget.labelPaint.textSize="@dimen/domain_label_font_size"
+                    androidPlot.graphWidget.domainLabelPaint.textSize="@dimen/domain_tick_label_font_size"
+                    androidPlot.graphWidget.domainOriginLabelPaint.textSize="@dimen/domain_tick_label_font_size"
+                    androidPlot.graphWidget.marginBottom="40dp"
+                    androidPlot.graphWidget.marginLeft="16dp"
+                    androidPlot.graphWidget.marginRight="12dp"
+                    androidPlot.graphWidget.marginTop="1dp"
+                    androidPlot.graphWidget.rangeLabelPaint.textSize="@dimen/range_tick_label_font_size"
+                    androidPlot.graphWidget.rangeOriginLabelPaint.textSize="@dimen/range_tick_label_font_size"
+                    androidPlot.rangeLabelWidget.labelPaint.textSize="@dimen/range_label_font_size"
+                    androidPlot.titleWidget.labelPaint.textSize="@dimen/title_font_size" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin_top"
+                android:layout_below="@+id/relativeLayout4"
+                android:id="@+id/relativeLayout5">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Body Temperature"
+                    android:textSize="25sp"
+                    android:textStyle="bold"
+                    android:id="@+id/tvBodyTempGraphTitle"
+                    android:layout_marginTop="10dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true" />
+
+                <com.androidplot.xy.XYPlot
+                    android:id="@+id/gBodyTemp_Patient"
+                    android:layout_width="match_parent"
+                    android:layout_below="@+id/tvBodyTempGraphTitle"
+                    android:layout_height="200dp"
+                    android:layout_marginTop="10dp"
+                    androidPlot.domainLabelWidget.labelPaint.textSize="@dimen/domain_label_font_size"
+                    androidPlot.graphWidget.domainLabelPaint.textSize="@dimen/domain_tick_label_font_size"
+                    androidPlot.graphWidget.domainOriginLabelPaint.textSize="@dimen/domain_tick_label_font_size"
+                    androidPlot.graphWidget.marginBottom="40dp"
+                    androidPlot.graphWidget.marginLeft="16dp"
+                    androidPlot.graphWidget.marginRight="12dp"
+                    androidPlot.graphWidget.marginTop="1dp"
+                    androidPlot.graphWidget.rangeLabelPaint.textSize="@dimen/range_tick_label_font_size"
+                    androidPlot.graphWidget.rangeOriginLabelPaint.textSize="@dimen/range_tick_label_font_size"
+                    androidPlot.rangeLabelWidget.labelPaint.textSize="@dimen/range_label_font_size"
+                    androidPlot.titleWidget.labelPaint.textSize="@dimen/title_font_size" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin_top"
+                android:layout_below="@+id/relativeLayout5"
+                android:id="@+id/relativeLayout6">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Blood Pressure"
+                    android:textSize="25sp"
+                    android:textStyle="bold"
+                    android:id="@+id/tvBloodPressureGraphTitle"
+                    android:layout_marginTop="10dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true" />
+
+                <com.androidplot.xy.XYPlot
+                    android:id="@+id/gBloodPressure_Patient"
+                    android:layout_width="match_parent"
+                    android:layout_below="@+id/tvBloodPressureGraphTitle"
+                    android:layout_height="200dp"
+                    android:layout_marginTop="10dp"
+                    androidPlot.domainLabelWidget.labelPaint.textSize="@dimen/domain_label_font_size"
+                    androidPlot.graphWidget.domainLabelPaint.textSize="@dimen/domain_tick_label_font_size"
+                    androidPlot.graphWidget.domainOriginLabelPaint.textSize="@dimen/domain_tick_label_font_size"
+                    androidPlot.graphWidget.marginBottom="40dp"
+                    androidPlot.graphWidget.marginLeft="16dp"
+                    androidPlot.graphWidget.marginRight="12dp"
+                    androidPlot.graphWidget.marginTop="1dp"
+                    androidPlot.graphWidget.rangeLabelPaint.textSize="@dimen/range_tick_label_font_size"
+                    androidPlot.graphWidget.rangeOriginLabelPaint.textSize="@dimen/range_tick_label_font_size"
+                    androidPlot.rangeLabelWidget.labelPaint.textSize="@dimen/range_label_font_size"
+                    androidPlot.titleWidget.labelPaint.textSize="@dimen/title_font_size" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
 
 </FrameLayout>

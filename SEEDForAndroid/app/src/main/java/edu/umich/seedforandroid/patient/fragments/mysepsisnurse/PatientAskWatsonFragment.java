@@ -23,9 +23,9 @@ import edu.umich.seedforandroid.api.ApiThread;
 import edu.umich.seedforandroid.api.SeedApi;
 import edu.umich.seedforandroid.watson.WatsonManager;
 
-public class MySepsisNurse_AskWatson extends Fragment implements View.OnClickListener  {
+public class PatientAskWatsonFragment extends Fragment implements View.OnClickListener  {
 
-    private static final String TAG = MySepsisNurse_AskWatson.class.getSimpleName();
+    private static final String TAG = PatientAskWatsonFragment.class.getSimpleName();
 
     private EditText etAskWatsonQuestion;
     private Button bAskWatson;
@@ -33,7 +33,7 @@ public class MySepsisNurse_AskWatson extends Fragment implements View.OnClickLis
 
     private ApiThread mApiThread;
     
-    public MySepsisNurse_AskWatson()  {
+    public PatientAskWatsonFragment()  {
 
     }
 

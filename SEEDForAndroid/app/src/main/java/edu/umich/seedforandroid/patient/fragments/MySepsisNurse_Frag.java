@@ -12,9 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import edu.umich.seedforandroid.R;
-import edu.umich.seedforandroid.patient.fragments.mysepsisnurse.RecentlyAskedQuestionsFragment;
-import edu.umich.seedforandroid.patient.fragments.mysepsisnurse.MySepsisNurse_AskWatson;
-import edu.umich.seedforandroid.patient.fragments.mysepsisnurse.MySepsisNurse_FAQ_Frag;
+import edu.umich.seedforandroid.patient.fragments.mysepsisnurse.PatientAskWatsonFragment;
+import edu.umich.seedforandroid.patient.fragments.mysepsisnurse.PatientFrequentlyAskedQuestionsFragment;
+import edu.umich.seedforandroid.patient.fragments.mysepsisnurse.PatientRecentlyAskedQuestionsFragment;
 
 public class MySepsisNurse_Frag extends Fragment  {
 
@@ -40,14 +40,14 @@ public class MySepsisNurse_Frag extends Fragment  {
         mTabHost.setup(getActivity(), getChildFragmentManager(), R.id.realtabcontent);
 
         mTabHost.addTab(mTabHost.newTabSpec("fragmentb")
-                .setIndicator("", getResources()
-                        .getDrawable(R.drawable.mysepsisnurse_askwatson_icon)), MySepsisNurse_AskWatson.class, null);
+                        .setIndicator("", getResources()
+                        .getDrawable(R.drawable.mysepsisnurse_askwatson_icon)), PatientAskWatsonFragment.class, null);
         mTabHost.addTab(mTabHost.newTabSpec("fragmentc")
-                .setIndicator("", getResources()
-                        .getDrawable(R.drawable.mysepsisnurse_faq_icon)), MySepsisNurse_FAQ_Frag.class, null);
+                        .setIndicator("", getResources()
+                        .getDrawable(R.drawable.mysepsisnurse_faq_icon)), PatientFrequentlyAskedQuestionsFragment.class, null);
         mTabHost.addTab(mTabHost.newTabSpec("fragmentd")
-                .setIndicator("", getResources()
-                        .getDrawable(R.drawable.mysepsisnurse_raq_icon)), RecentlyAskedQuestionsFragment.class, null);
+                        .setIndicator("", getResources()
+                        .getDrawable(R.drawable.mysepsisnurse_raq_icon)), PatientRecentlyAskedQuestionsFragment.class, null);
 
         ActionBar actionBar = getActivity().getActionBar();
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00274c")));

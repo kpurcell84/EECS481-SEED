@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 
 import edu.umich.seedforandroid.R;
 import edu.umich.seedforandroid.patient.fragments.myhealth.MyHealth_Alerts_Frag;
-import edu.umich.seedforandroid.patient.fragments.myhealth.MyHealth_EnterData_Frag;
 import edu.umich.seedforandroid.patient.fragments.myhealth.MyHealth_ViewData_Frag;
 
 public class MyHealth_Frag extends Fragment  {
@@ -45,9 +44,6 @@ public class MyHealth_Frag extends Fragment  {
         mTabHost.addTab(mTabHost.newTabSpec("MySepsisAlerts")
                 .setIndicator("", getResources()
                         .getDrawable(R.drawable.myhealth_alerts_icon)), MyHealth_Alerts_Frag.class, null);
-        mTabHost.addTab(mTabHost.newTabSpec("EnterNewData")
-                .setIndicator("", getResources()
-                        .getDrawable(R.drawable.myhealth_enterdata_icon)), MyHealth_EnterData_Frag.class, null);
 
         ActionBar actionBar = getActivity().getActionBar();
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00274c")));
