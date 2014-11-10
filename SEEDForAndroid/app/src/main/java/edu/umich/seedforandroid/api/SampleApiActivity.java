@@ -92,9 +92,10 @@ public class SampleApiActivity extends Activity {
 
     private void loadAccountManager() {
 
-        String prefix = getString(R.string.google_account_audience_prefix);
-        String postfix = getString(R.string.server_web_client_id);
-        String audience = getString(R.string.google_account_audience_format, prefix, postfix);
+        String prefix = GoogleAccountManager.GOOGLE_ACCOUNT_AUDIENCE_PREFIX;
+        String postfix = GoogleAccountManager.SERVER_WEB_CLIENT_ID;
+        String format = GoogleAccountManager.GOOGLE_ACCOUNT_AUDIENCE_FORMAT;
+        String audience = String.format(format, prefix, postfix);
         mAccountManager = new GoogleAccountManager(this, audience);
     }
 

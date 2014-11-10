@@ -15,6 +15,7 @@ import edu.umich.seedforandroid.R;
 import edu.umich.seedforandroid.api.ApiThread;
 import edu.umich.seedforandroid.api.SampleApiActivity;
 import edu.umich.seedforandroid.api.SeedApi;
+import edu.umich.seedforandroid.gcm.GcmManager;
 
 public class SampleAuthActivity extends Activity {
 
@@ -29,16 +30,22 @@ public class SampleAuthActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sample_api);
 
-        loadAccountManager();
+        //loadAccountManager();
 
         mApiThread = new ApiThread();
 
+        new GcmManager(this).registerInBackground(new GcmManager.IUploadRegistrationToServerAction() {
+            @Override
+            public void uploadToServer(String newNotificationId) {
+                Log.i(TAG, "Received Notification ID: " + newNotificationId);
+            }
+        });
 
-        if (login()) {
+        /*if (login()) {
 
             Log.i(TAG, "Account Name: " + mAccountManager.getAccountName());
             makeSampleApiCall();
-        }
+        }*/
     }
 
     @Override
@@ -83,9 +90,10 @@ public class SampleAuthActivity extends Activity {
 
     private void loadAccountManager() {
 
-        String prefix = getString(R.string.google_account_audience_prefix);
-        String postfix = getString(R.string.server_web_client_id);
-        String audience = getString(R.string.google_account_audience_format, prefix, postfix);
+        String prefix = GoogleAccountManager.GOOGLE_ACCOUNT_AUDIENCE_PREFIX;
+        String postfix = GoogleAccountManager.SERVER_WEB_CLIENT_ID;
+        String format = GoogleAccountManager.GOOGLE_ACCOUNT_AUDIENCE_FORMAT;
+        String audience = String.format(format, prefix, postfix);
         mAccountManager = new GoogleAccountManager(this, audience);
     }
 
