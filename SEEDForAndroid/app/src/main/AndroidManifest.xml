@@ -58,14 +58,11 @@
         <activity
             android:name=".account.SampleAuthActivity"
             android:label="@string/title_activity_sample_auth" >
-
-            <!--
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
+            </intent-filter>-->
         </activity>
         <activity
             android:name=".patient.EnterNewHealthData"

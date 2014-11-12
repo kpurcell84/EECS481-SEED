@@ -19,7 +19,7 @@ public class GcmManager {
 
     private static final String TAG = GcmManager.class.getSimpleName();
 
-    private static final String SENDER_ID = "AIzaSyASQHVSepuoISRArUhOXUrQIXHB6ZQzFRg";
+    private static final String SENDER_ID = "264671521534";
 
     private final Context mContext;
 
