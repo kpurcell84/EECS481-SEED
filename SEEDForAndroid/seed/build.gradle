@@ -4,7 +4,7 @@ apply plugin: 'maven'
 
 group = 'com.appspot.umichseed'
 archivesBaseName = 'seed'
-version = 'v0.4.3-1.19.0-SNAPSHOT'
+version = 'v0.4.4-1.19.0-SNAPSHOT'
 
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
