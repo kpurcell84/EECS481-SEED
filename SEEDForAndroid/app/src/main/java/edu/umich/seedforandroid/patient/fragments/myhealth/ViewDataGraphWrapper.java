@@ -1,29 +1,43 @@
 package edu.umich.seedforandroid.patient.fragments.myhealth;
 
-import com.androidplot.xy.BarFormatter;
-import com.androidplot.xy.XYSeries;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by andylee on 11/12/14.
  */
 public class ViewDataGraphWrapper  {
 
-    private XYSeries mXYseries;
-    private BarFormatter mBarFormat;
+    public static final int HEART_RATE = 0;
+    public static final int SKIN_TEMP = 1;
+    public static final int PERSPIRATION = 2;
+    public static final int BLOOD_PRESSURE = 3;
+    public static final int BODY_TEMP = 4;
+    public static final int ACTIVITY = 5;
 
-    public ViewDataGraphWrapper(XYSeries xySeries, BarFormatter barFormat)  {
+    private List<Double> data = new ArrayList<Double>();
+    private List<Long> epoch = new ArrayList<Long>();
+    private int dataType;
 
-        this.mXYseries = xySeries;
-        this.mBarFormat = barFormat;
+    public ViewDataGraphWrapper(List<Double> data, List<Long> epoch, int dataType)  {
+
+        this.data = data;
+        this.epoch = epoch;
+        this.dataType = dataType;
     }
 
-    public BarFormatter getBarFormatter()  {
+    public List<Double> getHealthData()  {
 
-        return mBarFormat;
+        return data;
     }
 
-    public XYSeries getXYSeries()  {
+    public List<Long> getEpoch()  {
 
-        return mXYseries;
+        return epoch;
+    }
+
+    public int getDataType()  {
+
+        return dataType;
     }
 }
