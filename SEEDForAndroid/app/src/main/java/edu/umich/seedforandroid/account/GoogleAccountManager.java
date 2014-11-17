@@ -19,7 +19,6 @@ public class GoogleAccountManager {
             "264671521534-evjhe6al5t2ahsba3eq2tf8jj78olpei.apps.googleusercontent.com";
     public static final String GOOGLE_ACCOUNT_AUDIENCE_FORMAT = "%1$s:%2$s";
 
-    private Context mContext;
     private SharedPrefsUtil mPrefsUtil;
     private GoogleAccountCredential mCredential;
 
@@ -37,9 +36,8 @@ public class GoogleAccountManager {
 
     private void create(Context context, String audience) {
 
-        mContext = context;
         mPrefsUtil = new SharedPrefsUtil(context);
-        mCredential = GoogleAccountCredential.usingAudience(mContext, audience);
+        mCredential = GoogleAccountCredential.usingAudience(context, audience);
     }
 
     public boolean tryLogIn() {
