@@ -18,7 +18,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import edu.umich.seedforandroid.R;
 
@@ -26,6 +31,8 @@ public class NavigationDrawerFragment_Patient extends Fragment {
 
     private static final String STATE_SELECTED_POSITION = "selected_navigation_drawer_position";
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
+    ArrayAdapter<NavigationDrawerItem> adapter;
+    private List<NavigationDrawerItem> myNavTabs = new ArrayList<NavigationDrawerItem>();
 
     /**
      * A pointer to the current callbacks instance (the Activity).
@@ -83,11 +90,23 @@ public class NavigationDrawerFragment_Patient extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectItem(position);
             }
+
         });
+
+        myNavTabs.add((new NavigationDrawerItem(R.drawable.evening_icon, getString(R.string.patient_title_section1))));
+        myNavTabs.add((new NavigationDrawerItem(R.drawable.evening_icon, getString(R.string.patient_title_section2))));
+        myNavTabs.add((new NavigationDrawerItem(R.drawable.evening_icon, getString(R.string.patient_title_section3))));
+        myNavTabs.add((new NavigationDrawerItem(R.drawable.evening_icon, getString(R.string.patient_title_section4))));
+        myNavTabs.add((new NavigationDrawerItem(R.drawable.evening_icon, getString(R.string.patient_title_section5))));
+
+        adapter = new MyListAdapter();
+
+        mDrawerListView.setAdapter(adapter);
+        /*
         mDrawerListView.setAdapter(new ArrayAdapter<String>(
                 getActionBar().getThemedContext(),
-                android.R.layout.simple_list_item_activated_1,
-                android.R.id.text1,
+                R.layout.patient_navigation_drawer_listview,
+                R.id.list_content,
                 new String[]{
                         getString(R.string.patient_title_section1),
                         getString(R.string.patient_title_section2),
@@ -95,6 +114,7 @@ public class NavigationDrawerFragment_Patient extends Fragment {
                         getString(R.string.patient_title_section4),
                         getString(R.string.patient_title_section5)
                 }));
+        */
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
     }
@@ -268,5 +288,55 @@ public class NavigationDrawerFragment_Patient extends Fragment {
          * Called when an item in the navigation drawer is selected.
          */
         void onNavigationDrawerItemSelected(int position);
+    }
+
+    private class MyListAdapter extends ArrayAdapter<NavigationDrawerItem> {
+
+        public MyListAdapter() {
+            super(getActivity().getApplicationContext(), R.layout.patient_navigation_drawer_listview, myNavTabs);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent)  {
+
+            // Make sure we have a view to work with (may have been given null)
+            View itemView = convertView;
+
+            if (itemView == null)  {
+
+                itemView = getActivity().getLayoutInflater().inflate(R.layout.patient_navigation_drawer_listview, parent, false);
+            }
+
+            // Find the item to work with.
+            NavigationDrawerItem currentTab = myNavTabs.get(position);
+
+            //Date - Month
+            TextView tvTitle = (TextView) itemView.findViewById(R.id.tvNavTabTitle);
+            tvTitle.setText(currentTab.getTitle().toString());
+
+            ImageView imageView = (ImageView) itemView.findViewById(R.id.imageViewNavTab);
+
+            if (tvTitle.getText().toString().contentEquals(getString(R.string.patient_title_section1)))  {
+
+                imageView.setImageResource(R.drawable.profile_tab_icon);
+            }
+            else if (tvTitle.getText().toString().contentEquals(getString(R.string.patient_title_section2))) {
+
+                imageView.setImageResource(R.drawable.health_tab_icon);
+            }
+            else if (tvTitle.getText().toString().contentEquals(getString(R.string.patient_title_section3))) {
+
+                imageView.setImageResource(R.drawable.nurse_tab_icon);
+            }
+            else if (tvTitle.getText().toString().contentEquals(getString(R.string.patient_title_section4))) {
+
+                imageView.setImageResource(R.drawable.settings_tab_icon);
+            }
+            else if (tvTitle.getText().toString().contentEquals(getString(R.string.patient_title_section5))) {
+
+                imageView.setImageResource(R.drawable.help_tab_icon);
+            }
+            return itemView;
+        }
     }
 }

@@ -2,22 +2,34 @@ package edu.umich.seedforandroid.patient.fragments.myhealth;
 
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.androidplot.ui.XLayoutStyle;
+import com.androidplot.ui.YLayoutStyle;
 import com.androidplot.xy.XYPlot;
+import com.androidplot.xy.XYSeries;
+
+import java.text.DecimalFormat;
+import java.text.FieldPosition;
+import java.text.Format;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import edu.umich.seedforandroid.R;
-import edu.umich.seedforandroid.patient.utility.UtilityPatient;
+import edu.umich.seedforandroid.util.Utils;
 
 public class MyHealth_ViewData_Frag extends Fragment  {
 
-    private UtilityPatient utilityPatientInst;
-    private XYPlot mHeartRatePlot, mSkinTempPlot,
-                   mPerspirationPlot, mBloodPressurePlot, mBodyTempPlot,
-                   mActivityTypePlot;
+    private Utils mUtilsInst;
+    private XYPlot mHeartRatePlot, mSkinTempPlot, mPerspirationPlot,
+                   mBloodPressurePlot, mBodyTempPlot, mActivityTypePlot;
+    private XYSeries mHeartRateSeries, mSkinTempSeries, mPerspirationSeries,
+                     mBloodPressureSeries, mBodyTempSeries, mActivityTypeSeries;
 
     public MyHealth_ViewData_Frag()  {
 
@@ -30,7 +42,7 @@ public class MyHealth_ViewData_Frag extends Fragment  {
 
         View v = null;
 
-        if (utilityPatientInst.checkInternetConnection(getActivity().getApplicationContext()))  { // There is internet connection
+        if (mUtilsInst.checkInternetConnection(getActivity().getApplicationContext()))  { // There is internet connection
 
             v = fetchPatientHealthData(v, inflater, container);
         }
@@ -44,7 +56,7 @@ public class MyHealth_ViewData_Frag extends Fragment  {
 
     private void initialSetup()  {
 
-        utilityPatientInst = new UtilityPatient();
+        mUtilsInst = new Utils();
 
         ActionBar actionBar = getActivity().getActionBar();
         actionBar.setTitle("View My Health Data");
@@ -64,16 +76,16 @@ public class MyHealth_ViewData_Frag extends Fragment  {
 
         setupGraphs(view);
 
+//        series = new SimpleXYSeries(result.epoch, result.steps, "Steps");
+
+//        mHeartRateSeries = new SimpleXYSeries()
+
         return view;
     }
 
-    private View setupGraphs(View view)  {
+    private void setupGraphSettings(XYPlot plot)  {
 
-       // mHeartRatePlot =
-
-                /*
         plot.getGraphWidget().getBackgroundPaint().setColor(Color.TRANSPARENT);
-        //plot.getGraphWidget().setTicksPerDomainLabel(30);
         plot.getGraphWidget().getGridBackgroundPaint().setColor(Color.WHITE);
         plot.getGraphWidget().setDomainLabelOrientation(-45);
         plot.getGraphWidget().setDomainLabelVerticalOffset(10); //does not offset further
@@ -97,8 +109,8 @@ public class MyHealth_ViewData_Frag extends Fragment  {
             private SimpleDateFormat dateFormat = new SimpleDateFormat("hh a");
 
             @Override
-            public StringBuffer format(Object obj, StringBuffer buffer,
-                                       FieldPosition fieldPos) {
+            public StringBuffer format(Object obj, StringBuffer buffer, FieldPosition fieldPos)  {
+
                 long stamp = ((Number) obj).longValue() * 1000;
                 Date date = new Date(stamp);//- 4 * 60 * 60 * 1000);
                 return dateFormat.format(date, buffer, fieldPos);
@@ -110,7 +122,22 @@ public class MyHealth_ViewData_Frag extends Fragment  {
             }
 
         });
-*/
-        return null;
+    }
+
+    private void setupGraphs(View view)  {
+
+        mHeartRatePlot = (XYPlot) view.findViewById(R.id.gHeartRate_Patient);
+        mSkinTempPlot = (XYPlot) view.findViewById(R.id.gSkinTemp_Patient);
+        mPerspirationPlot = (XYPlot) view.findViewById(R.id.gPerspiration_Patient);
+        mBloodPressurePlot = (XYPlot) view.findViewById(R.id.gBloodPressure_Patient);
+        mBodyTempPlot = (XYPlot) view.findViewById(R.id.gBodyTemp_Patient);
+        mActivityTypePlot = (XYPlot) view.findViewById(R.id.gActivity_Patient);
+
+        setupGraphSettings(mHeartRatePlot);
+        setupGraphSettings(mSkinTempPlot);
+        setupGraphSettings(mPerspirationPlot);
+        setupGraphSettings(mBloodPressurePlot);
+        setupGraphSettings(mBodyTempPlot);
+        setupGraphSettings(mActivityTypePlot);
     }
 }

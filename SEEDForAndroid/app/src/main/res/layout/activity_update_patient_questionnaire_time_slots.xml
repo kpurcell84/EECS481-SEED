@@ -1,0 +1,159 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:background="@drawable/seed_background"
+    tools:context="edu.umich.seedforandroid.patient.fragments.mysepsisnurse.UpdatePatientQuestionnaireTimeSlots">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Edit Settings"
+        android:id="@+id/tvTitleForEditSettingsNotification"
+        android:layout_alignParentTop="true"
+        android:background="#00274c"
+        android:padding="10dp"
+        android:gravity="center"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:textSize="25sp"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Notification Time Slots"
+        android:id="@+id/tvTitleDescription"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:textStyle="bold"
+        android:layout_below="@+id/tvTitleForEditSettingsNotification"
+        android:textSize="25sp"
+        android:layout_centerHorizontal="true" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="#F3F0EB"
+        android:id="@+id/relativelayoutmorning"
+        android:layout_below="@+id/tvTitleDescription"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Morning"
+            android:drawableStart="@drawable/morning_icon"
+            android:drawablePadding="10dp"
+            android:layout_marginTop="10dp"
+            android:id="@+id/tvMorning"
+            android:textSize="25sp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Please choose a time between\n7:00 AM and 10:00 AM."
+            android:id="@+id/tvMorningDes"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/tvMorning"
+            android:layout_alignParentLeft="true"/>
+
+        <RelativeLayout
+            android:id="@+id/relativelayout1"
+            android:layout_width="125dp"
+            android:layout_height="55dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@+id/tvMorningDes"
+            android:background="#ffffff"
+            android:padding="3dp">
+
+            <Button
+                android:id="@+id/bMorningTimeSlot"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/blue_button"
+                android:text="10:00 AM"
+                android:textColor="#FFFFFF"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="#F3F0EB"
+        android:id="@+id/relativelayoutevening"
+        android:layout_below="@+id/relativelayoutmorning"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Evening"
+            android:drawableStart="@drawable/evening_icon"
+            android:drawablePadding="10dp"
+            android:layout_marginTop="10dp"
+            android:id="@+id/tvEvening"
+            android:textSize="25sp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Please choose a time between\n7:00 PM and 10:00 PM."
+            android:id="@+id/tvEveningDes"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/tvEvening"
+            android:layout_alignParentLeft="true"/>
+
+        <RelativeLayout
+            android:id="@+id/relativelayout5"
+            android:layout_width="125dp"
+            android:layout_height="55dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@+id/tvEveningDes"
+            android:background="#ffffff"
+            android:padding="3dp">
+
+            <Button
+                android:id="@+id/bEveningTimeSlot"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/blue_button"
+                android:text="10:00 PM"
+                android:textColor="#FFFFFF"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativelayout10"
+        android:layout_width="150dp"
+        android:layout_height="55dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="#ffffff"
+        android:padding="3dp">
+
+        <Button
+            android:id="@+id/bSaveUpdateTimeSlots"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/blue_button"
+            android:text="Save"
+            android:textColor="#FFFFFF"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+</RelativeLayout>

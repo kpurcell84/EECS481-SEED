@@ -99,7 +99,7 @@ public class MainActivity_Doctor extends FragmentActivity implements ActionBar.T
 
         if (tab.getContentDescription().toString().contentEquals("myalerts") == true)  {
 
-            actionBar.setTitle((Html.fromHtml("<font color=\"#FFFFFF\">" + "My Alerts" + "</font>")));
+            actionBar.setTitle((Html.fromHtml("<font color=\"#FFFFFF\">" + "My Patients' Alerts" + "</font>")));
             tab.setIcon(R.drawable.myalert_icon_active);
         }
         else if (tab.getContentDescription().toString().contentEquals("mypatients") == true)  {

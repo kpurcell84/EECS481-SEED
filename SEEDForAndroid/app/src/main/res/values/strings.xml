@@ -10,8 +10,6 @@
     <string name="watson_id">um_student7</string>
     <string name="watson_password">GmwVKMFY</string>
     <string name="watson_server_instance">https://watson-wdc01.ihost.com/instance/509/deepqa/v1/question</string>
-
-
     <string name="patient_title_section1">Profile</string>
     <string name="patient_title_section2">My Health Data</string>
     <string name="patient_title_section3">My Sepsis Nurse</string>
@@ -25,5 +23,20 @@
     <string name="title_activity_splash">Splash</string>
     <string name="title_activity_sample_auth">SampleAuthActivity</string>
     <string name="title_activity_enter_new_health_data">EnterNewHealthData</string>
+    <string name="survey_1_question">Do you feel less energetic than usual?</string>
+    <string name="survey_2_question">Do you have any muscle aches?</string>
+    <string name="survey_3_question">Do you have abdominal pain?</string>
+    <string name="survey_4_question">Do you have a headache?</string>
+    <string name="survey_5_question">Do you feel you have to work hard to breathe?</string>
+    <string name="survey_6_question">Do you feel tightness in your lungs?</string>
+    <string name="survey_7_question">Do you have a cough?</string>
+    <string name="survey_8_question">Have you lost weight recently?</string>
+    <string name="survey_9_question">Is your urine output significantly lower than usual?</string>
+    <string name="survey_10_question">Do you feel down, depressed or hopeless?</string>
+    <string name="survey_answer_yes">yes</string>
+    <string name="survey_answer_no">no</string>
+    <string name="title_activity_daily_survey">DailySurvey</string>
+    <string name="title_activity_daily_survey_submit">DailySurveySubmit</string>
+    <string name="title_activity_update_patient_questionnaire_time_slots">UpdatePatientQuestionnaireTimeSlots</string>
 
 </resources>

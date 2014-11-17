@@ -32,6 +32,8 @@ public class SampleAuthActivity extends Activity {
 
         //loadAccountManager();
 
+        Log.i(TAG, "############");
+
         mApiThread = new ApiThread();
 
         new GcmManager(this).registerInBackground(new GcmManager.IUploadRegistrationToServerAction() {
