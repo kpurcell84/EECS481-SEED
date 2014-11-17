@@ -15,18 +15,18 @@ public class ViewDataGraphWrapper  {
     public static final int BODY_TEMP = 4;
     public static final int ACTIVITY = 5;
 
-    private List<Integer> data = new ArrayList<Integer>();
+    private List<Double> data = new ArrayList<Double>();
     private List<Long> epoch = new ArrayList<Long>();
     private int dataType;
 
-    public ViewDataGraphWrapper(List<Integer> data, List<Long> epoch, int dataType)  {
+    public ViewDataGraphWrapper(List<Double> data, List<Long> epoch, int dataType)  {
 
         this.data = data;
         this.epoch = epoch;
         this.dataType = dataType;
     }
 
-    public List<Integer> getHealthData()  {
+    public List<Double> getHealthData()  {
 
         return data;
     }
