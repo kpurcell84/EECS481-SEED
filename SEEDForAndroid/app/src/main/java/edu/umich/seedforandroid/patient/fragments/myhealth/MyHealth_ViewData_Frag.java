@@ -68,8 +68,6 @@ public class MyHealth_ViewData_Frag extends Fragment  {
     private View noInternetConnection(View view, LayoutInflater inflater, ViewGroup container)  {
 
         view = inflater.inflate(R.layout.fragment_my_health__view_data_no_internet, container, false);
-
-
         return view;
     }
 
@@ -78,11 +76,6 @@ public class MyHealth_ViewData_Frag extends Fragment  {
         view = inflater.inflate(R.layout.fragment_my_health__view_data_, container, false);
 
         setupGraphs(view);
-
-//        series = new SimpleXYSeries(result.epoch, result.steps, "Steps");
-
-//        mHeartRateSeries = new SimpleXYSeries()
-
         return view;
     }
 
