@@ -145,7 +145,8 @@ public class MyHealth_ViewData_Frag extends Fragment  {
             mActivityTypePlot.redraw();
         }
     }
-    double findDomainStep(ViewDataGraphWrapper ar)  {
+
+    private double findDomainStep(ViewDataGraphWrapper ar)  {
 
         long first = ar.getEpoch().get(0);
         long last = ar.getEpoch().get(ar.getEpoch().size()-1);
@@ -160,7 +161,6 @@ public class MyHealth_ViewData_Frag extends Fragment  {
             return 4;
         }
     }
-
 
     private void setupGraphSettings(XYPlot plot)  {
 
