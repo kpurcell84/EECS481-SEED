@@ -97,7 +97,6 @@ public class MyHealth_ViewData_Frag extends Fragment  {
             mHeartRatePlot.setDomainLabel(day);
             mHeartRatePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
             mHeartRatePlot.addSeries(mHeartRateSeries, stepFormatter);
-            mHeartRatePlot.redraw();
         }
         else if (data.getDataType() == ViewDataGraphWrapper.SKIN_TEMP) {
 
@@ -106,7 +105,6 @@ public class MyHealth_ViewData_Frag extends Fragment  {
             mSkinTempPlot.setDomainLabel(day);
             mSkinTempPlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
             mSkinTempPlot.addSeries(mSkinTempSeries, stepFormatter);
-            mSkinTempPlot.redraw();
         }
         else if (data.getDataType() == ViewDataGraphWrapper.PERSPIRATION) {
 
@@ -115,7 +113,6 @@ public class MyHealth_ViewData_Frag extends Fragment  {
             mPerspirationPlot.setDomainLabel(day);
             mPerspirationPlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
             mPerspirationPlot.addSeries(mPerspirationSeries, stepFormatter);
-            mPerspirationPlot.redraw();
         }
         else if (data.getDataType() == ViewDataGraphWrapper.BLOOD_PRESSURE) {
 
@@ -124,7 +121,6 @@ public class MyHealth_ViewData_Frag extends Fragment  {
             mBloodPressurePlot.setDomainLabel(day);
             mBloodPressurePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
             mBloodPressurePlot.addSeries(mBloodPressureSeries, stepFormatter);
-            mBloodPressurePlot.redraw();
         }
         else if (data.getDataType() == ViewDataGraphWrapper.BODY_TEMP) {
 
@@ -133,7 +129,6 @@ public class MyHealth_ViewData_Frag extends Fragment  {
             mBodyTempPlot.setDomainLabel(day);
             mBodyTempPlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
             mBodyTempPlot.addSeries(mBodyTempSeries, stepFormatter);
-            mBodyTempPlot.redraw();
         }
         else if (data.getDataType() == ViewDataGraphWrapper.ACTIVITY) {
 
@@ -142,8 +137,17 @@ public class MyHealth_ViewData_Frag extends Fragment  {
             mActivityTypePlot.setDomainLabel(day);
             mActivityTypePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
             mActivityTypePlot.addSeries(mActivityTypeSeries, stepFormatter);
-            mActivityTypePlot.redraw();
         }
+    }
+
+    private void reDrawGraphs()  {
+
+        mHeartRatePlot.redraw();
+        mSkinTempPlot.redraw();
+        mPerspirationPlot.redraw();
+        mBloodPressurePlot.redraw();
+        mBodyTempPlot.redraw();
+        mActivityTypePlot.redraw();
     }
 
     private double findDomainStep(ViewDataGraphWrapper ar)  {
