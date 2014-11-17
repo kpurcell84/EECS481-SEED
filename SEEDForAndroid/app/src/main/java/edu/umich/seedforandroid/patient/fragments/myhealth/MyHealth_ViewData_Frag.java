@@ -88,16 +88,14 @@ public class MyHealth_ViewData_Frag extends Fragment  {
 
         SimpleDateFormat xLabelFormat = new SimpleDateFormat("MMM dd");
         String day = xLabelFormat.format(data.getEpoch().get(0) * 1000);
+        double domainStep = findDomainStep(data);
 
         if (data.getDataType() == ViewDataGraphWrapper.HEART_RATE)  {
 
             mHeartRateSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Heart Rate");
 
             mHeartRatePlot.setDomainLabel(day);
-
-            double domainStep = findDomainStep(data);
             mHeartRatePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
-
             mHeartRatePlot.addSeries(mHeartRateSeries, stepFormatter);
             mHeartRatePlot.redraw();
         }
@@ -106,10 +104,7 @@ public class MyHealth_ViewData_Frag extends Fragment  {
             mSkinTempSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Skin Temperature");
 
             mSkinTempPlot.setDomainLabel(day);
-
-            double domainStep = findDomainStep(data);
             mSkinTempPlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
-
             mSkinTempPlot.addSeries(mSkinTempSeries, stepFormatter);
             mSkinTempPlot.redraw();
         }
@@ -118,10 +113,7 @@ public class MyHealth_ViewData_Frag extends Fragment  {
             mPerspirationSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Perspiration");
 
             mPerspirationPlot.setDomainLabel(day);
-
-            double domainStep = findDomainStep(data);
             mPerspirationPlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
-
             mPerspirationPlot.addSeries(mPerspirationSeries, stepFormatter);
             mPerspirationPlot.redraw();
         }
@@ -130,10 +122,7 @@ public class MyHealth_ViewData_Frag extends Fragment  {
             mBloodPressureSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Blood Pressure");
 
             mBloodPressurePlot.setDomainLabel(day);
-
-            double domainStep = findDomainStep(data);
             mBloodPressurePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
-
             mBloodPressurePlot.addSeries(mBloodPressureSeries, stepFormatter);
             mBloodPressurePlot.redraw();
         }
@@ -142,10 +131,7 @@ public class MyHealth_ViewData_Frag extends Fragment  {
             mBodyTempSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Body Temperature");
 
             mBodyTempPlot.setDomainLabel(day);
-
-            double domainStep = findDomainStep(data);
             mBodyTempPlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
-
             mBodyTempPlot.addSeries(mBodyTempSeries, stepFormatter);
             mBodyTempPlot.redraw();
         }
@@ -154,10 +140,7 @@ public class MyHealth_ViewData_Frag extends Fragment  {
             mActivityTypeSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Activity");
 
             mActivityTypePlot.setDomainLabel(day);
-
-            double domainStep = findDomainStep(data);
             mActivityTypePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
-
             mActivityTypePlot.addSeries(mActivityTypeSeries, stepFormatter);
             mActivityTypePlot.redraw();
         }
