@@ -2,11 +2,18 @@ package edu.umich.seedforandroid.patient.fragments.myhealth;
 
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 import com.androidplot.ui.XLayoutStyle;
 import com.androidplot.ui.YLayoutStyle;
@@ -34,8 +41,42 @@ public class MyHealth_ViewData_Frag extends Fragment  {
     private XYSeries mHeartRateSeries, mSkinTempSeries, mPerspirationSeries,
                      mBloodPressureSeries, mBodyTempSeries, mActivityTypeSeries;
 
-    public MyHealth_ViewData_Frag()  {
+    public MyHealth_ViewData_Frag()  {}
 
+    @Override
+    public void onCreate(Bundle savedInstanceState)  {
+
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)  {
+
+        int id = item.getItemId();
+
+        if (id == R.id.action_refresh)  { // rotate the refresh icon
+
+            LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            ImageView iv = (ImageView)inflater.inflate(R.layout.action_refresh_image, null);
+            Animation rotation = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_refresh_icon);
+            rotation.setRepeatCount(Animation.INFINITE);
+            iv.startAnimation(rotation);
+            item.setActionView(iv);
+            return true;
+        }
+        else if (id == R.id.action_graph_options)  {
+
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)  {
+
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.main, menu);
     }
 
     @Override
@@ -98,7 +139,7 @@ public class MyHealth_ViewData_Frag extends Fragment  {
             mHeartRatePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
             mHeartRatePlot.addSeries(mHeartRateSeries, stepFormatter);
         }
-        else if (data.getDataType() == ViewDataGraphWrapper.SKIN_TEMP) {
+        else if (data.getDataType() == ViewDataGraphWrapper.SKIN_TEMP)  {
 
             mSkinTempSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Skin Temperature");
 
@@ -106,7 +147,7 @@ public class MyHealth_ViewData_Frag extends Fragment  {
             mSkinTempPlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
             mSkinTempPlot.addSeries(mSkinTempSeries, stepFormatter);
         }
-        else if (data.getDataType() == ViewDataGraphWrapper.PERSPIRATION) {
+        else if (data.getDataType() == ViewDataGraphWrapper.PERSPIRATION)  {
 
             mPerspirationSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Perspiration");
 
@@ -114,7 +155,7 @@ public class MyHealth_ViewData_Frag extends Fragment  {
             mPerspirationPlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
             mPerspirationPlot.addSeries(mPerspirationSeries, stepFormatter);
         }
-        else if (data.getDataType() == ViewDataGraphWrapper.BLOOD_PRESSURE) {
+        else if (data.getDataType() == ViewDataGraphWrapper.BLOOD_PRESSURE)  {
 
             mBloodPressureSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Blood Pressure");
 
@@ -122,7 +163,7 @@ public class MyHealth_ViewData_Frag extends Fragment  {
             mBloodPressurePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
             mBloodPressurePlot.addSeries(mBloodPressureSeries, stepFormatter);
         }
-        else if (data.getDataType() == ViewDataGraphWrapper.BODY_TEMP) {
+        else if (data.getDataType() == ViewDataGraphWrapper.BODY_TEMP)  {
 
             mBodyTempSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Body Temperature");
 
@@ -130,7 +171,7 @@ public class MyHealth_ViewData_Frag extends Fragment  {
             mBodyTempPlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
             mBodyTempPlot.addSeries(mBodyTempSeries, stepFormatter);
         }
-        else if (data.getDataType() == ViewDataGraphWrapper.ACTIVITY) {
+        else if (data.getDataType() == ViewDataGraphWrapper.ACTIVITY)  {
 
             mActivityTypeSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Activity");
 

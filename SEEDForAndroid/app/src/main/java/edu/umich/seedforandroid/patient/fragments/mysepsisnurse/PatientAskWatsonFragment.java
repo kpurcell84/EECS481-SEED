@@ -12,15 +12,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.appspot.umichseed.seed.Seed;
-import com.appspot.umichseed.seed.SeedRequest;
-import com.appspot.umichseed.seed.model.SeedApiMessagesWatsonQuestionPut;
-
-import java.io.IOException;
-
 import edu.umich.seedforandroid.R;
 import edu.umich.seedforandroid.api.ApiThread;
-import edu.umich.seedforandroid.api.SeedApi;
 import edu.umich.seedforandroid.watson.WatsonManager;
 
 public class PatientAskWatsonFragment extends Fragment implements View.OnClickListener  {
@@ -109,19 +102,21 @@ public class PatientAskWatsonFragment extends Fragment implements View.OnClickLi
 
                 tvAnswer.setText(response);
 
+                /*
                 try {
 
                     Seed api = SeedApi.getUnauthenticatedApi();
                     SeedApiMessagesWatsonQuestionPut question = new SeedApiMessagesWatsonQuestionPut();
                     question.setQuestion(query);
                     question.setAnswer(response);
-                    SeedRequest request = api.watsonQuestion().put(question);
+                    SeedRequest request = api.watsonRecentQuestions().put(question);
                     mApiThread.enqueueRequest(request, null);
                 }
                 catch (IOException e) {
 
                     e.printStackTrace();
                 }
+                */
             }
 /*
             private String truncateAnswer(String response)  {

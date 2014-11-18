@@ -16,13 +16,25 @@ public class Patient_Settings_Frag extends Fragment  {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState)  {
+
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(false);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)  {
 
         View view = inflater.inflate(R.layout.fragment_patient__settings_, container, false);
 
-        ActionBar actionBar = getActivity().getActionBar();
-        actionBar.setTitle("Settings");
+        initialSetup();
 
         return view;
+    }
+
+    private void initialSetup()  {
+
+        ActionBar actionBar = getActivity().getActionBar();
+        actionBar.setTitle("Settings");
     }
 }

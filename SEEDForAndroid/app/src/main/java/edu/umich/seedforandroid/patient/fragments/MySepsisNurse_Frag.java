@@ -10,6 +10,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TabWidget;
 
 import edu.umich.seedforandroid.R;
 import edu.umich.seedforandroid.patient.fragments.mysepsisnurse.PatientAskWatsonFragment;
@@ -23,6 +24,22 @@ public class MySepsisNurse_Frag extends Fragment  {
     public MySepsisNurse_Frag()  {
 
     }
+
+//    @Override
+//    public void onCreate(Bundle savedInstanceState)  {
+//
+//        super.onCreate(savedInstanceState);
+//        setHasOptionsMenu(true);
+//    }
+//
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)  {
+//
+//        super.onCreateOptionsMenu(menu, inflater);
+//
+//        menu.findItem(R.id.action_graph_options).setVisible(false).setEnabled(false);
+//        menu.findItem(R.id.action_refresh).setVisible(false).setEnabled(false);
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,6 +65,14 @@ public class MySepsisNurse_Frag extends Fragment  {
         mTabHost.addTab(mTabHost.newTabSpec("fragmentd")
                         .setIndicator("", getResources()
                         .getDrawable(R.drawable.mysepsisnurse_raq_icon)), PatientRecentlyAskedQuestionsFragment.class, null);
+
+        // Set the indicator color
+        TabWidget widget = mTabHost.getTabWidget();
+        for (int i = 0; i < widget.getChildCount(); i++)  {
+
+            View v = widget.getChildAt(i);
+            v.setBackgroundResource(R.drawable.tab_indicator_custom);
+        }
 
         ActionBar actionBar = getActivity().getActionBar();
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00274c")));

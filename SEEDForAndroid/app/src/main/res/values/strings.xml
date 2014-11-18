@@ -3,8 +3,11 @@
 
     <string name="app_name">SEED System</string>
     <string name="hello_world">Hello world!</string>
+    <string name="action_refresh">Refresh</string>
     <string name="action_settings">Settings</string>
+    <string name="action_graphs_options">Graphs</string>
     <string name="title_activity_my">MyActivity</string>
+
 
     <!-- Watson Data -->
     <string name="watson_id">um_student7</string>

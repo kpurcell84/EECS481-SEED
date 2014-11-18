@@ -21,7 +21,6 @@ import edu.umich.seedforandroid.patient.fragments.Patient_Settings_Frag;
 public class MainActivity_Patient extends Activity implements NavigationDrawerFragment_Patient.NavigationDrawerCallbacks {
 
     private NavigationDrawerFragment_Patient mNavigationDrawerFragment;
-
     private CharSequence mTitle;
 
     @Override
@@ -112,13 +111,12 @@ public class MainActivity_Patient extends Activity implements NavigationDrawerFr
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
-    //    actionBar.setTitle(mTitle);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)  {
 
+        /*
         if (!mNavigationDrawerFragment.isDrawerOpen())  {
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
@@ -128,21 +126,15 @@ public class MainActivity_Patient extends Activity implements NavigationDrawerFr
             return true;
         }
         return super.onCreateOptionsMenu(menu);
+        */
+        return false;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)  {
 
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        //return super.onOptionsItemSelected(item);
 
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings)  {
-
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        return false;
     }
 }

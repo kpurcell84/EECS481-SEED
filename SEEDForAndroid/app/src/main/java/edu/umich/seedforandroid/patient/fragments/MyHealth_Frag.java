@@ -10,6 +10,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TabWidget;
 
 import edu.umich.seedforandroid.R;
 import edu.umich.seedforandroid.patient.fragments.myhealth.MyHealth_Alerts_Frag;
@@ -36,7 +37,7 @@ public class MyHealth_Frag extends Fragment  {
     private View initialSetup(View view)  {
 
         mTabHost = (FragmentTabHost) view.findViewById(android.R.id.tabhost);
-        mTabHost.setup(getActivity(), getChildFragmentManager(), R.id.realtabcontent);
+        mTabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
 
         mTabHost.addTab(mTabHost.newTabSpec("ViewMyHealthData")
                 .setIndicator("", getResources()
@@ -44,6 +45,14 @@ public class MyHealth_Frag extends Fragment  {
         mTabHost.addTab(mTabHost.newTabSpec("MySepsisAlerts")
                 .setIndicator("", getResources()
                         .getDrawable(R.drawable.myhealth_alerts_icon)), MyHealth_Alerts_Frag.class, null);
+
+        // Set the indicator color
+        TabWidget widget = mTabHost.getTabWidget();
+        for (int i = 0; i < widget.getChildCount(); i++)  {
+
+            View v = widget.getChildAt(i);
+            v.setBackgroundResource(R.drawable.tab_indicator_custom);
+        }
 
         ActionBar actionBar = getActivity().getActionBar();
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00274c")));

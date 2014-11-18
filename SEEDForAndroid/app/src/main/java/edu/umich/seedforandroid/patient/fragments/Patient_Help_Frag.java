@@ -11,8 +11,13 @@ import edu.umich.seedforandroid.R;
 
 public class Patient_Help_Frag extends Fragment  {
 
-    public Patient_Help_Frag() {
+    public Patient_Help_Frag()  {}
 
+    @Override
+    public void onCreate(Bundle savedInstanceState)  {
+
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(false);
     }
 
     @Override
@@ -20,10 +25,15 @@ public class Patient_Help_Frag extends Fragment  {
 
         View view = inflater.inflate(R.layout.fragment_patient__help_, container, false);
 
-        ActionBar actionBar = getActivity().getActionBar();
-        actionBar.setTitle("Help");
-
+        initialSetup();
 
         return view;
+    }
+
+    private void initialSetup()  {
+
+        ActionBar actionBar = getActivity().getActionBar();
+        actionBar.setTitle("Help");
+        setHasOptionsMenu(false);
     }
 }

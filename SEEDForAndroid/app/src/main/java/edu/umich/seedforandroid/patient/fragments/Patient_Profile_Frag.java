@@ -11,8 +11,13 @@ import edu.umich.seedforandroid.R;
 
 public class Patient_Profile_Frag extends Fragment  {
 
-    public Patient_Profile_Frag() {
+    public Patient_Profile_Frag()  {}
 
+    @Override
+    public void onCreate(Bundle savedInstanceState)  {
+
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(false);
     }
 
     @Override
@@ -20,9 +25,25 @@ public class Patient_Profile_Frag extends Fragment  {
 
         View view = inflater.inflate(R.layout.fragment_patient__profile_, container, false);
 
-        ActionBar actionBar = getActivity().getActionBar();
-        actionBar.setTitle("Profile");
+        initialSetup();
 
         return view;
+    }
+
+    /*
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)  {
+
+        super.onCreateOptionsMenu(menu, inflater);
+
+        menu.findItem(R.id.action_graph_options).setVisible(false).setEnabled(false);
+        menu.findItem(R.id.action_refresh).setVisible(false).setEnabled(false);
+    }
+    */
+    private void initialSetup()  {
+
+        ActionBar actionBar = getActivity().getActionBar();
+        actionBar.setTitle("Profile");
+        setHasOptionsMenu(false);
     }
 }
