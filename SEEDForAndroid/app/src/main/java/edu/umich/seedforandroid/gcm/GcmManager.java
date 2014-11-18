@@ -75,14 +75,17 @@ public class GcmManager {
     public String getRegistrationId() {
 
         SharedPrefsUtil prefsUtil = new SharedPrefsUtil(mContext);
+        return prefsUtil.getRegistrationId("");
+    }
 
-        String registrationId = prefsUtil.getRegistrationId("");
+    public void clearRegistrationId() {
 
-        if (registrationId.isEmpty()) {
 
-            Log.i(TAG, "Registration not found.");
-            return "";
-        }
+    }
+
+    public boolean isRegistrationValid() {
+
+        SharedPrefsUtil prefsUtil = new SharedPrefsUtil(mContext);
 
         // Check if app was updated; if so, it must clear the registration ID
         // since the existing regID is not guaranteed to work with the new
@@ -93,10 +96,10 @@ public class GcmManager {
         if (registeredVersion != currentVersion) {
 
             Log.i(TAG, "App version changed.");
-            return "";
+            return false;
         }
 
-        return registrationId;
+        return prefsUtil.getRegistrationSuccessful(false);
     }
 
     public interface IUploadRegistrationToServerAction {
