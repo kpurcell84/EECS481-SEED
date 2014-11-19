@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.Toast;
 
 import com.appspot.umichseed.seed.Seed;
 import com.appspot.umichseed.seed.SeedRequest;
@@ -32,11 +32,9 @@ public class MainActivity extends Activity implements View.OnClickListener  {
     private static final int PICK_ACCOUNT_RESULT = 2;
 
     private Button bLogin;
-    private EditText etUsername;
-    private EditText etPassword;
-
     private GoogleAccountManager mAccountManager;
     private ApiThread mApiThread;
+    private SharedPrefsUtil sharedPrefsUtilInst;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
@@ -44,25 +42,43 @@ public class MainActivity extends Activity implements View.OnClickListener  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getActionBar().hide();
-
-        bLogin = (Button) findViewById(R.id.bLogin);
-        etUsername = (EditText) findViewById(R.id.etUsername);
-        etPassword = (EditText) findViewById(R.id.etPassword);
+        initialSetup();
 
         loadAccountManager();
         // note that we explicitly opt NOT to stop this during activity lifecycle events, so
         // it can live on long enough for the GCM upload to complete
 
-        /*
         mApiThread = new ApiThread();
 
         if (mAccountManager.tryLogIn()) {
 
-            registerGcm();
-            // todo: already logged in, get account type and navigate to the appropriate start page AFTER the registerGcm() line
+            // User already logged in, get account type and navigate to the appropriate start page
+            // Save the user type
+            if (sharedPrefsUtilInst.getUserAccountType("").equals(SharedPrefsUtil.ACCOUNT_TYPE_DOCTOR))  {
+
+                registerGcm();
+                Intent intent = new Intent(MainActivity.this, MainActivity_Doctor.class);
+                startActivity(intent);
+            }
+            else if (sharedPrefsUtilInst.getUserAccountType("").equals(SharedPrefsUtil.ACCOUNT_TYPE_PATIENT)) {
+
+                registerGcm();
+                Intent intent = new Intent(MainActivity.this, MainActivity_Patient.class);
+                startActivity(intent);
+            }
+            else  {
+
+                Toast.makeText(MainActivity.this, "Please log in", Toast.LENGTH_SHORT).show();
+            }
         }
-        */
+    }
+
+    private void initialSetup()  {
+
+        getActionBar().hide();
+
+        sharedPrefsUtilInst = new SharedPrefsUtil(MainActivity.this);
+        bLogin = (Button) findViewById(R.id.bLogin);
         bLogin.setOnClickListener(this);
     }
 
@@ -71,18 +87,7 @@ public class MainActivity extends Activity implements View.OnClickListener  {
 
         if (v.getId() == R.id.bLogin)  {
 
-            if (etUsername.getText().toString().contentEquals("doctor"))  {
-
-                Intent intent = new Intent(MainActivity.this, MainActivity_Doctor.class);
-                startActivity(intent);
-            }
-            else  {
-
-                Intent intent = new Intent(MainActivity.this, MainActivity_Patient.class);
-                startActivity(intent);
-            }
-
-            //login();
+            login();
         }
     }
 
@@ -123,7 +128,7 @@ public class MainActivity extends Activity implements View.OnClickListener  {
                 @Override
                 public void onApiResult(Object result) {
 
-                    if (result != null && result instanceof SeedApiMessagesUserCheckResponse) {
+                    if (result != null && result instanceof SeedApiMessagesUserCheckResponse)  {
 
                         String type = ((SeedApiMessagesUserCheckResponse)result).getUserType();
 
@@ -133,11 +138,32 @@ public class MainActivity extends Activity implements View.OnClickListener  {
                             mApiThread.stop();
                         }
 
-                        // todo: save user type, navigate to proper experience
+                        // Save user type, navigate to proper experience - Patient, Doctor, None
+                        if (type.equals(SharedPrefsUtil.ACCOUNT_TYPE_DOCTOR) ||
+                            type.equals(SharedPrefsUtil.ACCOUNT_TYPE_PATIENT))  {
+
+                            // Save the user type
+                            sharedPrefsUtilInst.setUserAccountType(type);
+
+                            if (type.equals(SharedPrefsUtil.ACCOUNT_TYPE_DOCTOR))  {
+
+                                Intent intent = new Intent(MainActivity.this, MainActivity_Doctor.class);
+                                startActivity(intent);
+                            }
+                            else  {
+
+                                Intent intent = new Intent(MainActivity.this, MainActivity_Patient.class);
+                                startActivity(intent);
+                            }
+                        }
+                        else  {
+
+                            Toast.makeText(MainActivity.this, "You are not registered in our system yet. Please contact your doctor", Toast.LENGTH_LONG).show();
+                        }
                     }
                     else {
 
-                        Log.e(TAG, "FATAL ERROR: Could not validate the user");
+                        Log.e(TAG, "FATAL ERROR: Could not validate the user. An Unknown API error occurred");
                         //todo: logic for handling login failure here
                     }
                 }
@@ -145,14 +171,14 @@ public class MainActivity extends Activity implements View.OnClickListener  {
                 @Override
                 public void onApiError(Throwable error) {
 
-                    Log.e(TAG, "FATAL ERROR: Could not validate the user");
+                    Log.e(TAG, "FATAL ERROR: Could not validate the user. An API Error occurred:\n" + error.getMessage());
                     //todo: logic for handling login failure here
                 }
             });
         }
         catch (IOException e) {
 
-            Log.e(TAG, "FATAL ERROR: Could not validate the user");
+            Log.e(TAG, "FATAL ERROR: Could not validate the user. The API could not be initialized");
             //todo: logic for handling login failure here
         }
     }
@@ -207,7 +233,7 @@ public class MainActivity extends Activity implements View.OnClickListener  {
                             }
                         });
                     }
-                    catch (IOException e) {
+                    catch (IOException e)  {
 
                         Log.w(TAG, "Error while uploading token to server");
                         onTokenUploadAttemptComplete(false);
@@ -220,7 +246,7 @@ public class MainActivity extends Activity implements View.OnClickListener  {
         else return false;
     }
 
-    private void onTokenUploadAttemptComplete(boolean success) {
+    private void onTokenUploadAttemptComplete(boolean success)  {
 
         new SharedPrefsUtil(MainActivity.this).setRegistrationSuccessful(success);
         mApiThread.stop();
@@ -231,11 +257,11 @@ public class MainActivity extends Activity implements View.OnClickListener  {
 
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch(requestCode) {
+        switch(requestCode)  {
 
             case PICK_ACCOUNT_RESULT:
 
-                if (data != null && data.getExtras() != null) {
+                if (data != null && data.getExtras() != null)  {
 
                     String accountName = data.getExtras().getString(AccountManager.KEY_ACCOUNT_NAME);
 
@@ -250,7 +276,6 @@ public class MainActivity extends Activity implements View.OnClickListener  {
                         // todo user didn't choose an account, so they didn't log in.
                     }
                 }
-
                 break;
         }
     }

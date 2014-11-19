@@ -8,6 +8,10 @@ import android.content.SharedPreferences;
  */
 public class SharedPrefsUtil {
 
+    public static final String ACCOUNT_TYPE_DOCTOR = "Doctor";
+    public static final String ACCOUNT_TYPE_PATIENT = "Patient";
+    public static final String ACCOUNT_TYPE_NONE = "None";
+
     private static final String SHARED_PREFS_FILENAME = "seed_shared_prefs";
     private static final String PROPERTY_CHOSEN_ACCOUNT = "chosen_account";
     private static final String PROPERTY_REG_ID = "registration_id";
@@ -90,9 +94,19 @@ public class SharedPrefsUtil {
         removeProperty(PROPERTY_APP_VERSION);
     }
 
-    public void setUserAccountType(String type)  {
+    public boolean setUserAccountType(String type)  {
 
-        setProperty(PROPERTY_USER_ACCOUNT_TYPE, type);
+        if (type.equals(ACCOUNT_TYPE_DOCTOR) ||
+            type.equals(ACCOUNT_TYPE_PATIENT) ||
+            type.equals(ACCOUNT_TYPE_NONE))  {
+
+            setProperty(PROPERTY_USER_ACCOUNT_TYPE, type);
+            return true;
+        }
+        else  {
+
+            return false;
+        }
     }
 
     public String getUserAccountType(String defValue)  {

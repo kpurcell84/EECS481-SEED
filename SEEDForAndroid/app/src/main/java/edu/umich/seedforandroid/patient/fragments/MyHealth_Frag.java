@@ -47,7 +47,7 @@ public class MyHealth_Frag extends Fragment  {
 
         // Set the indicator color
         TabWidget widget = mTabHost.getTabWidget();
-        for (int i = 0; i < widget.getChildCount(); i++) {
+        for (int i = 0; i < widget.getChildCount(); i++)  {
 
             View v = widget.getChildAt(i);
             v.setBackgroundResource(R.drawable.tab_indicator_custom);

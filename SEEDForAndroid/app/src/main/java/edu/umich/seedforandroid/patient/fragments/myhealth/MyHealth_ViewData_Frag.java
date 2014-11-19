@@ -167,8 +167,9 @@ public class MyHealth_ViewData_Frag extends Fragment  {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)  {
 
-        super.onCreateOptionsMenu(menu, inflater);
+        this.mMenu = menu;
         inflater.inflate(R.menu.main, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
