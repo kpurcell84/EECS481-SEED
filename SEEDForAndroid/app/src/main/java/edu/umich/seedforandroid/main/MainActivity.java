@@ -113,7 +113,10 @@ public class MainActivity extends Activity implements View.OnClickListener  {
         try {
 
             Seed api = SeedApi.getAuthenticatedApi(mAccountManager.getCredential());
-            SeedRequest checkUser = api.userCheck().get(new SeedApiMessagesUserCheckRequest().setEmail(mAccountManager.getAccountName()));
+            SeedRequest checkUser = api.userCheck().get(
+                    new SeedApiMessagesUserCheckRequest()
+                            .setEmail(mAccountManager.getAccountName())
+            );
 
             mApiThread.enqueueRequest(checkUser, new ApiThread.ApiResultAction() {
 
@@ -125,7 +128,6 @@ public class MainActivity extends Activity implements View.OnClickListener  {
                         String type = ((SeedApiMessagesUserCheckResponse)result).getUserType();
 
                         if (!registerGcm()) {
-
                             // registerGcm won't need this thread, so we can
                             // stop it now.
                             mApiThread.stop();
