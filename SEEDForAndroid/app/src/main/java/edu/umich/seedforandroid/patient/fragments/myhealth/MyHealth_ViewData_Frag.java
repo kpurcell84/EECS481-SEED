@@ -1,9 +1,12 @@
 package edu.umich.seedforandroid.patient.fragments.myhealth;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,9 +15,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 
 import com.androidplot.ui.XLayoutStyle;
 import com.androidplot.ui.YLayoutStyle;
@@ -25,11 +25,9 @@ import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.XYStepMode;
 import com.appspot.umichseed.seed.Seed;
 import com.appspot.umichseed.seed.SeedRequest;
-import com.appspot.umichseed.seed.model.SeedApiMessagesPQualDataListResponse;
 import com.appspot.umichseed.seed.model.SeedApiMessagesPQuantDataListResponse;
 import com.appspot.umichseed.seed.model.SeedApiMessagesPQuantDataRequest;
 import com.appspot.umichseed.seed.model.SeedApiMessagesPQuantDataResponse;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.util.DateTime;
 
 import java.io.IOException;
@@ -40,8 +38,6 @@ import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 
 import edu.umich.seedforandroid.R;
 import edu.umich.seedforandroid.account.GoogleAccountManager;
@@ -54,11 +50,19 @@ public class MyHealth_ViewData_Frag extends Fragment  {
     private static final String TAG = MyHealth_ViewData_Frag.class.getSimpleName();
 
     private Utils mUtilsInst;
+    private Menu mMenu;
     private XYPlot mHeartRatePlot, mSkinTempPlot, mPerspirationPlot,
                    mBloodPressurePlot, mBodyTempPlot, mActivityTypePlot;
     private XYSeries mHeartRateSeries, mSkinTempSeries, mPerspirationSeries,
                      mBloodPressureSeries, mBodyTempSeries, mActivityTypeSeries;
     private ApiThread mApiThread;
+    private CharSequence[] mGraphDialogItems = {" Heart Rate ",
+                                                " Activities Engaged ",
+                                                " Perspiration ",
+                                                " Skin Temperature ",
+                                                " Body Temperature ",
+                                                " Blood Pressure"};
+    private ArrayList<Integer> mSeletedGraphDialogItems;
 
     public MyHealth_ViewData_Frag()  {}
 
@@ -77,19 +81,87 @@ public class MyHealth_ViewData_Frag extends Fragment  {
 
         if (id == R.id.action_refresh)  { // rotate the refresh icon
 
-            LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            ImageView iv = (ImageView)inflater.inflate(R.layout.action_refresh_image, null);
-            Animation rotation = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_refresh_icon);
-            rotation.setRepeatCount(Animation.INFINITE);
-            iv.startAnimation(rotation);
-            item.setActionView(iv);
+            startProgressBar();
             return true;
         }
         else if (id == R.id.action_graph_options)  {
 
-
+            showGraphFilterDiaglog();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void startProgressBar()  {
+
+        if (mMenu != null)  {
+
+            final MenuItem refreshItem = mMenu.findItem(R.id.action_refresh);
+
+            if (refreshItem != null)  {
+
+                refreshItem.setActionView(R.layout.action_refresh_image);
+            }
+        }
+    }
+
+    public void stopProgressBar()  {
+
+        if (mMenu != null)  {
+
+            final MenuItem refreshItem = mMenu.findItem(R.id.action_refresh);
+
+            if (refreshItem != null)  {
+
+                refreshItem.setActionView(null);
+            }
+        }
+    }
+
+    private void showGraphFilterDiaglog()  {
+
+        // arraylist to keep the selected items
+        mSeletedGraphDialogItems = new ArrayList();
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+        View convertView = (View) getActivity().getLayoutInflater().inflate(R.layout.patient_alert_dialog_title, null);
+        alertDialog.setCustomTitle(convertView);
+        alertDialog.setMultiChoiceItems(mGraphDialogItems, null, new DialogInterface.OnMultiChoiceClickListener()  {
+            @Override
+            public void onClick(DialogInterface dialog, int indexSelected, boolean isChecked)  {
+
+                if (isChecked == true)  {
+
+                    mSeletedGraphDialogItems.add(indexSelected);
+                }
+                else if (mSeletedGraphDialogItems.contains(indexSelected))  {
+
+                    mSeletedGraphDialogItems.remove(Integer.valueOf(indexSelected));
+                }
+            }
+        })
+        .setNegativeButton("Cancel", new DialogInterface.OnClickListener()  {
+
+            @Override
+            public void onClick(DialogInterface dialog, int id) {}
+        })
+        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int id)  {
+
+                for (int i = 0; i < mSeletedGraphDialogItems.size(); ++i)  {
+
+                    int ind = (int) mSeletedGraphDialogItems.get(i);
+                    Log.i("INDEX : ".concat(String.valueOf(i)), String.valueOf(ind));
+                }
+            }
+        });
+
+        // Set the line color
+        Dialog d = alertDialog.show();
+        int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+        View divider = d.findViewById(dividerId);
+        divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
     }
 
     @Override
