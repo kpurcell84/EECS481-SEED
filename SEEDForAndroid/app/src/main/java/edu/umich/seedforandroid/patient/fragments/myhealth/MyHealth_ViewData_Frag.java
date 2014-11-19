@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,24 +23,42 @@ import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.XYStepMode;
+import com.appspot.umichseed.seed.Seed;
+import com.appspot.umichseed.seed.SeedRequest;
+import com.appspot.umichseed.seed.model.SeedApiMessagesPQualDataListResponse;
+import com.appspot.umichseed.seed.model.SeedApiMessagesPQuantDataListResponse;
+import com.appspot.umichseed.seed.model.SeedApiMessagesPQuantDataRequest;
+import com.appspot.umichseed.seed.model.SeedApiMessagesPQuantDataResponse;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.util.DateTime;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.FieldPosition;
 import java.text.Format;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import edu.umich.seedforandroid.R;
+import edu.umich.seedforandroid.account.GoogleAccountManager;
+import edu.umich.seedforandroid.api.ApiThread;
+import edu.umich.seedforandroid.api.SeedApi;
 import edu.umich.seedforandroid.util.Utils;
 
 public class MyHealth_ViewData_Frag extends Fragment  {
+
+    private static final String TAG = MyHealth_ViewData_Frag.class.getSimpleName();
 
     private Utils mUtilsInst;
     private XYPlot mHeartRatePlot, mSkinTempPlot, mPerspirationPlot,
                    mBloodPressurePlot, mBodyTempPlot, mActivityTypePlot;
     private XYSeries mHeartRateSeries, mSkinTempSeries, mPerspirationSeries,
                      mBloodPressureSeries, mBodyTempSeries, mActivityTypeSeries;
+    private ApiThread mApiThread;
 
     public MyHealth_ViewData_Frag()  {}
 
@@ -48,6 +67,7 @@ public class MyHealth_ViewData_Frag extends Fragment  {
 
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        mApiThread = new ApiThread();
     }
 
     @Override
@@ -117,8 +137,126 @@ public class MyHealth_ViewData_Frag extends Fragment  {
         view = inflater.inflate(R.layout.fragment_my_health__view_data_, container, false);
 
         setupGraphs(view);
+
         return view;
     }
+
+    private void fetchDataFromServer(DateTime begin, DateTime end) {
+
+        GoogleAccountManager manager = new GoogleAccountManager(this.getActivity());
+
+        if (!manager.tryLogIn()) {
+
+            Log.e(TAG, "FATAL ERROR: Somehow, user is on this page without being logged in");
+            //todo: handle the probably impossible case of the user reaching this page without being
+            //logged in (perhaps possible if they resume to here after clearing app cache)
+        }
+
+        try {
+            Seed api = SeedApi.getAuthenticatedApi(manager.getCredential());
+            SeedRequest getDataRequest = api.pQuantData().get(
+
+                    //todo: figure out how to get datetimes in here
+                    new SeedApiMessagesPQuantDataRequest()
+                            .setEmail(manager.getAccountName())
+                            .setStartTime(begin)
+                            .setEndTime(end)
+            );
+
+            mApiThread.enqueueRequest(getDataRequest, new ApiThread.ApiResultAction() {
+
+                @Override
+                public Object doInBackground(Object result) {
+
+                    if (result != null && result instanceof SeedApiMessagesPQuantDataListResponse) {
+
+                        SeedApiMessagesPQuantDataListResponse castedResult =
+                                (SeedApiMessagesPQuantDataListResponse) result;
+
+                        ViewDataGraphWrapper heartRateData = new ViewDataGraphWrapper(ViewDataGraphWrapper.HEART_RATE);
+                        ViewDataGraphWrapper skinTempData = new ViewDataGraphWrapper(ViewDataGraphWrapper.SKIN_TEMP);
+                        ViewDataGraphWrapper gsrData = new ViewDataGraphWrapper(ViewDataGraphWrapper.GSR);
+                        ViewDataGraphWrapper bloodPressureData = new ViewDataGraphWrapper(ViewDataGraphWrapper.BLOOD_PRESSURE);
+                        ViewDataGraphWrapper bodyTempData = new ViewDataGraphWrapper(ViewDataGraphWrapper.BODY_TEMP);
+                        ViewDataGraphWrapper activityData = new ViewDataGraphWrapper(ViewDataGraphWrapper.ACTIVITY);
+
+                        for (SeedApiMessagesPQuantDataResponse r : castedResult.getPdataList()) {
+
+                            Long epoch = r.getTimeTaken().getValue();
+
+                            if (r.getHeartRate() != null) {
+
+                                Double data = r.getHeartRate().doubleValue();
+                                heartRateData.getHealthData().add(data);
+                            }
+                            if (r.getSkinTemp() != null) {
+
+                                skinTempData.getHealthData().add(r.getSkinTemp());
+                            }
+                            if (r.getGsr() != null) {
+
+                                gsrData.getHealthData().add(r.getGsr());
+                            }
+                            if (r.getBloodPressure() != null) {
+
+                                //todo handle blood pressure (it's a string, we need a Double)
+                            }
+                            if (r.getBodyTemp() != null) {
+
+                                bodyTempData.getHealthData().add(r.getBodyTemp());
+                            }
+                            if (r.getActivityType() != null) {
+
+                                Double activityLevel
+                                        = ViewDataGraphWrapper.activityTypeToValue(r.getActivityType());
+
+                                activityData.getHealthData().add(activityLevel);
+                            }
+
+                            heartRateData.getEpoch().add(epoch);
+                            skinTempData.getEpoch().add(epoch);
+                            gsrData.getEpoch().add(epoch);
+                            bloodPressureData.getEpoch().add(epoch);
+                            bodyTempData.getEpoch().add(epoch);
+                            activityData.getEpoch().add(epoch);
+                        }
+
+                        populateDataIntoGraphs(heartRateData);
+                        populateDataIntoGraphs(skinTempData);
+                        populateDataIntoGraphs(gsrData);
+                        populateDataIntoGraphs(bloodPressureData);
+                        populateDataIntoGraphs(bodyTempData);
+                        populateDataIntoGraphs(activityData);
+
+                        return true;
+                    }
+                    else return false;
+                }
+
+                @Override
+                public void onApiResult(Object result) {
+
+                    if (result != null && result instanceof Boolean) {
+
+                        Boolean success = (Boolean) result;
+
+                        if (success) {
+
+                            reDrawGraphs();
+                        }
+                    }
+                    //todo the data failed to load from the API, handle this in the UI here
+                }
+
+                @Override
+                public void onApiError(Throwable error) {
+                    //todo the data failed to load from the API, handle this in the UI here
+                }
+            });
+        }
+        catch (IOException e) { Log.e(TAG, "Error occurred while fetching patient data");
+    }
+}
 
     private void populateDataIntoGraphs(ViewDataGraphWrapper data)  {
 
@@ -147,8 +285,9 @@ public class MyHealth_ViewData_Frag extends Fragment  {
             mSkinTempPlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
             mSkinTempPlot.addSeries(mSkinTempSeries, stepFormatter);
         }
-        else if (data.getDataType() == ViewDataGraphWrapper.PERSPIRATION)  {
+        else if (data.getDataType() == ViewDataGraphWrapper.GSR)  {
 
+            // todo this is GSR now
             mPerspirationSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Perspiration");
 
             mPerspirationPlot.setDomainLabel(day);
@@ -263,5 +402,8 @@ public class MyHealth_ViewData_Frag extends Fragment  {
         setupGraphSettings(mBloodPressurePlot);
         setupGraphSettings(mBodyTempPlot);
         setupGraphSettings(mActivityTypePlot);
+
+        //todo: figure out base datetimes here
+        fetchDataFromServer(null, null);
     }
 }
