@@ -231,7 +231,7 @@ public class ApiThread {
         }
     }
 
-    private class ApiTask {
+    private class ApiTask  {
 
         private final SeedRequest mmRequest;
         private final ApiResultAction mmAction;
