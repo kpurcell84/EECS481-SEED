@@ -70,8 +70,6 @@ public class SharedPrefsUtil {
         return mPrefs.getBoolean(PROPERTY_REG_SUCCESS, defValue);
     }
 
-
-
     public void setAppVersion(int version) {
 
         setProperty(PROPERTY_APP_VERSION, version);

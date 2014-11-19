@@ -153,10 +153,10 @@ public class MyHealth_ViewData_Frag extends Fragment  {
         }
 
         try {
+
             Seed api = SeedApi.getAuthenticatedApi(manager.getCredential());
             SeedRequest getDataRequest = api.pQuantData().get(
 
-                    //todo: figure out how to get datetimes in here
                     new SeedApiMessagesPQuantDataRequest()
                             .setEmail(manager.getAccountName())
                             .setStartTime(begin)
@@ -271,63 +271,77 @@ public class MyHealth_ViewData_Frag extends Fragment  {
 
         if (data.getDataType() == ViewDataGraphWrapper.HEART_RATE)  {
 
-            mHeartRateSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Heart Rate");
+            synchronized (MyHealth_ViewData_Frag.this) {
 
-            mHeartRatePlot.setDomainLabel(day);
-            mHeartRatePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
-            mHeartRatePlot.addSeries(mHeartRateSeries, stepFormatter);
+                mHeartRateSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Heart Rate");
+                mHeartRatePlot.setDomainLabel(day);
+                mHeartRatePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
+                mHeartRatePlot.addSeries(mHeartRateSeries, stepFormatter);
+            }
         }
         else if (data.getDataType() == ViewDataGraphWrapper.SKIN_TEMP)  {
 
-            mSkinTempSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Skin Temperature");
+            synchronized (MyHealth_ViewData_Frag.this) {
 
-            mSkinTempPlot.setDomainLabel(day);
-            mSkinTempPlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
-            mSkinTempPlot.addSeries(mSkinTempSeries, stepFormatter);
+                mSkinTempSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Skin Temperature");
+                mSkinTempPlot.setDomainLabel(day);
+                mSkinTempPlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
+                mSkinTempPlot.addSeries(mSkinTempSeries, stepFormatter);
+            }
         }
         else if (data.getDataType() == ViewDataGraphWrapper.GSR)  {
 
-            // todo this is GSR now
-            mPerspirationSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Perspiration");
-
-            mPerspirationPlot.setDomainLabel(day);
-            mPerspirationPlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
-            mPerspirationPlot.addSeries(mPerspirationSeries, stepFormatter);
+            synchronized (MyHealth_ViewData_Frag.this) {
+                // todo this is GSR now
+                mPerspirationSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Perspiration");
+                mPerspirationPlot.setDomainLabel(day);
+                mPerspirationPlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
+                mPerspirationPlot.addSeries(mPerspirationSeries, stepFormatter);
+            }
         }
         else if (data.getDataType() == ViewDataGraphWrapper.BLOOD_PRESSURE)  {
 
-            mBloodPressureSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Blood Pressure");
+            synchronized (MyHealth_ViewData_Frag.this) {
 
-            mBloodPressurePlot.setDomainLabel(day);
-            mBloodPressurePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
-            mBloodPressurePlot.addSeries(mBloodPressureSeries, stepFormatter);
+                mBloodPressureSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Blood Pressure");
+                mBloodPressurePlot.setDomainLabel(day);
+                mBloodPressurePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
+                mBloodPressurePlot.addSeries(mBloodPressureSeries, stepFormatter);
+            }
         }
         else if (data.getDataType() == ViewDataGraphWrapper.BODY_TEMP)  {
 
-            mBodyTempSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Body Temperature");
+            synchronized (MyHealth_ViewData_Frag.this) {
 
-            mBodyTempPlot.setDomainLabel(day);
-            mBodyTempPlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
-            mBodyTempPlot.addSeries(mBodyTempSeries, stepFormatter);
+                mBodyTempSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Body Temperature");
+                mBodyTempPlot.setDomainLabel(day);
+                mBodyTempPlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
+                mBodyTempPlot.addSeries(mBodyTempSeries, stepFormatter);
+            }
         }
         else if (data.getDataType() == ViewDataGraphWrapper.ACTIVITY)  {
 
-            mActivityTypeSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Activity");
+            synchronized (MyHealth_ViewData_Frag.this) {
 
-            mActivityTypePlot.setDomainLabel(day);
-            mActivityTypePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
-            mActivityTypePlot.addSeries(mActivityTypeSeries, stepFormatter);
+                mActivityTypeSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Activity");
+                mActivityTypePlot.setDomainLabel(day);
+                mActivityTypePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
+                mActivityTypePlot.addSeries(mActivityTypeSeries, stepFormatter);
+            }
         }
     }
 
     private void reDrawGraphs()  {
 
-        mHeartRatePlot.redraw();
-        mSkinTempPlot.redraw();
-        mPerspirationPlot.redraw();
-        mBloodPressurePlot.redraw();
-        mBodyTempPlot.redraw();
-        mActivityTypePlot.redraw();
+        synchronized (MyHealth_ViewData_Frag.this) {
+
+            mHeartRatePlot.redraw();
+            mSkinTempPlot.redraw();
+            mPerspirationPlot.redraw();
+            mBloodPressurePlot.redraw();
+            mBodyTempPlot.redraw();
+            mActivityTypePlot.redraw();
+        }
     }
 
     private double findDomainStep(ViewDataGraphWrapper ar)  {
@@ -389,19 +403,22 @@ public class MyHealth_ViewData_Frag extends Fragment  {
 
     private void setupGraphs(View view)  {
 
-        mHeartRatePlot = (XYPlot) view.findViewById(R.id.gHeartRate_Patient);
-        mSkinTempPlot = (XYPlot) view.findViewById(R.id.gSkinTemp_Patient);
-        mPerspirationPlot = (XYPlot) view.findViewById(R.id.gPerspiration_Patient);
-        mBloodPressurePlot = (XYPlot) view.findViewById(R.id.gBloodPressure_Patient);
-        mBodyTempPlot = (XYPlot) view.findViewById(R.id.gBodyTemp_Patient);
-        mActivityTypePlot = (XYPlot) view.findViewById(R.id.gActivity_Patient);
+        synchronized (MyHealth_ViewData_Frag.this) {
 
-        setupGraphSettings(mHeartRatePlot);
-        setupGraphSettings(mSkinTempPlot);
-        setupGraphSettings(mPerspirationPlot);
-        setupGraphSettings(mBloodPressurePlot);
-        setupGraphSettings(mBodyTempPlot);
-        setupGraphSettings(mActivityTypePlot);
+            mHeartRatePlot = (XYPlot) view.findViewById(R.id.gHeartRate_Patient);
+            mSkinTempPlot = (XYPlot) view.findViewById(R.id.gSkinTemp_Patient);
+            mPerspirationPlot = (XYPlot) view.findViewById(R.id.gPerspiration_Patient);
+            mBloodPressurePlot = (XYPlot) view.findViewById(R.id.gBloodPressure_Patient);
+            mBodyTempPlot = (XYPlot) view.findViewById(R.id.gBodyTemp_Patient);
+            mActivityTypePlot = (XYPlot) view.findViewById(R.id.gActivity_Patient);
+
+            setupGraphSettings(mHeartRatePlot);
+            setupGraphSettings(mSkinTempPlot);
+            setupGraphSettings(mPerspirationPlot);
+            setupGraphSettings(mBloodPressurePlot);
+            setupGraphSettings(mBodyTempPlot);
+            setupGraphSettings(mActivityTypePlot);
+        }
 
         //todo: figure out base datetimes here
         fetchDataFromServer(null, null);
