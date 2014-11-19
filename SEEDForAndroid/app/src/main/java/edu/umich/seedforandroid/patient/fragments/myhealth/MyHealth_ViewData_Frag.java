@@ -1,9 +1,12 @@
 package edu.umich.seedforandroid.patient.fragments.myhealth;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,8 +15,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.androidplot.ui.XLayoutStyle;
@@ -23,16 +24,7 @@ import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.XYStepMode;
-import com.appspot.umichseed.seed.Seed;
-import com.appspot.umichseed.seed.SeedRequest;
-import com.appspot.umichseed.seed.model.SeedApiMessagesPQualDataListResponse;
-import com.appspot.umichseed.seed.model.SeedApiMessagesPQuantDataListResponse;
-import com.appspot.umichseed.seed.model.SeedApiMessagesPQuantDataRequest;
-import com.appspot.umichseed.seed.model.SeedApiMessagesPQuantDataResponse;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.util.DateTime;
 
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.FieldPosition;
 import java.text.Format;
@@ -40,25 +32,26 @@ import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 
 import edu.umich.seedforandroid.R;
-import edu.umich.seedforandroid.account.GoogleAccountManager;
-import edu.umich.seedforandroid.api.ApiThread;
-import edu.umich.seedforandroid.api.SeedApi;
 import edu.umich.seedforandroid.util.Utils;
 
 public class MyHealth_ViewData_Frag extends Fragment  {
 
-    private static final String TAG = MyHealth_ViewData_Frag.class.getSimpleName();
-
+    private ImageView mRefreshIv;
     private Utils mUtilsInst;
+    private Menu mMenu;
+    private CharSequence[] mGraphDialogItems = {" Heart Rate ",
+                                                " Activities Engaged ",
+                                                " Perspiration ",
+                                                " Skin Temperature ",
+                                                " Body Temperature ",
+                                                " Blood Pressure"};
+    private ArrayList<Integer> mSeletedGraphDialogItems;
     private XYPlot mHeartRatePlot, mSkinTempPlot, mPerspirationPlot,
                    mBloodPressurePlot, mBodyTempPlot, mActivityTypePlot;
     private XYSeries mHeartRateSeries, mSkinTempSeries, mPerspirationSeries,
                      mBloodPressureSeries, mBodyTempSeries, mActivityTypeSeries;
-    private ApiThread mApiThread;
 
     public MyHealth_ViewData_Frag()  {}
 
@@ -67,36 +60,66 @@ public class MyHealth_ViewData_Frag extends Fragment  {
 
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        mApiThread = new ApiThread();
+    }
+
+    @Override
+    public void onPause()  {
+
+        super.onPause();
+        stopProgressBar();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)  {
 
+        final MenuItem itemThis = item;
         int id = item.getItemId();
 
         if (id == R.id.action_refresh)  { // rotate the refresh icon
 
-            LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            ImageView iv = (ImageView)inflater.inflate(R.layout.action_refresh_image, null);
-            Animation rotation = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_refresh_icon);
-            rotation.setRepeatCount(Animation.INFINITE);
-            iv.startAnimation(rotation);
-            item.setActionView(iv);
+            startProgressBar();
             return true;
         }
         else if (id == R.id.action_graph_options)  {
 
-
+            showGraphFilterDiaglog();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void startProgressBar()  {
+
+        if (mMenu != null)  {
+
+            final MenuItem refreshItem = mMenu.findItem(R.id.action_refresh);
+
+            if (refreshItem != null)  {
+
+                refreshItem.setActionView(R.layout.action_refresh_image);
+            }
+        }
+    }
+
+    public void stopProgressBar()  {
+
+        if (mMenu != null)  {
+
+            final MenuItem refreshItem = mMenu.findItem(R.id.action_refresh);
+
+            if (refreshItem != null)  {
+
+                refreshItem.setActionView(null);
+            }
+        }
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)  {
 
-        super.onCreateOptionsMenu(menu, inflater);
+        this.mMenu = menu;
         inflater.inflate(R.menu.main, menu);
+        //stopRefreshButtonAnimation();
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -118,10 +141,59 @@ public class MyHealth_ViewData_Frag extends Fragment  {
         return v;
     }
 
+    private void showGraphFilterDiaglog()  {
+
+        // arraylist to keep the selected items
+        mSeletedGraphDialogItems = new ArrayList();
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+        View convertView = (View) getActivity().getLayoutInflater().inflate(R.layout.patient_alert_dialog_title, null);
+        alertDialog.setCustomTitle(convertView);
+        alertDialog.setMultiChoiceItems(mGraphDialogItems, null, new DialogInterface.OnMultiChoiceClickListener()  {
+            @Override
+            public void onClick(DialogInterface dialog, int indexSelected, boolean isChecked)  {
+
+                if (isChecked == true)  {
+
+                    mSeletedGraphDialogItems.add(indexSelected);
+                }
+                else if (mSeletedGraphDialogItems.contains(indexSelected))  {
+
+                    mSeletedGraphDialogItems.remove(Integer.valueOf(indexSelected));
+                }
+            }
+        })
+        .setNegativeButton("Cancel", new DialogInterface.OnClickListener()  {
+
+            @Override
+            public void onClick(DialogInterface dialog, int id) {}
+        })
+        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int id)  {
+
+                for (int i = 0; i < mSeletedGraphDialogItems.size(); ++i)  {
+
+                    int ind = (int) mSeletedGraphDialogItems.get(i);
+                    Log.i("INDEX : ".concat(String.valueOf(i)), String.valueOf(ind));
+                }
+            }
+        });
+
+        // Set the line color
+        Dialog d = alertDialog.show();
+        int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+        View divider = d.findViewById(dividerId);
+        divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
+    }
+
     private void initialSetup()  {
 
+        // Instantiate new objects
         mUtilsInst = new Utils();
 
+        // ActionBar
         ActionBar actionBar = getActivity().getActionBar();
         actionBar.setTitle("View My Health Data");
     }
@@ -135,128 +207,9 @@ public class MyHealth_ViewData_Frag extends Fragment  {
     private View fetchPatientHealthData(View view, LayoutInflater inflater, ViewGroup container)  {
 
         view = inflater.inflate(R.layout.fragment_my_health__view_data_, container, false);
-
         setupGraphs(view);
-
         return view;
     }
-
-    private void fetchDataFromServer(DateTime begin, DateTime end) {
-
-        GoogleAccountManager manager = new GoogleAccountManager(this.getActivity());
-
-        if (!manager.tryLogIn()) {
-
-            Log.e(TAG, "FATAL ERROR: Somehow, user is on this page without being logged in");
-            //todo: handle the probably impossible case of the user reaching this page without being
-            //logged in (perhaps possible if they resume to here after clearing app cache)
-        }
-
-        try {
-            Seed api = SeedApi.getAuthenticatedApi(manager.getCredential());
-            SeedRequest getDataRequest = api.pQuantData().get(
-
-                    //todo: figure out how to get datetimes in here
-                    new SeedApiMessagesPQuantDataRequest()
-                            .setEmail(manager.getAccountName())
-                            .setStartTime(begin)
-                            .setEndTime(end)
-            );
-
-            mApiThread.enqueueRequest(getDataRequest, new ApiThread.ApiResultAction() {
-
-                @Override
-                public Object doInBackground(Object result) {
-
-                    if (result != null && result instanceof SeedApiMessagesPQuantDataListResponse) {
-
-                        SeedApiMessagesPQuantDataListResponse castedResult =
-                                (SeedApiMessagesPQuantDataListResponse) result;
-
-                        ViewDataGraphWrapper heartRateData = new ViewDataGraphWrapper(ViewDataGraphWrapper.HEART_RATE);
-                        ViewDataGraphWrapper skinTempData = new ViewDataGraphWrapper(ViewDataGraphWrapper.SKIN_TEMP);
-                        ViewDataGraphWrapper gsrData = new ViewDataGraphWrapper(ViewDataGraphWrapper.GSR);
-                        ViewDataGraphWrapper bloodPressureData = new ViewDataGraphWrapper(ViewDataGraphWrapper.BLOOD_PRESSURE);
-                        ViewDataGraphWrapper bodyTempData = new ViewDataGraphWrapper(ViewDataGraphWrapper.BODY_TEMP);
-                        ViewDataGraphWrapper activityData = new ViewDataGraphWrapper(ViewDataGraphWrapper.ACTIVITY);
-
-                        for (SeedApiMessagesPQuantDataResponse r : castedResult.getPdataList()) {
-
-                            Long epoch = r.getTimeTaken().getValue();
-
-                            if (r.getHeartRate() != null) {
-
-                                Double data = r.getHeartRate().doubleValue();
-                                heartRateData.getHealthData().add(data);
-                            }
-                            if (r.getSkinTemp() != null) {
-
-                                skinTempData.getHealthData().add(r.getSkinTemp());
-                            }
-                            if (r.getGsr() != null) {
-
-                                gsrData.getHealthData().add(r.getGsr());
-                            }
-                            if (r.getBloodPressure() != null) {
-
-                                //todo handle blood pressure (it's a string, we need a Double)
-                            }
-                            if (r.getBodyTemp() != null) {
-
-                                bodyTempData.getHealthData().add(r.getBodyTemp());
-                            }
-                            if (r.getActivityType() != null) {
-
-                                Double activityLevel
-                                        = ViewDataGraphWrapper.activityTypeToValue(r.getActivityType());
-
-                                activityData.getHealthData().add(activityLevel);
-                            }
-
-                            heartRateData.getEpoch().add(epoch);
-                            skinTempData.getEpoch().add(epoch);
-                            gsrData.getEpoch().add(epoch);
-                            bloodPressureData.getEpoch().add(epoch);
-                            bodyTempData.getEpoch().add(epoch);
-                            activityData.getEpoch().add(epoch);
-                        }
-
-                        populateDataIntoGraphs(heartRateData);
-                        populateDataIntoGraphs(skinTempData);
-                        populateDataIntoGraphs(gsrData);
-                        populateDataIntoGraphs(bloodPressureData);
-                        populateDataIntoGraphs(bodyTempData);
-                        populateDataIntoGraphs(activityData);
-
-                        return true;
-                    }
-                    else return false;
-                }
-
-                @Override
-                public void onApiResult(Object result) {
-
-                    if (result != null && result instanceof Boolean) {
-
-                        Boolean success = (Boolean) result;
-
-                        if (success) {
-
-                            reDrawGraphs();
-                        }
-                    }
-                    //todo the data failed to load from the API, handle this in the UI here
-                }
-
-                @Override
-                public void onApiError(Throwable error) {
-                    //todo the data failed to load from the API, handle this in the UI here
-                }
-            });
-        }
-        catch (IOException e) { Log.e(TAG, "Error occurred while fetching patient data");
-    }
-}
 
     private void populateDataIntoGraphs(ViewDataGraphWrapper data)  {
 
@@ -285,9 +238,8 @@ public class MyHealth_ViewData_Frag extends Fragment  {
             mSkinTempPlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
             mSkinTempPlot.addSeries(mSkinTempSeries, stepFormatter);
         }
-        else if (data.getDataType() == ViewDataGraphWrapper.GSR)  {
+        else if (data.getDataType() == ViewDataGraphWrapper.PERSPIRATION)  {
 
-            // todo this is GSR now
             mPerspirationSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Perspiration");
 
             mPerspirationPlot.setDomainLabel(day);
@@ -402,8 +354,5 @@ public class MyHealth_ViewData_Frag extends Fragment  {
         setupGraphSettings(mBloodPressurePlot);
         setupGraphSettings(mBodyTempPlot);
         setupGraphSettings(mActivityTypePlot);
-
-        //todo: figure out base datetimes here
-        fetchDataFromServer(null, null);
     }
 }

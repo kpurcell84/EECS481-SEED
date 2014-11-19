@@ -20,7 +20,6 @@ import java.io.IOException;
 import edu.umich.seedforandroid.R;
 import edu.umich.seedforandroid.account.GoogleAccountManager;
 import edu.umich.seedforandroid.api.ApiThread;
-import edu.umich.seedforandroid.api.SampleApiActivity;
 import edu.umich.seedforandroid.api.SeedApi;
 import edu.umich.seedforandroid.doctor.MainActivity_Doctor;
 import edu.umich.seedforandroid.gcm.GcmManager;
@@ -54,6 +53,8 @@ public class MainActivity extends Activity implements View.OnClickListener  {
         loadAccountManager();
         // note that we explicitly opt NOT to stop this during activity lifecycle events, so
         // it can live on long enough for the GCM upload to complete
+
+        /*
         mApiThread = new ApiThread();
 
         if (mAccountManager.tryLogIn()) {
@@ -61,7 +62,7 @@ public class MainActivity extends Activity implements View.OnClickListener  {
             registerGcm();
             // todo: already logged in, get account type and navigate to the appropriate start page AFTER the registerGcm() line
         }
-
+        */
         bLogin.setOnClickListener(this);
     }
 
@@ -70,7 +71,6 @@ public class MainActivity extends Activity implements View.OnClickListener  {
 
         if (v.getId() == R.id.bLogin)  {
 
-            /*
             if (etUsername.getText().toString().contentEquals("doctor"))  {
 
                 Intent intent = new Intent(MainActivity.this, MainActivity_Doctor.class);
@@ -81,9 +81,8 @@ public class MainActivity extends Activity implements View.OnClickListener  {
                 Intent intent = new Intent(MainActivity.this, MainActivity_Patient.class);
                 startActivity(intent);
             }
-            */
 
-            login();
+            //login();
         }
     }
 

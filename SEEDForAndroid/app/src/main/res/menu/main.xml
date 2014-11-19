@@ -6,11 +6,11 @@
         android:id="@+id/action_refresh"
         android:showAsAction="always"
         android:title="@string/action_refresh"
-        android:icon="@drawable/ic_launcher"></item>
+        android:icon="@drawable/refresh_icon"></item>
 
     <item
         android:id="@+id/action_graph_options"
         android:showAsAction="always"
         android:title="@string/action_graphs_options"
-        android:icon="@drawable/myhealth_icon_inactive"></item>
+        android:icon="@drawable/graph_filter_icon"></item>
 </menu>

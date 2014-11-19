@@ -119,8 +119,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/relativelayout1"
                 android:layout_marginTop="@dimen/default_margin_top"
-                android:background="#F3F0EB"
-                android:visibility="gone">
+                android:background="#F3F0EB">
 
                 <TextView
                     android:id="@+id/tvActivityGraphTitle"

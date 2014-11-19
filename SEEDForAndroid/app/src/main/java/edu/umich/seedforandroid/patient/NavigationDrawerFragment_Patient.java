@@ -215,7 +215,8 @@ public class NavigationDrawerFragment_Patient extends Fragment  {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)  {
 
-        if (mDrawerLayout != null && isDrawerOpen()) {
+        if (mDrawerLayout != null && isDrawerOpen())  {
+
             showGlobalContextActionBar();
         }
 

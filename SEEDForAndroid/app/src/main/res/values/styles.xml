@@ -8,7 +8,5 @@
     <style name="ActionBarTabStyle" parent="AppTheme">
         <item name="android:background">@drawable/tab_indicator_custom</item>
         <item name="android:gravity">center</item>
-
     </style>
-
 </resources>

@@ -20,9 +20,7 @@ public class MyHealth_Frag extends Fragment  {
 
     private FragmentTabHost mTabHost;
 
-    public MyHealth_Frag()  {
-
-    }
+    public MyHealth_Frag()  {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -34,7 +32,7 @@ public class MyHealth_Frag extends Fragment  {
         return view;
     }
 
-    private View initialSetup(View view)  {
+    private View initialSetup(View view) {
 
         mTabHost = (FragmentTabHost) view.findViewById(android.R.id.tabhost);
         mTabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
@@ -42,13 +40,14 @@ public class MyHealth_Frag extends Fragment  {
         mTabHost.addTab(mTabHost.newTabSpec("ViewMyHealthData")
                 .setIndicator("", getResources()
                         .getDrawable(R.drawable.myhealth_viewdata_icon)), MyHealth_ViewData_Frag.class, null);
+
         mTabHost.addTab(mTabHost.newTabSpec("MySepsisAlerts")
                 .setIndicator("", getResources()
                         .getDrawable(R.drawable.myhealth_alerts_icon)), MyHealth_Alerts_Frag.class, null);
 
         // Set the indicator color
         TabWidget widget = mTabHost.getTabWidget();
-        for (int i = 0; i < widget.getChildCount(); i++)  {
+        for (int i = 0; i < widget.getChildCount(); i++) {
 
             View v = widget.getChildAt(i);
             v.setBackgroundResource(R.drawable.tab_indicator_custom);
