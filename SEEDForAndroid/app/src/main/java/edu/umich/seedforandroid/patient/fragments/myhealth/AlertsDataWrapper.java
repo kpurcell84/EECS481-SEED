@@ -21,19 +21,6 @@ public class AlertsDataWrapper {
         return message;
     }
 
-    //don't expose
-    private String race = null;
-
-    public String getRace()  {
-
-        return race;
-    }
-
-    public void setRace(String race)  {
-
-        this.race = race;
-    }
-
     //change
     @Expose
     @SerializedName("timeStamp")
