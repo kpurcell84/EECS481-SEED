@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import edu.umich.seedforandroid.R;
+import edu.umich.seedforandroid.main.MainActivity;
 import edu.umich.seedforandroid.patient.fragments.MyHealth_Frag;
 import edu.umich.seedforandroid.patient.fragments.MySepsisNurse_Frag;
 import edu.umich.seedforandroid.patient.fragments.Patient_Help_Frag;
@@ -98,15 +100,16 @@ public class MainActivity_Patient extends Activity implements NavigationDrawerFr
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity_Patient.this);
         View convertView = (View) getLayoutInflater().inflate(R.layout.patient_alert_dialog_log_out, null);
         alertDialog.setCustomTitle(convertView);
-        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener()  {
+        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 
             @Override
-            public void onClick(DialogInterface dialog, int id) {}
+            public void onClick(DialogInterface dialog, int id) {
+            }
         })
-        .setPositiveButton("Yes", new DialogInterface.OnClickListener()  {
+        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
             @Override
-            public void onClick(DialogInterface dialog, int id)  {
+            public void onClick(DialogInterface dialog, int id) {
 
                 logout();
             }
@@ -121,7 +124,8 @@ public class MainActivity_Patient extends Activity implements NavigationDrawerFr
 
     private void logout()  {
 
-
+        Intent intent = new Intent(MainActivity_Patient.this, MainActivity.class);
+        startActivity(intent);
     }
 
     public void onSectionAttached(int number)  {

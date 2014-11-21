@@ -81,7 +81,7 @@ public class NavigationDrawerFragment_Patient extends Fragment  {
         myNavTabs.add((new NavigationDrawerItem(R.drawable.evening_icon, getString(R.string.patient_title_section3))));
         myNavTabs.add((new NavigationDrawerItem(R.drawable.evening_icon, getString(R.string.patient_title_section4))));
         myNavTabs.add((new NavigationDrawerItem(R.drawable.evening_icon, getString(R.string.patient_title_section5))));
-        myNavTabs.add((new NavigationDrawerItem(R.drawable.evening_icon, getString(R.string.patient_title_section6))));
+        myNavTabs.add((new NavigationDrawerItem(R.drawable.logout_icon_blue, getString(R.string.patient_title_section6))));
 
         adapter = new MyListAdapter();
 
@@ -293,6 +293,10 @@ public class NavigationDrawerFragment_Patient extends Fragment  {
             else if (tvTitle.getText().toString().contentEquals(getString(R.string.patient_title_section5))) {
 
                 imageView.setImageResource(R.drawable.help_tab_icon);
+            }
+            else if (tvTitle.getText().toString().contentEquals(getString(R.string.patient_title_section6))) {
+
+                imageView.setImageResource(R.drawable.logout_icon_blue);
             }
             return itemView;
         }

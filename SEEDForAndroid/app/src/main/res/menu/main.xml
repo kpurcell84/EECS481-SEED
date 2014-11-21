@@ -12,5 +12,5 @@
         android:id="@+id/action_graph_options"
         android:showAsAction="always"
         android:title="@string/action_graphs_options"
-        android:icon="@drawable/graph_filter_icon"></item>
+        android:icon="@drawable/graph_white_icon"></item>
 </menu>
