@@ -191,7 +191,7 @@ public class MainActivity extends Activity implements View.OnClickListener  {
         }
     }
 
-    private boolean registerGcm() {
+    private boolean registerGcm()  {
 
         GcmManager manager = new GcmManager(this);
 
