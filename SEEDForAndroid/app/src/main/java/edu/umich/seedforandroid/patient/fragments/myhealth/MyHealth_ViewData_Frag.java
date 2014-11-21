@@ -396,14 +396,20 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
                     if (result != null && result instanceof MessagesPQuantDataListResponse) {
 
                         MessagesPQuantDataListResponse castedResult =
-                                (MessagesPQuantDataListResponse) result;
+                                (MessagesPQuantDataListResponse)result;
 
-                        ViewDataGraphWrapper heartRateData = new ViewDataGraphWrapper(ViewDataGraphWrapper.HEART_RATE);
-                        ViewDataGraphWrapper skinTempData = new ViewDataGraphWrapper(ViewDataGraphWrapper.SKIN_TEMP);
-                        ViewDataGraphWrapper gsrData = new ViewDataGraphWrapper(ViewDataGraphWrapper.GSR);
-                        ViewDataGraphWrapper bloodPressureData = new ViewDataGraphWrapper(ViewDataGraphWrapper.BLOOD_PRESSURE);
-                        ViewDataGraphWrapper bodyTempData = new ViewDataGraphWrapper(ViewDataGraphWrapper.BODY_TEMP);
-                        ViewDataGraphWrapper activityData = new ViewDataGraphWrapper(ViewDataGraphWrapper.ACTIVITY);
+                        ViewDataGraphWrapper heartRateData =
+                                new ViewDataGraphWrapper(ViewDataGraphWrapper.HEART_RATE);
+                        ViewDataGraphWrapper skinTempData =
+                                new ViewDataGraphWrapper(ViewDataGraphWrapper.SKIN_TEMP);
+                        ViewDataGraphWrapper gsrData =
+                                new ViewDataGraphWrapper(ViewDataGraphWrapper.GSR);
+                        ViewBloodPressureGraphWrapper bloodPressureData =
+                                new ViewBloodPressureGraphWrapper(ViewDataGraphWrapper.BLOOD_PRESSURE);
+                        ViewDataGraphWrapper bodyTempData =
+                                new ViewDataGraphWrapper(ViewDataGraphWrapper.BODY_TEMP);
+                        ViewDataGraphWrapper activityData =
+                                new ViewDataGraphWrapper(ViewDataGraphWrapper.ACTIVITY);
 
                         for (MessagesPQuantDataResponse r : castedResult.getPdataList()) {
 
@@ -413,22 +419,38 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
 
                                 Double data = r.getHeartRate().doubleValue();
                                 heartRateData.getHealthData().add(data);
+                                heartRateData.getEpoch().add(epoch);
                             }
                             if (r.getSkinTemp() != null) {
 
                                 skinTempData.getHealthData().add(r.getSkinTemp());
+                                skinTempData.getEpoch().add(epoch);
                             }
                             if (r.getGsr() != null) {
 
                                 gsrData.getHealthData().add(r.getGsr());
+                                gsrData.getEpoch().add(epoch);
                             }
                             if (r.getBloodPressure() != null) {
 
-                                //todo handle blood pressure (it's a string, we need a Double)
+                                String[] bpParts = r.getBloodPressure().split("/");
+
+                                if (bpParts.length == 2) {
+
+                                    bloodPressureData.getUpperData().add(Double.parseDouble(bpParts[0]));
+                                    bloodPressureData.getLowerData().add(Double.parseDouble(bpParts[1]));
+                                    bloodPressureData.getEpoch().add(epoch);
+                                }
+                                else {
+
+                                    Log.e(TAG, "Malformed blood pressure data received: "
+                                            + r.getBloodPressure());
+                                }
                             }
                             if (r.getBodyTemp() != null) {
 
                                 bodyTempData.getHealthData().add(r.getBodyTemp());
+                                bodyTempData.getEpoch().add(epoch);
                             }
                             if (r.getActivityType() != null) {
 
@@ -436,14 +458,8 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
                                         = ViewDataGraphWrapper.activityTypeToValue(r.getActivityType());
 
                                 activityData.getHealthData().add(activityLevel);
+                                activityData.getEpoch().add(epoch);
                             }
-
-                            heartRateData.getEpoch().add(epoch);
-                            skinTempData.getEpoch().add(epoch);
-                            gsrData.getEpoch().add(epoch);
-                            bloodPressureData.getEpoch().add(epoch);
-                            bodyTempData.getEpoch().add(epoch);
-                            activityData.getEpoch().add(epoch);
                         }
 
                         populateDataIntoGraphs(heartRateData);
@@ -585,7 +601,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
         }
     }
 
-    private void setupGraphSettings(XYPlot plot)  {
+    private void setupGraphSettings(XYPlot plot) {
 
         plot.getGraphWidget().getBackgroundPaint().setColor(Color.TRANSPARENT);
         plot.getGraphWidget().getGridBackgroundPaint().setColor(Color.WHITE);

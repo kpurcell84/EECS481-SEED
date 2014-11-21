@@ -16,25 +16,25 @@ public class ViewDataGraphWrapper  {
     public static final int ACTIVITY = 5;
 
 
-    private static final String REM = "Rem";
-    private static final String DEEP = "Deep";
-    private static final String LIGHT = "Light";
-    private static final String STILL = "Still";
-    private static final String WALK = "Walk";
-    private static final String RUN = "Run";
-    private static final String BIKE = "Bike";
+    protected static final String REM = "Rem";
+    protected static final String DEEP = "Deep";
+    protected static final String LIGHT = "Light";
+    protected static final String STILL = "Still";
+    protected static final String WALK = "Walk";
+    protected static final String RUN = "Run";
+    protected static final String BIKE = "Bike";
 
-    private static Double REM_VAL = 1.0d;
-    private static Double DEEP_VAL = 2.0d;
-    private static Double LIGHT_VAL = 3.0d;
-    private static Double STILL_VAL = 4.0d;
-    private static Double WALK_VAL = 5.0d;
-    private static Double RUN_VAL = 6.0d;
-    private static Double BIKE_VAL = 7.0d;
+    protected static Double REM_VAL = 1.0d;
+    protected static Double DEEP_VAL = 2.0d;
+    protected static Double LIGHT_VAL = 3.0d;
+    protected static Double STILL_VAL = 4.0d;
+    protected static Double WALK_VAL = 5.0d;
+    protected static Double RUN_VAL = 6.0d;
+    protected static Double BIKE_VAL = 7.0d;
 
-    private List<Double> data = new ArrayList<Double>();
-    private List<Long> epoch = new ArrayList<Long>();
-    private int dataType;
+    protected List<Double> data = new ArrayList<Double>();
+    protected List<Long> epoch = new ArrayList<Long>();
+    protected int dataType;
 
     public ViewDataGraphWrapper(int dataType) {
 
