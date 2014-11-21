@@ -17,12 +17,17 @@ public class SharedPrefsUtil {
     private static final String PROPERTY_REG_ID = "registration_id";
     private static final String PROPERTY_REG_SUCCESS = "registration_successful";
     private static final String PROPERTY_APP_VERSION = "appVersion";
+
+    // App Stuff
     private static final String PROPERTY_USER_ACCOUNT_TYPE = "user_account_type"; // "doctor" or "patient"
     private static final String PROPERTY_NOTIFICATION_STATE = "noti_state";
 
     private static final String PROPERTY_SURVEY_QA_PAIR = "survey_qa";
     private static final String PROPERTY_SURVEY_MORNING_TIME = "survey_morning_time";
     private static final String PROPERTY_SURVEY_EVENING_TIME = "survey_evening_time";
+
+    private static final String PROPERTY_PATIENT_GRAPH_FILTER = "patient_graph_filter";
+
 
     private SharedPreferences mPrefs;
 
@@ -170,6 +175,16 @@ public class SharedPrefsUtil {
         timeInt[0] = Integer.parseInt(timeParts[0]);
         timeInt[1] = Integer.parseInt(timeParts[1]);
         return timeInt;
+    }
+
+    public void setPatientGraphFilter(String filter)  {
+
+        setProperty(PROPERTY_PATIENT_GRAPH_FILTER, filter);
+    }
+
+    public String getPatientGraphFilter(String defValue)  {
+
+        return mPrefs.getString(PROPERTY_PATIENT_GRAPH_FILTER, defValue);
     }
 
     private void setProperty(String property, String value) {

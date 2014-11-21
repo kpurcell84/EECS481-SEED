@@ -15,6 +15,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.androidplot.ui.XLayoutStyle;
 import com.androidplot.ui.YLayoutStyle;
@@ -31,24 +34,31 @@ import com.appspot.umichseed.seed.model.MessagesPQuantDataResponse;
 import com.google.api.client.util.DateTime;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.FieldPosition;
 import java.text.Format;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 
 import edu.umich.seedforandroid.R;
 import edu.umich.seedforandroid.account.GoogleAccountManager;
 import edu.umich.seedforandroid.api.ApiThread;
 import edu.umich.seedforandroid.api.SeedApi;
+import edu.umich.seedforandroid.util.SharedPrefsUtil;
 import edu.umich.seedforandroid.util.Utils;
 
-public class MyHealth_ViewData_Frag extends Fragment  {
+public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickListener  {
 
     private static final String TAG = MyHealth_ViewData_Frag.class.getSimpleName();
 
+    private SharedPrefsUtil sharedPrefsUtilInst;
+    private RelativeLayout mHeartRateLayout, mSkinTempLayout, mPerspirationLayout,
+                           mBloodPressureLayout, mBodyTempLayout, mActivityTypeLayout;
     private Utils mUtilsInst;
     private Menu mMenu;
     private XYPlot mHeartRatePlot, mSkinTempPlot, mPerspirationPlot,
@@ -56,13 +66,14 @@ public class MyHealth_ViewData_Frag extends Fragment  {
     private XYSeries mHeartRateSeries, mSkinTempSeries, mPerspirationSeries,
                      mBloodPressureSeries, mBodyTempSeries, mActivityTypeSeries;
     private ApiThread mApiThread;
-    private CharSequence[] mGraphDialogItems = {" Heart Rate ",
-                                                " Activities Engaged ",
-                                                " Perspiration ",
-                                                " Skin Temperature ",
-                                                " Body Temperature ",
-                                                " Blood Pressure"};
+    private CharSequence[] mGraphDialogItems = {" Heart Rate ", " Activities Engaged ", " Perspiration ",
+                                                " Skin Temperature ", " Body Temperature ", " Blood Pressure"};
     private ArrayList<Integer> mSeletedGraphDialogItems;
+    private String defValueGraphFilters = "0@1@2@3@4@5";
+    private Button bNextDate, bPrevDate;
+    private TextView tvDate;
+    private Calendar mCurrentCalendar;
+    private Calendar mTodayCalendar;
 
     public MyHealth_ViewData_Frag()  {}
 
@@ -72,6 +83,8 @@ public class MyHealth_ViewData_Frag extends Fragment  {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         mApiThread = new ApiThread();
+        mCurrentCalendar = Calendar.getInstance();
+        mTodayCalendar = Calendar.getInstance();
     }
 
     @Override
@@ -122,10 +135,28 @@ public class MyHealth_ViewData_Frag extends Fragment  {
         // arraylist to keep the selected items
         mSeletedGraphDialogItems = new ArrayList();
 
+        boolean[] checkedSelections = new boolean[6];
+        Arrays.fill(checkedSelections, Boolean.FALSE);
+
+        String userSelections = sharedPrefsUtilInst.getPatientGraphFilter(defValueGraphFilters);
+
+        if (userSelections.equals("") == false)  {
+
+            String[] parts = userSelections.split("@");
+
+            for (int i = 0; i < parts.length; ++i)  {
+
+                int ind = Integer.parseInt(parts[i]);
+                checkedSelections[ind] = true;
+                mSeletedGraphDialogItems.add(ind);
+            }
+        }
+
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
         View convertView = (View) getActivity().getLayoutInflater().inflate(R.layout.patient_alert_dialog_title, null);
         alertDialog.setCustomTitle(convertView);
-        alertDialog.setMultiChoiceItems(mGraphDialogItems, null, new DialogInterface.OnMultiChoiceClickListener()  {
+        alertDialog.setMultiChoiceItems(mGraphDialogItems, checkedSelections, new DialogInterface.OnMultiChoiceClickListener()  {
+
             @Override
             public void onClick(DialogInterface dialog, int indexSelected, boolean isChecked)  {
 
@@ -149,11 +180,7 @@ public class MyHealth_ViewData_Frag extends Fragment  {
             @Override
             public void onClick(DialogInterface dialog, int id)  {
 
-                for (int i = 0; i < mSeletedGraphDialogItems.size(); ++i)  {
-
-                    int ind = (int) mSeletedGraphDialogItems.get(i);
-                    Log.i("INDEX : ".concat(String.valueOf(i)), String.valueOf(ind));
-                }
+                saveGraphFilters();
             }
         });
 
@@ -162,6 +189,64 @@ public class MyHealth_ViewData_Frag extends Fragment  {
         int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
         View divider = d.findViewById(dividerId);
         divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
+    }
+
+    private void saveGraphFilters()  {
+
+        // Make all graphs invisible
+        hideAllGraphs();
+
+        boolean[] graphArr = new boolean[6];
+        Arrays.fill(graphArr, Boolean.FALSE);
+
+        // Show graphs based on selections
+        for (int i = 0; i < mSeletedGraphDialogItems.size(); ++i)  {
+
+            int index = mSeletedGraphDialogItems.get(i);
+
+            graphArr[index] = true;
+
+            if (index == 0)  {
+
+                mHeartRateLayout.setVisibility(View.VISIBLE);
+            }
+            else if (index == 1)  {
+
+                mActivityTypeLayout.setVisibility(View.VISIBLE);
+            }
+            else if (index == 2)  {
+
+                mPerspirationLayout.setVisibility(View.VISIBLE);
+            }
+            else if (index == 3)  {
+
+                mSkinTempLayout.setVisibility(View.VISIBLE);
+            }
+            else if (index == 4)  {
+
+                mBodyTempLayout.setVisibility(View.VISIBLE);
+            }
+            else if (index == 5)  {
+
+                mBloodPressureLayout.setVisibility(View.VISIBLE);
+            }
+        }
+
+        String saveVal = "";
+        for (int i = 0; i < 6; ++i)  {
+
+            if (graphArr[i])  {
+
+                saveVal += String.valueOf(i);
+                if (i < 5)  {
+
+                    saveVal += "@";
+                }
+            }
+        }
+
+        // Save the selections into SharedPrefs
+        sharedPrefsUtilInst.setPatientGraphFilter(saveVal);
     }
 
     @Override
@@ -193,6 +278,7 @@ public class MyHealth_ViewData_Frag extends Fragment  {
 
     private void initialSetup()  {
 
+        sharedPrefsUtilInst = new SharedPrefsUtil(getActivity().getApplicationContext());
         mUtilsInst = new Utils();
 
         ActionBar actionBar = getActivity().getActionBar();
@@ -209,9 +295,75 @@ public class MyHealth_ViewData_Frag extends Fragment  {
 
         view = inflater.inflate(R.layout.fragment_my_health__view_data_, container, false);
 
+        setupRelativeLayouts(view);
         setupGraphs(view);
 
+        tvDate = (TextView) view.findViewById(R.id.tvDataTimeStamp);
+        bNextDate = (Button) view.findViewById(R.id.bNextRight);
+        bPrevDate = (Button) view.findViewById(R.id.bNextLeft);
+        bNextDate.setOnClickListener(this);
+        bPrevDate.setOnClickListener(this);
+
+        getTodayDate();
         return view;
+    }
+
+    private void hideAllGraphs()  {
+
+        mHeartRateLayout.setVisibility(View.GONE);
+        mSkinTempLayout.setVisibility(View.GONE);
+        mBodyTempLayout.setVisibility(View.GONE);
+        mBloodPressureLayout.setVisibility(View.GONE);
+        mActivityTypeLayout.setVisibility(View.GONE);
+        mPerspirationLayout.setVisibility(View.GONE);
+    }
+
+    private void setupRelativeLayouts(View view)  {
+
+        mHeartRateLayout = (RelativeLayout) view.findViewById(R.id.relativelayoutHeartRate);
+        mActivityTypeLayout = (RelativeLayout) view.findViewById(R.id.relativeLayoutActivitiesEngaged);
+        mPerspirationLayout = (RelativeLayout) view.findViewById(R.id.relativeLayoutPerspiration);
+        mSkinTempLayout = (RelativeLayout) view.findViewById(R.id.relativeLayoutSkinTemp);
+        mBodyTempLayout = (RelativeLayout) view.findViewById(R.id.relativeLayoutBodyTemp);
+        mBloodPressureLayout = (RelativeLayout) view.findViewById(R.id.relativeLayoutBloodPressure);
+
+        hideAllGraphs();
+
+        // Based on SharedPrefs, decide which graphs to show
+        String graphSelections = sharedPrefsUtilInst.getPatientGraphFilter(defValueGraphFilters);
+
+        if (graphSelections.equals("") == false)  {
+
+            String[] parts = graphSelections.split("@");
+            for (int i = 0; i < parts.length; ++i)  {
+
+                Log.i("ON CREATE VIEW Parts ".concat(String.valueOf(parts[i])), "@@@@@@@@@");
+                if (parts[i].equals("0"))  {
+
+                    mHeartRateLayout.setVisibility(View.VISIBLE);
+                }
+                else if (parts[i].equals("1"))  {
+
+                    mActivityTypeLayout.setVisibility(View.VISIBLE);
+                }
+                else if (parts[i].equals("2"))  {
+
+                    mPerspirationLayout.setVisibility(View.VISIBLE);
+                }
+                else if (parts[i].equals("3"))  {
+
+                    mSkinTempLayout.setVisibility(View.VISIBLE);
+                }
+                else if (parts[i].equals("4"))  {
+
+                    mBodyTempLayout.setVisibility(View.VISIBLE);
+                }
+                else if (parts[i].equals("5"))  {
+
+                    mBloodPressureLayout.setVisibility(View.VISIBLE);
+                }
+            }
+        }
     }
 
     private void fetchDataFromServer(DateTime begin, DateTime end) {
@@ -495,5 +647,72 @@ public class MyHealth_ViewData_Frag extends Fragment  {
 
         //todo: figure out base datetimes here
         fetchDataFromServer(null, null);
+    }
+
+    private void getTodayDate()  {
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy:MM:dd:HH:mm:ss");
+        String today = dateFormat.format(mCurrentCalendar.getTime());
+        String[] parts = today.split(":");
+
+        int day = mCurrentCalendar.get(Calendar.DAY_OF_WEEK);
+        String dayStr = mUtilsInst.getDayOfWeekFullString(day);
+        int month = Integer.parseInt(parts[1]);
+        month--;
+        String monthStr = mUtilsInst.getMonth(month);
+
+        tvDate.setText(dayStr.concat(" ").concat(String.valueOf(parts[2])).concat(" ").concat(monthStr));
+    }
+
+    private void getNextDateData()  {
+
+        long todayTime = mTodayCalendar.getTimeInMillis();
+        long currentTime = mCurrentCalendar.getTimeInMillis();
+        currentTime = currentTime + 1000 * 60 * 60 * 24;
+
+        if (currentTime <= todayTime)  {
+
+            mCurrentCalendar = mUtilsInst.getNextDate(mCurrentCalendar);
+            DateFormat dateFormat = new SimpleDateFormat("yyyy:MM:dd:HH:mm:ss");
+            String tomorrow = dateFormat.format(mCurrentCalendar.getTime());
+            String[] parts = tomorrow.split(":");
+
+            int day = mCurrentCalendar.get(Calendar.DAY_OF_WEEK);
+            String dayStr = mUtilsInst.getDayOfWeekFullString(day);
+            int month = Integer.parseInt(parts[1]);
+            month--;
+            String monthStr = mUtilsInst.getMonth(month);
+
+            tvDate.setText(dayStr.concat(" ").concat(String.valueOf(parts[2])).concat(" ").concat(monthStr));
+        }
+    }
+
+    private void getPrevDateData()  {
+
+        mCurrentCalendar = mUtilsInst.getPrevDate(mCurrentCalendar);
+        DateFormat dateFormat = new SimpleDateFormat("yyyy:MM:dd:HH:mm:ss");
+        String yesterday = dateFormat.format(mCurrentCalendar.getTime());
+        String[] parts = yesterday.split(":");
+
+        int day = mCurrentCalendar.get(Calendar.DAY_OF_WEEK);
+        String dayStr = mUtilsInst.getDayOfWeekFullString(day);
+        int month = Integer.parseInt(parts[1]);
+        month--;
+        String monthStr = mUtilsInst.getMonth(month);
+
+        tvDate.setText(dayStr.concat(" ").concat(String.valueOf(parts[2])).concat(" ").concat(monthStr));
+    }
+
+    @Override
+    public void onClick(View v)  {
+
+        if (v.getId() == R.id.bNextRight)  {
+
+            getNextDateData();
+        }
+        else if (v.getId() == R.id.bNextLeft)  {
+
+            getPrevDateData();
+        }
     }
 }

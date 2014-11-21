@@ -12,6 +12,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -170,6 +171,41 @@ public class Utils {
         return dayStr;
     }
 
+    public String getDayOfWeekFullString (int day)  {
+
+        String dayStr = "";
+
+        if (day == 1)  {
+
+            dayStr = "Sunday";
+        }
+        else if (day == 2)  {
+
+            dayStr = "Monday";
+        }
+        else if (day == 3)  {
+
+            dayStr = "Tuesday";
+        }
+        else if (day == 4)  {
+
+            dayStr = "Wednesday";
+        }
+        else if (day == 5)  {
+
+            dayStr = "Thursday";
+        }
+        else if (day == 6)  {
+
+            dayStr = "Friday";
+        }
+        else if (day == 7)  {
+
+            dayStr = "Saturday";
+        }
+        return dayStr;
+    }
+
     public String[] convert24HourTo12Hour(String hour)  { // take hour from 0 to 23 and convert it to 12 hour clock, 0 : hour, 1 : "AM" or "PM"
 
         String[] retArr = new String[2];
@@ -215,5 +251,17 @@ public class Utils {
             retVal = String.valueOf(minute);
         }
         return retVal;
+    }
+
+    public Calendar getNextDate(Calendar cal)  {
+
+        cal.add(Calendar.DATE, +1);
+        return cal;
+    }
+
+    public Calendar getPrevDate(Calendar cal)  {
+
+        cal.add(Calendar.DATE, -1);
+        return cal;
     }
 }

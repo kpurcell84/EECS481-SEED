@@ -3,12 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/seed_background"
-    android:padding="20dp"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
     tools:context="seed.um.com.seed_andy.patient.fragments.Patient_Help_Frag">
 
     <ImageView
-        android:layout_width="175dp"
-        android:layout_height="175dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:id="@+id/imageViewLogo"
         android:src="@drawable/seed_system_logo_standalone"
         android:layout_alignParentTop="true"
@@ -44,6 +45,19 @@
         android:id="@+id/relativeLayout7">
     </RelativeLayout>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="23sp"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:text="If this is an emergency,\nplease dial 911."
+        android:gravity="center"
+        android:textColor="#DF0101"
+        android:textStyle="bold"
+        android:layout_below="@+id/relativeLayout7"
+        android:id="@+id/bEmergency"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -51,7 +65,7 @@
         android:text="SEED (Sepsis Early and Emergency Detection) System uses machine learning in order to detect the onset of sepsis for postoperative patients."
         android:id="@+id/tvHelpDescription"
         android:textSize="18sp"
-        android:layout_below="@+id/relativeLayout7"
+        android:layout_below="@+id/bEmergency"
         android:layout_alignParentLeft="true"
         android:layout_marginTop="10dp" />
 
@@ -59,7 +73,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20sp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:text="For any concerns or questions, please email us."
         android:gravity="center"
         android:textStyle="bold"
@@ -72,7 +86,7 @@
         android:background="#ffffff"
         android:layout_below="@+id/tvConcern"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:padding="3dp">
 
         <Button

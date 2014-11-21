@@ -3,6 +3,7 @@ package edu.umich.seedforandroid.patient.fragments;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,7 @@ import edu.umich.seedforandroid.util.SharedPrefsUtil;
 
 public class Patient_Help_Frag extends Fragment implements View.OnClickListener  {
 
-    private Button bEmail;
+    private Button bEmail, bEmergency;
     private SharedPrefsUtil sharedPrefsUtilInst;
     private int appVersion;
     private TextView tvAppVersion;
@@ -50,7 +51,9 @@ public class Patient_Help_Frag extends Fragment implements View.OnClickListener 
         tvAppVersion = (TextView) view.findViewById(R.id.tvVersion);
         tvAppVersion.setText(padVersionString());
         bEmail = (Button) view.findViewById(R.id.bEmail);
+        bEmergency = (Button) view.findViewById(R.id.bEmergency);
         bEmail.setOnClickListener(this);
+        bEmergency.setOnClickListener(this);
     }
 
     private void emailSeedSystem()  {
@@ -70,12 +73,23 @@ public class Patient_Help_Frag extends Fragment implements View.OnClickListener 
         return String.valueOf(appVersion).concat(".0");
     }
 
+    private void emergency()  {
+
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:911"));
+        startActivity(intent);
+    }
+
     @Override
     public void onClick(View v)  {
 
         if (v.getId() == R.id.bEmail)  {
 
             emailSeedSystem();
+        }
+        else if (v.getId() == R.id.bEmergency)  {
+
+            emergency();
         }
     }
 }
