@@ -198,7 +198,7 @@ public class MainActivity extends Activity implements View.OnClickListener  {
         if (!manager.isRegistrationValid()) {
 
             final Seed api = SeedApi.getAuthenticatedApi(mAccountManager.getCredential());
-            final String oldRegistrationId = manager.getRegistrationId();
+            final String oldNotificationId = manager.getRegistrationId();
             final String accountName = mAccountManager.getAccountName();
 
             manager.registerInBackground(new GcmManager.IUploadRegistrationToServerAction() {
@@ -212,9 +212,9 @@ public class MainActivity extends Activity implements View.OnClickListener  {
                                 .setEmail(accountName)
                                 .setNewRegId(newNotificationId);
 
-                        if (!oldRegistrationId.equals("")) {
+                        if (!oldNotificationId.equals("")) {
 
-                            putData.setOldRegId(oldRegistrationId);
+                            putData.setOldRegId(oldNotificationId);
                         }
 
                         final SeedRequest request = api.gcmCreds().put(putData);

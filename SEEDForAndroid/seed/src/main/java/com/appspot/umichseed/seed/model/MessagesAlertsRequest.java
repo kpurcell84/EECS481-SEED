@@ -19,7 +19,7 @@
 package com.appspot.umichseed.seed.model;
 
 /**
- * ProtoRPC message definition to represent a patient data query
+ * Model definition for MessagesAlertsRequest.
  *
  * <p> This is the Java data model class that specifies how to parse/serialize into the JSON that is
  * transmitted over HTTP when working with the seed. For a detailed explanation see:
@@ -29,7 +29,7 @@ package com.appspot.umichseed.seed.model;
  * @author Google, Inc.
  */
 @SuppressWarnings("javadoc")
-public final class MessagesPQuantDataRequest extends com.google.api.client.json.GenericJson {
+public final class MessagesAlertsRequest extends com.google.api.client.json.GenericJson {
 
   /**
    * The value may be {@code null}.
@@ -59,7 +59,7 @@ public final class MessagesPQuantDataRequest extends com.google.api.client.json.
   /**
    * @param email email or {@code null} for none
    */
-  public MessagesPQuantDataRequest setEmail(java.lang.String email) {
+  public MessagesAlertsRequest setEmail(java.lang.String email) {
     this.email = email;
     return this;
   }
@@ -74,7 +74,7 @@ public final class MessagesPQuantDataRequest extends com.google.api.client.json.
   /**
    * @param endTime endTime or {@code null} for none
    */
-  public MessagesPQuantDataRequest setEndTime(com.google.api.client.util.DateTime endTime) {
+  public MessagesAlertsRequest setEndTime(com.google.api.client.util.DateTime endTime) {
     this.endTime = endTime;
     return this;
   }
@@ -89,19 +89,19 @@ public final class MessagesPQuantDataRequest extends com.google.api.client.json.
   /**
    * @param startTime startTime or {@code null} for none
    */
-  public MessagesPQuantDataRequest setStartTime(com.google.api.client.util.DateTime startTime) {
+  public MessagesAlertsRequest setStartTime(com.google.api.client.util.DateTime startTime) {
     this.startTime = startTime;
     return this;
   }
 
   @Override
-  public MessagesPQuantDataRequest set(String fieldName, Object value) {
-    return (MessagesPQuantDataRequest) super.set(fieldName, value);
+  public MessagesAlertsRequest set(String fieldName, Object value) {
+    return (MessagesAlertsRequest) super.set(fieldName, value);
   }
 
   @Override
-  public MessagesPQuantDataRequest clone() {
-    return (MessagesPQuantDataRequest) super.clone();
+  public MessagesAlertsRequest clone() {
+    return (MessagesAlertsRequest) super.clone();
   }
 
 }
