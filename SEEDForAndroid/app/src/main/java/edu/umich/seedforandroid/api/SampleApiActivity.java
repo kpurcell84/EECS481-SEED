@@ -66,7 +66,7 @@ public class SampleApiActivity extends Activity {
 
         try {
 
-            SeedRequest request = api.doctor().get().setEmail("smeagol@lotr.com");
+            SeedRequest request = api.doctor().get("smeagol@lotr.com");
 
             // this call implicitly starts the thread
             /*mApiThread.enqueRequest(request, new ApiThread.ApiResultAction() {

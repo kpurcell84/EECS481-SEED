@@ -19,8 +19,10 @@ public class SharedPrefsUtil {
     private static final String PROPERTY_APP_VERSION = "appVersion";
     private static final String PROPERTY_USER_ACCOUNT_TYPE = "user_account_type"; // "doctor" or "patient"
     private static final String PROPERTY_NOTIFICATION_STATE = "noti_state";
+
     private static final String PROPERTY_SURVEY_QA_PAIR = "survey_qa";
-    private static final String PROPERTY_SURVEY_NOTIFICATION_TIME = "survey_time";
+    private static final String PROPERTY_SURVEY_MORNING_TIME = "survey_morning_time";
+    private static final String PROPERTY_SURVEY_EVENING_TIME = "survey_evening_time";
 
     private SharedPreferences mPrefs;
 
@@ -136,16 +138,33 @@ public class SharedPrefsUtil {
         return mPrefs.getString(thisQuestionAnswerPair, defValue);
     }
 
-    public void setSurveyNotificationTime(int hour, int minute)  { // 24 hour clock (23:00)
+    public void setMorningSurveyNotificationTime(int hour, int minute)  { // 24 hour clock (23:00)
 
         String time = String.valueOf(hour).concat(":").concat(String.valueOf(minute));
-        setProperty(PROPERTY_SURVEY_NOTIFICATION_TIME, time);
+        setProperty(PROPERTY_SURVEY_MORNING_TIME, time);
     }
 
-    public int[] getSurveyNotificationTime(int defHour, int defMinute)  {
+    public int[] getMorningSurveyNotificationTime(int defHour, int defMinute)  {
 
         String tmp = String.valueOf(defHour).concat(":").concat(String.valueOf(defMinute));
-        String time = mPrefs.getString(PROPERTY_SURVEY_NOTIFICATION_TIME, tmp);
+        String time = mPrefs.getString(PROPERTY_SURVEY_MORNING_TIME, tmp);
+        String[] timeParts = time.split(":");
+        int[] timeInt = new int[2];
+        timeInt[0] = Integer.parseInt(timeParts[0]);
+        timeInt[1] = Integer.parseInt(timeParts[1]);
+        return timeInt;
+    }
+
+    public void setEveningSurveyNotificationTime(int hour, int minute)  { // 24 hour clock (23:00)
+
+        String time = String.valueOf(hour).concat(":").concat(String.valueOf(minute));
+        setProperty(PROPERTY_SURVEY_EVENING_TIME, time);
+    }
+
+    public int[] getEveningSurveyNotificationTime(int defHour, int defMinute)  {
+
+        String tmp = String.valueOf(defHour).concat(":").concat(String.valueOf(defMinute));
+        String time = mPrefs.getString(PROPERTY_SURVEY_EVENING_TIME, tmp);
         String[] timeParts = time.split(":");
         int[] timeInt = new int[2];
         timeInt[0] = Integer.parseInt(timeParts[0]);

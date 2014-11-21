@@ -7,53 +7,58 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
-    <permission android:name="edu.umich.seedforandroid.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+    <permission
+        android:name="edu.umich.seedforandroid.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
     <uses-permission android:name="edu.umich.seedforandroid.permission.C2D_MESSAGE" />
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@drawable/seed_system_icon_small"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:hardwareAccelerated="true"
         android:theme="@style/AppTheme" >
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
         <receiver
-            android:name=".gcm.GcmBroadcastReceiver"
+            android:name="edu.umich.seedforandroid.gcm.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
                 <category android:name="edu.umich.seedforandroid" />
             </intent-filter>
         </receiver>
 
         <activity
-            android:name=".TestActivity"
+            android:name="edu.umich.seedforandroid.TestActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".MyActivity"
+            android:name="edu.umich.seedforandroid.MyActivity"
             android:label="@string/title_activity_my" >
         </activity>
         <activity
-            android:name=".doctor.MainActivity_Doctor"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_my" >
+            android:name="edu.umich.seedforandroid.doctor.MainActivity_Doctor"
+            android:label="@string/title_activity_my"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".patient.MainActivity_Patient"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_my" >
+            android:name="edu.umich.seedforandroid.patient.MainActivity_Patient"
+            android:label="@string/title_activity_my"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".main.MainActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_my" >
+            android:name="edu.umich.seedforandroid.main.MainActivity"
+            android:label="@string/title_activity_my"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".main.Splash"
+            android:name="edu.umich.seedforandroid.main.Splash"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" >
@@ -64,18 +69,26 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".account.SampleAuthActivity"
+            android:name="edu.umich.seedforandroid.account.SampleAuthActivity"
             android:label="@string/title_activity_sample_auth" >
-            <!--<intent-filter>
+
+            <!--
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
+            -->
         </activity>
         <activity
-            android:name=".patient.EnterNewHealthData"
+            android:name="edu.umich.seedforandroid.patient.EnterNewHealthData"
+            android:label="@string/title_activity_enter_new_health_data"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="edu.umich.seedforandroid.patient.updates.UpdateSurveyTime"
             android:screenOrientation="portrait"
-            android:label="@string/title_activity_enter_new_health_data" >
+            android:label="@string/title_activity_update_survey_time" >
         </activity>
     </application>
 

@@ -4,11 +4,8 @@ import android.content.Context;
 import android.util.Log;
 
 import com.appspot.umichseed.seed.Seed;
-import com.appspot.umichseed.seed.SeedRequest;
-import com.appspot.umichseed.seed.model.SeedApiMessagesPatientRequest;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import edu.umich.seedforandroid.account.GoogleAccountManager;

@@ -11,72 +11,35 @@
 
     <RelativeLayout
         android:id="@+id/relativelayout1"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:background="#A4A4A4"
-        android:padding="1dp"
-        android:layout_below="@+id/imageView"
-        android:layout_marginTop="20dp">
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:ems="10"
-            android:background="#ffffff"
-            android:id="@+id/etUsername"
-            android:padding="10dp"
-            android:hint="Email"
-            android:layout_centerVertical="true"
-            android:paddingStart="10dp"
-            android:layout_centerHorizontal="true" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/relativelayout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:background="#A4A4A4"
-        android:padding="1dp"
-        android:layout_below="@+id/relativelayout1"
-        android:layout_marginTop="10dp">
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:ems="10"
-            android:background="#ffffff"
-            android:id="@+id/etPassword"
-            android:padding="10dp"
-            android:hint="Password"
-            android:layout_centerVertical="true"
-            android:paddingStart="10dp"
-            android:layout_centerHorizontal="true" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_alignLeft="@+id/relativelayout1"
-        android:layout_below="@+id/tvSignup"
-        android:layout_marginTop="20dp"
+        android:layout_below="@+id/tvWelcome"
+        android:layout_marginTop="30dp"
         android:background="#ffffff"
-        android:padding="3dp"
-        android:id="@+id/relativeLayout">
+        android:padding="3dp">
 
         <Button
             android:id="@+id/bLogin"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="250dp"
+            android:layout_height="55dp"
             android:background="@drawable/blue_button"
             android:text="Log In"
             android:textColor="#FFFFFF"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:textStyle="bold" />
     </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        android:text="Welcome to SEED System"
+        android:id="@+id/tvWelcome"
+        android:layout_below="@+id/imageView"
+        android:layout_centerHorizontal="true" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -84,16 +47,17 @@
         android:layout_height="150dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="35dp"
         android:src="@drawable/seed_system_logo_standalone" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Need Help?"
         android:onClick="helpClicked"
-        android:id="@+id/textView"
+        android:layout_marginBottom="20dp"
+        android:textSize="18sp"
+        android:id="@+id/tvHelp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
@@ -102,9 +66,9 @@
         android:layout_height="wrap_content"
         android:text="Are you a doctor? Sign Up"
         android:id="@+id/tvSignup"
+        android:layout_marginBottom="20dp"
         android:textSize="18sp"
-        android:layout_marginTop="20dp"
-        android:layout_below="@+id/relativelayout2"
+        android:layout_above="@+id/tvHelp"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

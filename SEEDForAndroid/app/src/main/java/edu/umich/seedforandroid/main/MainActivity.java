@@ -11,9 +11,9 @@ import android.widget.Toast;
 
 import com.appspot.umichseed.seed.Seed;
 import com.appspot.umichseed.seed.SeedRequest;
-import com.appspot.umichseed.seed.model.SeedApiMessagesGcmCredsPut;
-import com.appspot.umichseed.seed.model.SeedApiMessagesUserCheckRequest;
-import com.appspot.umichseed.seed.model.SeedApiMessagesUserCheckResponse;
+import com.appspot.umichseed.seed.model.MessagesEmailRequest;
+import com.appspot.umichseed.seed.model.MessagesGcmCredsPut;
+import com.appspot.umichseed.seed.model.MessagesUserCheckResponse;
 
 import java.io.IOException;
 
@@ -102,15 +102,23 @@ public class MainActivity extends Activity implements View.OnClickListener  {
 
     private void login() {
 
+        Intent intent = mAccountManager.getPickAccountIntent();
+        startActivityForResult(intent, PICK_ACCOUNT_RESULT);
+
+        /*
         if (!mAccountManager.tryLogIn()) {
 
+            Log.i("HEREEEE", "@@@@@@@@@@@@@@");
             Intent intent = mAccountManager.getPickAccountIntent();
             startActivityForResult(intent, PICK_ACCOUNT_RESULT);
+            Toast.makeText(MainActivity.this, "IF STATEMENT", Toast.LENGTH_SHORT).show();
         }
         else {
 
+            Toast.makeText(MainActivity.this, "ELSE STATEMENT", Toast.LENGTH_SHORT).show();
             completeLogin();
         }
+        */
     }
 
     private void completeLogin() {
@@ -119,7 +127,7 @@ public class MainActivity extends Activity implements View.OnClickListener  {
 
             Seed api = SeedApi.getAuthenticatedApi(mAccountManager.getCredential());
             SeedRequest checkUser = api.userCheck().get(
-                    new SeedApiMessagesUserCheckRequest()
+                    new MessagesEmailRequest()
                             .setEmail(mAccountManager.getAccountName())
             );
 
@@ -128,9 +136,9 @@ public class MainActivity extends Activity implements View.OnClickListener  {
                 @Override
                 public void onApiResult(Object result) {
 
-                    if (result != null && result instanceof SeedApiMessagesUserCheckResponse)  {
+                    if (result != null && result instanceof MessagesUserCheckResponse)  {
 
-                        String type = ((SeedApiMessagesUserCheckResponse)result).getUserType();
+                        String type = ((MessagesUserCheckResponse)result).getUserType();
 
                         if (!registerGcm()) {
                             // registerGcm won't need this thread, so we can
@@ -200,7 +208,7 @@ public class MainActivity extends Activity implements View.OnClickListener  {
 
                     try {
 
-                        SeedApiMessagesGcmCredsPut putData = new SeedApiMessagesGcmCredsPut()
+                        MessagesGcmCredsPut putData = new MessagesGcmCredsPut()
                                 .setEmail(accountName)
                                 .setNewRegId(newNotificationId);
 

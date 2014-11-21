@@ -2,14 +2,18 @@ package edu.umich.seedforandroid.patient;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import edu.umich.seedforandroid.R;
 import edu.umich.seedforandroid.patient.fragments.MyHealth_Frag;
@@ -75,7 +79,7 @@ public class MainActivity_Patient extends Activity implements NavigationDrawerFr
                     .commit();
 
         }
-        else  { // help
+        else if (position == 4) { // help
 
             Fragment frag = new Patient_Help_Frag();
             FragmentManager fragmentManager = getFragmentManager();
@@ -83,6 +87,41 @@ public class MainActivity_Patient extends Activity implements NavigationDrawerFr
                     .replace(R.id.container, frag)
                     .commit();
         }
+        else  {
+
+            showLogOutAlertDialog();
+        }
+    }
+
+    private void showLogOutAlertDialog()  {
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity_Patient.this);
+        View convertView = (View) getLayoutInflater().inflate(R.layout.patient_alert_dialog_log_out, null);
+        alertDialog.setCustomTitle(convertView);
+        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener()  {
+
+            @Override
+            public void onClick(DialogInterface dialog, int id) {}
+        })
+        .setPositiveButton("Yes", new DialogInterface.OnClickListener()  {
+
+            @Override
+            public void onClick(DialogInterface dialog, int id)  {
+
+                logout();
+            }
+        });
+
+        // Set the line color
+        Dialog d = alertDialog.show();
+        int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+        View divider = d.findViewById(dividerId);
+        divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
+    }
+
+    private void logout()  {
+
+
     }
 
     public void onSectionAttached(int number)  {

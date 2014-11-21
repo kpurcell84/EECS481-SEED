@@ -170,7 +170,7 @@ public class Utils {
         return dayStr;
     }
 
-    public String[] convert4HourTo12Hour(String hour)  { // take hour from 0 to 23 and convert it to 12 hour clock, 0 : hour, 1 : "AM" or "PM"
+    public String[] convert24HourTo12Hour(String hour)  { // take hour from 0 to 23 and convert it to 12 hour clock, 0 : hour, 1 : "AM" or "PM"
 
         String[] retArr = new String[2];
         String amPm;

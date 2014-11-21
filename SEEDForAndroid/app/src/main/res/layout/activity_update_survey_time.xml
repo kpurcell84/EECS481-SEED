@@ -1,0 +1,157 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@drawable/seed_background"
+    android:layout_height="match_parent"
+    android:paddingBottom="20dp"
+    tools:context="edu.umich.seedforandroid.patient.updates.UpdateSurveyTime">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:background="#00274c"
+        android:textColor="#FFFFFF"
+        android:padding="10dp"
+        android:gravity="center"
+        android:text="Notification Time Slots"
+        android:id="@+id/tvNotificationTimeSlots"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="#F3F0EB"
+        android:layout_marginTop="20dp"
+        android:paddingLeft="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:id="@+id/relativeLayoutMorning"
+        android:paddingRight="5dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="20dp"
+        android:layout_below="@+id/tvNotificationTimeSlots"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:text="Morning"
+            android:id="@+id/tvMorning"
+            android:drawablePadding="10dp"
+            android:drawableStart="@drawable/morning_icon"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:text="Please choose a time between\n7:00 AM and 10:00 AM."
+            android:id="@+id/tvMorningDescription"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/tvMorning"
+            android:layout_alignParentLeft="true"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@+id/tvMorningDescription"
+            android:padding="3dp">
+
+            <Button
+                android:id="@+id/bMorningTimeUpdate"
+                android:layout_width="120dp"
+                android:layout_height="55dp"
+                android:background="@drawable/blue_button"
+                android:text="10:00 AM"
+                android:gravity="center"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="#F3F0EB"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:id="@+id/relativeLayoutEvening"
+        android:layout_below="@+id/relativeLayoutMorning"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:text="Evening"
+            android:id="@+id/tvEvening"
+            android:drawablePadding="10dp"
+            android:drawableStart="@drawable/evening_icon"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:text="Please choose a time between\n7:00 PM and 10:00 PM."
+            android:id="@+id/tvEveningDescription"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/tvEvening"
+            android:layout_alignParentLeft="true"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@+id/tvEveningDescription"
+            android:padding="3dp">
+
+            <Button
+                android:id="@+id/bEveningTimeUpdate"
+                android:layout_width="120dp"
+                android:layout_height="55dp"
+                android:background="@drawable/blue_button"
+                android:text="10:00 PM"
+                android:gravity="center"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:padding="3dp">
+
+        <Button
+            android:id="@+id/bSaveTimeSlotsUpdate"
+            android:layout_width="150dp"
+            android:layout_height="55dp"
+            android:background="@drawable/blue_button"
+            android:text="Save"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+</RelativeLayout>

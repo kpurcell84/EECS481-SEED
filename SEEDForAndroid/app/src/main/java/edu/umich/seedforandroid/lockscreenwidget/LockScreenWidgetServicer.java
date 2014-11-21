@@ -70,7 +70,7 @@ public class LockScreenWidgetServicer extends Service  {
         mCurrentTime = mUtilInst.getCurrentTime();
         String[] timeParts=  mCurrentTime.split(":"); // yyyy:MM:dd:HH:mm:ss
         int month = Integer.parseInt(timeParts[1]);
-        String[] twelveHourTime = mUtilInst.convert4HourTo12Hour(timeParts[3]);
+        String[] twelveHourTime = mUtilInst.convert24HourTo12Hour(timeParts[3]);
         mHour = Integer.parseInt(twelveHourTime[0]);
         mMinute = Integer.parseInt(timeParts[4]);
         mDay = Integer.parseInt(timeParts[2]);

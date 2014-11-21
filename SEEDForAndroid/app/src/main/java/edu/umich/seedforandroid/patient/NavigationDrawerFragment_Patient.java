@@ -81,6 +81,7 @@ public class NavigationDrawerFragment_Patient extends Fragment  {
         myNavTabs.add((new NavigationDrawerItem(R.drawable.evening_icon, getString(R.string.patient_title_section3))));
         myNavTabs.add((new NavigationDrawerItem(R.drawable.evening_icon, getString(R.string.patient_title_section4))));
         myNavTabs.add((new NavigationDrawerItem(R.drawable.evening_icon, getString(R.string.patient_title_section5))));
+        myNavTabs.add((new NavigationDrawerItem(R.drawable.evening_icon, getString(R.string.patient_title_section6))));
 
         adapter = new MyListAdapter();
 

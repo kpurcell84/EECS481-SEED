@@ -10,10 +10,10 @@ import android.widget.ExpandableListView;
 
 import com.appspot.umichseed.seed.Seed;
 import com.appspot.umichseed.seed.SeedRequest;
-import com.appspot.umichseed.seed.model.SeedApiMessagesPQuantDataRequest;
-import com.appspot.umichseed.seed.model.SeedApiMessagesWatsonQuestionPut;
-import com.appspot.umichseed.seed.model.SeedApiMessagesWatsonQuestionsListResponse;
-import com.appspot.umichseed.seed.model.SeedApiMessagesWatsonQuestionsRequest;
+import com.appspot.umichseed.seed.model.MessagesPQuantDataRequest;
+import com.appspot.umichseed.seed.model.MessagesWatsonQuestionPut;
+import com.appspot.umichseed.seed.model.MessagesWatsonQuestionsListResponse;
+import com.appspot.umichseed.seed.model.MessagesWatsonQuestionsRequest;
 import com.google.api.client.util.DateTime;
 
 import java.io.IOException;
@@ -92,7 +92,7 @@ public class PatientRecentlyAskedQuestionsFragment extends Fragment  {
             final SeedRequest request =
                     api.watsonRecentQuestions()
                     .get(
-                            new SeedApiMessagesWatsonQuestionsRequest()
+                            new MessagesWatsonQuestionsRequest()
                             .setNumQuestions(NUM_QUESTIONS)
                     );
 
@@ -100,7 +100,7 @@ public class PatientRecentlyAskedQuestionsFragment extends Fragment  {
             final Seed.PQuantData.Get request2 =
                     api.pQuantData().get(
 
-                        new SeedApiMessagesPQuantDataRequest()
+                        new MessagesPQuantDataRequest()
                                 .setEmail("jinseok@umich.edu")
                                 .setStartTime(new DateTime(System.currentTimeMillis() - 10000))
                                 .setEndTime(new DateTime(System.currentTimeMillis()))
@@ -141,12 +141,12 @@ public class PatientRecentlyAskedQuestionsFragment extends Fragment  {
 
         if (result != null) {
 
-            SeedApiMessagesWatsonQuestionsListResponse response
-                    = (SeedApiMessagesWatsonQuestionsListResponse) result;
+            MessagesWatsonQuestionsListResponse response
+                    = (MessagesWatsonQuestionsListResponse) result;
 
             Map<String, List<String>> questionMap = new LinkedHashMap<String, List<String>>();
 
-            for (SeedApiMessagesWatsonQuestionPut q : response.getQuestions()) {
+            for (MessagesWatsonQuestionPut q : response.getQuestions()) {
 
                 List<String> answers = new ArrayList<String>();
                 answers.add(q.getAnswer());

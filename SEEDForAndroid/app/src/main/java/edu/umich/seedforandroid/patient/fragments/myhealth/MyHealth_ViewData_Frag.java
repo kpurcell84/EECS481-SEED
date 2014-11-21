@@ -25,9 +25,9 @@ import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.XYStepMode;
 import com.appspot.umichseed.seed.Seed;
 import com.appspot.umichseed.seed.SeedRequest;
-import com.appspot.umichseed.seed.model.SeedApiMessagesPQuantDataListResponse;
-import com.appspot.umichseed.seed.model.SeedApiMessagesPQuantDataRequest;
-import com.appspot.umichseed.seed.model.SeedApiMessagesPQuantDataResponse;
+import com.appspot.umichseed.seed.model.MessagesPQuantDataListResponse;
+import com.appspot.umichseed.seed.model.MessagesPQuantDataRequest;
+import com.appspot.umichseed.seed.model.MessagesPQuantDataResponse;
 import com.google.api.client.util.DateTime;
 
 import java.io.IOException;
@@ -230,7 +230,7 @@ public class MyHealth_ViewData_Frag extends Fragment  {
             Seed api = SeedApi.getAuthenticatedApi(manager.getCredential());
             SeedRequest getDataRequest = api.pQuantData().get(
 
-                    new SeedApiMessagesPQuantDataRequest()
+                    new MessagesPQuantDataRequest()
                             .setEmail(manager.getAccountName())
                             .setStartTime(begin)
                             .setEndTime(end)
@@ -241,10 +241,10 @@ public class MyHealth_ViewData_Frag extends Fragment  {
                 @Override
                 public Object doInBackground(Object result) {
 
-                    if (result != null && result instanceof SeedApiMessagesPQuantDataListResponse) {
+                    if (result != null && result instanceof MessagesPQuantDataListResponse) {
 
-                        SeedApiMessagesPQuantDataListResponse castedResult =
-                                (SeedApiMessagesPQuantDataListResponse) result;
+                        MessagesPQuantDataListResponse castedResult =
+                                (MessagesPQuantDataListResponse) result;
 
                         ViewDataGraphWrapper heartRateData = new ViewDataGraphWrapper(ViewDataGraphWrapper.HEART_RATE);
                         ViewDataGraphWrapper skinTempData = new ViewDataGraphWrapper(ViewDataGraphWrapper.SKIN_TEMP);
@@ -253,7 +253,7 @@ public class MyHealth_ViewData_Frag extends Fragment  {
                         ViewDataGraphWrapper bodyTempData = new ViewDataGraphWrapper(ViewDataGraphWrapper.BODY_TEMP);
                         ViewDataGraphWrapper activityData = new ViewDataGraphWrapper(ViewDataGraphWrapper.ACTIVITY);
 
-                        for (SeedApiMessagesPQuantDataResponse r : castedResult.getPdataList()) {
+                        for (MessagesPQuantDataResponse r : castedResult.getPdataList()) {
 
                             Long epoch = r.getTimeTaken().getValue();
 

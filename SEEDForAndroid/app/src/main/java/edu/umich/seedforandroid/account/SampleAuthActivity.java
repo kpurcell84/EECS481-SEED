@@ -63,7 +63,7 @@ public class SampleAuthActivity extends Activity {
 
         try {
 
-            SeedRequest request = api.doctor().get().setEmail("smeagol@lotr.com");
+            SeedRequest request = api.doctor().get("smeagol@lotr.com");
 
             // this call implicitly starts the thread
             mApiThread.enqueueRequest(request, new ApiThread.ApiResultAction() {
