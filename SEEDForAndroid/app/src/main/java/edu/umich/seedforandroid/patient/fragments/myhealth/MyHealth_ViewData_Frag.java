@@ -396,7 +396,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
                     if (result != null && result instanceof MessagesPQuantDataListResponse) {
 
                         MessagesPQuantDataListResponse castedResult =
-                                (MessagesPQuantDataListResponse)result;
+                                (MessagesPQuantDataListResponse) result;
 
                         ViewDataGraphWrapper heartRateData =
                                 new ViewDataGraphWrapper(ViewDataGraphWrapper.HEART_RATE);
@@ -411,67 +411,73 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
                         ViewDataGraphWrapper activityData =
                                 new ViewDataGraphWrapper(ViewDataGraphWrapper.ACTIVITY);
 
-                        for (MessagesPQuantDataResponse r : castedResult.getPdataList()) {
+                        if (castedResult.getPdataList() != null) {
 
-                            Long epoch = r.getTimeTaken().getValue();
+                            for (MessagesPQuantDataResponse r : castedResult.getPdataList()) {
 
-                            if (r.getHeartRate() != null) {
+                                if (r != null && r.getTimeTaken() != null) {
 
-                                Double data = r.getHeartRate().doubleValue();
-                                heartRateData.getHealthData().add(data);
-                                heartRateData.getEpoch().add(epoch);
-                            }
-                            if (r.getSkinTemp() != null) {
+                                    Long epoch = r.getTimeTaken().getValue();
 
-                                skinTempData.getHealthData().add(r.getSkinTemp());
-                                skinTempData.getEpoch().add(epoch);
-                            }
-                            if (r.getGsr() != null) {
+                                    if (r.getHeartRate() != null) {
 
-                                gsrData.getHealthData().add(r.getGsr());
-                                gsrData.getEpoch().add(epoch);
-                            }
-                            if (r.getBloodPressure() != null) {
+                                        Double data = r.getHeartRate().doubleValue();
+                                        heartRateData.getHealthData().add(data);
+                                        heartRateData.getEpoch().add(epoch);
+                                    }
+                                    if (r.getSkinTemp() != null) {
 
-                                String[] bpParts = r.getBloodPressure().split("/");
+                                        skinTempData.getHealthData().add(r.getSkinTemp());
+                                        skinTempData.getEpoch().add(epoch);
+                                    }
+                                    if (r.getGsr() != null) {
 
-                                if (bpParts.length == 2) {
+                                        gsrData.getHealthData().add(r.getGsr());
+                                        gsrData.getEpoch().add(epoch);
+                                    }
+                                    if (r.getBloodPressure() != null) {
 
-                                    bloodPressureData.getUpperData().add(Double.parseDouble(bpParts[0]));
-                                    bloodPressureData.getLowerData().add(Double.parseDouble(bpParts[1]));
-                                    bloodPressureData.getEpoch().add(epoch);
+                                        String[] bpParts = r.getBloodPressure().split("/");
+
+                                        if (bpParts.length == 2) {
+
+                                            bloodPressureData.getUpperData().add(Double.parseDouble(bpParts[0]));
+                                            bloodPressureData.getLowerData().add(Double.parseDouble(bpParts[1]));
+                                            bloodPressureData.getEpoch().add(epoch);
+                                        } else {
+
+                                            Log.e(TAG, "Malformed blood pressure data received: "
+                                                    + r.getBloodPressure());
+                                        }
+                                    }
+                                    if (r.getBodyTemp() != null) {
+
+                                        bodyTempData.getHealthData().add(r.getBodyTemp());
+                                        bodyTempData.getEpoch().add(epoch);
+                                    }
+                                    if (r.getActivityType() != null) {
+
+                                        Double activityLevel
+                                                = ViewDataGraphWrapper.activityTypeToValue(r.getActivityType());
+
+                                        activityData.getHealthData().add(activityLevel);
+                                        activityData.getEpoch().add(epoch);
+                                    }
                                 }
-                                else {
-
-                                    Log.e(TAG, "Malformed blood pressure data received: "
-                                            + r.getBloodPressure());
-                                }
                             }
-                            if (r.getBodyTemp() != null) {
 
-                                bodyTempData.getHealthData().add(r.getBodyTemp());
-                                bodyTempData.getEpoch().add(epoch);
-                            }
-                            if (r.getActivityType() != null) {
+                            populateDataIntoGraphs(heartRateData);
+                            populateDataIntoGraphs(skinTempData);
+                            populateDataIntoGraphs(gsrData);
+                            populateDataIntoGraphs(bloodPressureData);
+                            populateDataIntoGraphs(bodyTempData);
+                            populateDataIntoGraphs(activityData);
 
-                                Double activityLevel
-                                        = ViewDataGraphWrapper.activityTypeToValue(r.getActivityType());
-
-                                activityData.getHealthData().add(activityLevel);
-                                activityData.getEpoch().add(epoch);
-                            }
+                            return true;
                         }
-
-                        populateDataIntoGraphs(heartRateData);
-                        populateDataIntoGraphs(skinTempData);
-                        populateDataIntoGraphs(gsrData);
-                        populateDataIntoGraphs(bloodPressureData);
-                        populateDataIntoGraphs(bodyTempData);
-                        populateDataIntoGraphs(activityData);
-
-                        return true;
                     }
-                    else return false;
+
+                    return false;
                 }
 
                 @Override
