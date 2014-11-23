@@ -69,7 +69,7 @@ public class MyPatients_Frag extends Fragment  {
         list.setAdapter(adapter);
 
         // Testing
-        DoctorPatientWrapper tmp = new DoctorPatientWrapper("Andy", "Lee", "734-834-9095", "jinseok@umich.edu");
+        DoctorPatientWrapper tmp = new DoctorPatientWrapper("Andy", "Lee", "734-834-9095", "seedsystem00@gmail.com");
         myPatientList.add(tmp);
     }
 
@@ -179,9 +179,10 @@ public class MyPatients_Frag extends Fragment  {
                 @Override
                 public void onClick(View v)  {
 
-                    TextView tv = (TextView) v.findViewById(R.id.tvPatientID);
+//                    TextView tvEmail
+                    TextView tvID = (TextView) v.findViewById(R.id.tvPatientID);
                     TextView tvName = (TextView) v.findViewById(R.id.tvPatientName);
-                    gotoPatientDataPage(tv.getText().toString(), tvName.getText().toString());
+                    gotoPatientDataPage(tvID.getText().toString(), tvName.getText().toString());
                 }
             });
             return itemView;

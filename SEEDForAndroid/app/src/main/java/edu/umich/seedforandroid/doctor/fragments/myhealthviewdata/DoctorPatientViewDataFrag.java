@@ -58,6 +58,7 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
 
     private static final String TAG = DoctorPatientViewDataFrag.class.getSimpleName();
 
+    private String mPatientEmail;
     private SharedPrefsUtil sharedPrefsUtilInst;
     private RelativeLayout mHeartRateLayout, mSkinTempLayout, mPerspirationLayout,
             mBloodPressureLayout, mBodyTempLayout, mActivityTypeLayout;
@@ -405,7 +406,7 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
             SeedRequest getDataRequest = api.pQuantData().get(
 
                     new MessagesPQuantDataRequest()
-                            .setEmail(manager.getAccountName())
+                            .setEmail(mPatientEmail)
                             .setStartTime(begin)
                             .setEndTime(end)
             );
@@ -827,7 +828,7 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
 
         DateTime startDate = new DateTime(calStart.getTimeInMillis());
         DateTime endDate = new DateTime(calEnd.getTimeInMillis());
-        //fetchDataFromServer(startDate, endDate);
+        fetchDataFromServer(startDate, endDate);
     }
 
     private void getTodayDate()  {

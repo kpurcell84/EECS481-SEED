@@ -79,7 +79,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
     private TextView tvDate;
     private Calendar mCurrentCalendar, mTodayCalendar;
 
-    public MyHealth_ViewData_Frag() {}
+    public MyHealth_ViewData_Frag()  {}
 
     @Override
     public void setArguments(Bundle args)  {
@@ -96,6 +96,12 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
         mApiThread = new ApiThread();
         mCurrentCalendar = Calendar.getInstance();
         mTodayCalendar = Calendar.getInstance();
+
+        GoogleAccountManager gm = new GoogleAccountManager(getActivity().getApplicationContext());
+        if (gm.getIsLoggedIn())  {
+
+            mPatientEmail = gm.getAccountName();
+        }
     }
 
     @Override
