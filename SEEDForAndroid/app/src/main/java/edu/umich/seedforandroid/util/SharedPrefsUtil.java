@@ -53,6 +53,11 @@ public class SharedPrefsUtil {
         return mPrefs.getString(PROPERTY_CHOSEN_ACCOUNT, defValue);
     }
 
+    public void clearChosenAccount() {
+
+        removeProperty(PROPERTY_CHOSEN_ACCOUNT);
+    }
+
     public void setRegistrationId(String id) {
 
         setProperty(PROPERTY_REG_ID, id);
@@ -123,6 +128,11 @@ public class SharedPrefsUtil {
         return mPrefs.getString(PROPERTY_USER_ACCOUNT_TYPE, defValue);
     }
 
+    public void clearUserAccountType() {
+
+        removeProperty(PROPERTY_USER_ACCOUNT_TYPE);
+    }
+
     public void setNotificationState(boolean val)  { // ACTIVE or INACTIVE
 
         setProperty(PROPERTY_NOTIFICATION_STATE, val);
@@ -133,6 +143,11 @@ public class SharedPrefsUtil {
         return mPrefs.getBoolean(PROPERTY_NOTIFICATION_STATE, defValue);
     }
 
+    public void clearNotificationState() {
+
+        removeProperty(PROPERTY_NOTIFICATION_STATE);
+    }
+
     public void setNotificationMessage(String val)  {
 
         setProperty(PROPERTY_NOTIFICATION_MESSAGE, val);
@@ -141,6 +156,11 @@ public class SharedPrefsUtil {
     public String getNotificationMessage(String defValue)  {
 
         return mPrefs.getString(PROPERTY_NOTIFICATION_MESSAGE, defValue);
+    }
+
+    public void clearNotificationMessage() {
+
+        removeProperty(PROPERTY_NOTIFICATION_MESSAGE);
     }
 
     public void setSurveyQAPair(int question, String answer)  {
@@ -228,5 +248,10 @@ public class SharedPrefsUtil {
     private void removeProperty(String property) {
 
         mPrefs.edit().remove(property).apply();
+    }
+
+    public void removeAllProperties() {
+
+        mPrefs.edit().clear().apply();
     }
 }

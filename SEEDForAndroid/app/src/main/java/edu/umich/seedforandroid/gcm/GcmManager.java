@@ -80,7 +80,6 @@ public class GcmManager {
 
     public void clearRegistrationId() {
 
-
     }
 
     public boolean isRegistrationValid() {

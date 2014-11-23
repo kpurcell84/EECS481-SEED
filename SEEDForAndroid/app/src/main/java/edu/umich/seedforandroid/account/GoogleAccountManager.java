@@ -85,4 +85,9 @@ public class GoogleAccountManager {
         mPrefsUtil.setChosenAccount(accountName);
         mCredential.setSelectedAccountName(accountName);
     }
+
+    public void logOutCurrentAccount() {
+
+        mPrefsUtil.removeAllProperties();
+    }
 }

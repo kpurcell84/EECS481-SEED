@@ -11,14 +11,14 @@ apply plugin: 'android'
 apply plugin: 'com.android.application'
 
 android {
-//    signingConfigs {
-//        debug {
-//            keyAlias 'test'
-//            keyPassword 'seedapp'
-//            storeFile file('C:/Users/Dominic/.android/debug.keystore.jks')
-//            storePassword 'seedapp'
-//        }
-//    }
+    signingConfigs {
+        debug {
+            keyAlias 'test'
+            keyPassword 'seedapp'
+            storeFile file('C:/Users/Dominic/.android/debug.keystore.jks')
+            storePassword 'seedapp'
+        }
+    }
     compileSdkVersion 19
     buildToolsVersion '20.0.0'
     defaultConfig {
@@ -70,8 +70,8 @@ dependencies {
     }
     // This is used by the Google HTTP client library.
     /*compile ('com.google.guava:guava:14.0.+') {
-                                    exclude module: 'annotations'
-                                }*/
+                                        exclude module: 'annotations'
+                                    }*/
     compile 'com.android.support:support-v13:20.0.0'
     compile 'com.androidplot:androidplot-core:0.6.1'
     compile project(':seed')

@@ -12,19 +12,32 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.appspot.umichseed.seed.Seed;
+import com.appspot.umichseed.seed.SeedRequest;
+import com.appspot.umichseed.seed.model.MessagesGcmCredsPut;
+
+import java.io.IOException;
+
 import edu.umich.seedforandroid.R;
+import edu.umich.seedforandroid.account.GoogleAccountManager;
+import edu.umich.seedforandroid.api.ApiThread;
+import edu.umich.seedforandroid.api.SeedApi;
 import edu.umich.seedforandroid.main.MainActivity;
 import edu.umich.seedforandroid.patient.fragments.MyHealth_Frag;
 import edu.umich.seedforandroid.patient.fragments.MySepsisNurse_Frag;
 import edu.umich.seedforandroid.patient.fragments.Patient_Help_Frag;
 import edu.umich.seedforandroid.patient.fragments.Patient_Profile_Frag;
 import edu.umich.seedforandroid.patient.fragments.Patient_Settings_Frag;
+import edu.umich.seedforandroid.util.SharedPrefsUtil;
 
 public class MainActivity_Patient extends Activity implements NavigationDrawerFragment_Patient.NavigationDrawerCallbacks {
+
+    private static final String TAG = MainActivity_Patient.class.getSimpleName();
 
     private NavigationDrawerFragment_Patient mNavigationDrawerFragment;
     private CharSequence mTitle;
@@ -122,9 +135,71 @@ public class MainActivity_Patient extends Activity implements NavigationDrawerFr
         divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
     }
 
+    private void notifyUiOfUnregisterPushNotificationError() {
+
+        // todo: notify the user that we couldn't unregister their push notifications
+        // tell them something like "an error occurred while logging you out. Unfortunately, you may
+        // still receive push notifications on this device. To fix this issue, please uninstall and reinstall
+        // the app. We apologize for this inconvenience". And then navigate home afterwards.
+        navigateHome();
+    }
+
     private void logout()  {
 
-        // todo handle logout for Google Account Manager
+        final GoogleAccountManager manager = new GoogleAccountManager(this);
+        if (manager.tryLogIn()) {
+            //user is logged in, log them out
+            SharedPrefsUtil prefsUtil = new SharedPrefsUtil(this);
+            String oldToken = prefsUtil.getRegistrationId("");
+            if (!oldToken.equals("")) {
+
+                try {
+                    Seed api = SeedApi.getAuthenticatedApi(manager.getCredential());
+                    SeedRequest request = api.gcmCreds().put(
+                            new MessagesGcmCredsPut()
+                                    .setEmail(manager.getAccountName())
+                                    .setOldRegId(oldToken)
+                    );
+                    final ApiThread apiThread = new ApiThread();
+                    apiThread.enqueueRequest(request, new ApiThread.ApiResultAction() {
+                        @Override
+                        public void onApiResult(Object result) {
+
+                            apiThread.stop();
+                            manager.logOutCurrentAccount();
+                            navigateHome();
+                        }
+
+                        @Override
+                        public void onApiError(Throwable error) {
+
+                            Log.e(TAG, "API error received with message: " + error.getMessage());
+                            apiThread.stop();
+                            manager.logOutCurrentAccount();
+                            notifyUiOfUnregisterPushNotificationError();
+                        }
+                    });
+                }
+                catch (IOException e) {
+
+                    Log.e(TAG, "Unknown API error occurred - API could not create request");
+                    manager.logOutCurrentAccount();
+                    notifyUiOfUnregisterPushNotificationError();
+                }
+            }
+            else {
+
+                manager.logOutCurrentAccount();
+                navigateHome();
+            }
+        }
+        else {
+
+            navigateHome();
+        }
+    }
+
+    private void navigateHome() {
 
         Intent intent = new Intent(MainActivity_Patient.this, MainActivity.class);
         startActivity(intent);
