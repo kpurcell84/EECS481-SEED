@@ -59,7 +59,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
 
     public static final String ARG_PATIENT_EMAIL = "forPatientEmail";
 
-    private String mPatientEmail;
+    private String mPatientEmail = null;
     private SharedPrefsUtil sharedPrefsUtilInst;
     private RelativeLayout mHeartRateLayout, mSkinTempLayout, mPerspirationLayout,
             mBloodPressureLayout, mBodyTempLayout, mActivityTypeLayout;
@@ -96,12 +96,6 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
         mApiThread = new ApiThread();
         mCurrentCalendar = Calendar.getInstance();
         mTodayCalendar = Calendar.getInstance();
-
-        GoogleAccountManager gm = new GoogleAccountManager(getActivity().getApplicationContext());
-        if (gm.getIsLoggedIn())  {
-
-            mPatientEmail = gm.getAccountName();
-        }
     }
 
     @Override
@@ -419,11 +413,12 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
 
         try  {
 
+            String patientEmail = mPatientEmail == null ? manager.getAccountName() : mPatientEmail;
             Seed api = SeedApi.getAuthenticatedApi(manager.getCredential());
             SeedRequest getDataRequest = api.pQuantData().get(
 
                     new MessagesPQuantDataRequest()
-                            .setEmail(mPatientEmail)
+                            .setEmail(patientEmail)
                             .setStartTime(begin)
                             .setEndTime(end)
             );

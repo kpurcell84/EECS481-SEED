@@ -20,7 +20,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver  {
 
         Bundle extras = intent.getExtras();
         Log.i(TAG, "Received message: " + extras.toString());
-        Toast.makeText(context.getApplicationContext(), extras.get("priority").toString(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(context.getApplicationContext(), extras.get("message").toString(), Toast.LENGTH_SHORT).show();
 
         setResultCode(Activity.RESULT_OK);
     }

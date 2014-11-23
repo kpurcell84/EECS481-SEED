@@ -1,6 +1,12 @@
 package edu.umich.seedforandroid.doctor.fragments;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -10,13 +16,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.appspot.umichseed.seed.Seed;
 import com.appspot.umichseed.seed.SeedRequest;
 import com.appspot.umichseed.seed.model.MessagesEmailRequest;
 import com.appspot.umichseed.seed.model.MessagesPatientListResponse;
+import com.appspot.umichseed.seed.model.MessagesPatientPut;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,16 +45,16 @@ public class MyPatients_Frag extends Fragment  {
     public MyPatients_Frag()  {}
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate(Bundle savedInstanceState)  {
 
+        super.onCreate(savedInstanceState);
         mApiThread = new ApiThread();
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroy()  {
 
+        super.onDestroy();
         mApiThread.stop();
     }
 
@@ -68,19 +74,24 @@ public class MyPatients_Frag extends Fragment  {
         ListView list = (ListView) view.findViewById(R.id.patientlistView);
         list.setAdapter(adapter);
 
-        // Testing
-        DoctorPatientWrapper tmp = new DoctorPatientWrapper("Andy", "Lee", "734-834-9095", "seedsystem00@gmail.com");
-        myPatientList.add(tmp);
+        updatePatientListFromServer();
     }
 
     private void populatePatientList(MessagesPatientListResponse patients) {
 
         //todo load up patient list, call redraw on Adapter
-    }
+        myPatientList.clear();
+        for (MessagesPatientPut patient : patients.getPatients())  {
 
-    private void populatePatientList(DoctorPatientWrapper patientData)  {
+            DoctorPatientWrapper tmp = new DoctorPatientWrapper(patient.getFirstName(),
+                                                                patient.getLastName(),
+                                                                patient.getPhone(), patient.getEmail());
+            myPatientList.add(tmp);
+        }
 
-        myPatientList.add(patientData);
+        adapter = new PatientListAdapter();
+        ListView list = (ListView) getView().findViewById(R.id.patientlistView);
+        list.setAdapter(adapter);
     }
 
     private void notifyUiUserNotLoggedIn() {
@@ -109,11 +120,11 @@ public class MyPatients_Frag extends Fragment  {
                         new MessagesEmailRequest()
                                 .setEmail(accountManager.getAccountName())
                 );
-                mApiThread.enqueueRequest(request, new ApiThread.ApiResultAction() {
+                mApiThread.enqueueRequest(request, new ApiThread.ApiResultAction()  {
                     @Override
-                    public void onApiResult(Object result) {
+                    public void onApiResult(Object result)  {
 
-                        if (result != null && result instanceof MessagesPatientListResponse) {
+                        if (result != null && result instanceof MessagesPatientListResponse)  {
 
                             populatePatientList((MessagesPatientListResponse)result);
                         }
@@ -158,34 +169,117 @@ public class MyPatients_Frag extends Fragment  {
 
             // Name
             TextView tvName = (TextView) itemView.findViewById(R.id.tvPatientName);
-            String patientNameTmp = currentPatient.getPatientFirstName().concat(" ").concat(currentPatient.getPatientLastName());
+            final String patientNameTmp = currentPatient.getPatientFirstName().concat(" ").concat(currentPatient.getPatientLastName());
             tvName.setText(patientNameTmp);
 
             // Phone Number
-            TextView tvPhoneNumber = (TextView) itemView.findViewById(R.id.tvPatientPhoneNumber);
+            final TextView tvPhoneNumber = (TextView) itemView.findViewById(R.id.tvPatientPhoneNumber);
             tvPhoneNumber.setText(currentPatient.getPatientPhoneNumber());
+            tvPhoneNumber.setOnClickListener(new View.OnClickListener()  {
+
+                @Override
+                public void onClick(View v)  {
+
+                    popUpPhoneCallAlertDialog(tvPhoneNumber.getText().toString(), patientNameTmp);
+                }
+            });
 
             // Email
-            TextView tvEmail = (TextView) itemView.findViewById(R.id.tvPatientEmail);
+            final TextView tvEmail = (TextView) itemView.findViewById(R.id.tvPatientEmail);
             tvEmail.setText(currentPatient.getPatientEmail());
+            tvEmail.setOnClickListener(new View.OnClickListener()  {
+
+                @Override
+                public void onClick(View v)  {
+
+                    popUpEmailAlertDialog(tvEmail.getText().toString(), patientNameTmp);
+                }
+            });
 
             // ImageView
             ImageView imageView = (ImageView) itemView.findViewById(R.id.imageViewPatientGender);
 
             // RelativeLayout
-            RelativeLayout thisLayout = (RelativeLayout) itemView.findViewById(R.id.patientRelativeLayout);
-            thisLayout.setOnClickListener(new View.OnClickListener()  {
+            ImageView imageViewNext = (ImageView) itemView.findViewById(R.id.imageViewNextIcon);
+            imageViewNext.setOnClickListener(new View.OnClickListener()  {
 
                 @Override
                 public void onClick(View v)  {
 
-                    TextView tvEmail = (TextView) v.findViewById(R.id.tvPatientEmail);
-                    TextView tvName = (TextView) v.findViewById(R.id.tvPatientName);
-                    gotoPatientDataPage(tvEmail.getText().toString(), tvName.getText().toString());
+                    gotoPatientDataPage(tvEmail.getText().toString(), patientNameTmp);
                 }
             });
             return itemView;
         }
+    }
+
+    private void popUpEmailAlertDialog(final String emailStr, String patientName)  {
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+        alertDialog.setTitle("Email ".concat(patientName).concat("?"));
+        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener()  {
+
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        })
+        .setPositiveButton("Yes", new DialogInterface.OnClickListener()  {
+
+            @Override
+            public void onClick(DialogInterface dialog, int id)  {
+
+                emailPatient(emailStr);
+            }
+        });
+
+        // Set the line color
+        Dialog d = alertDialog.show();
+        int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+        View divider = d.findViewById(dividerId);
+        divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
+    }
+
+    private void popUpPhoneCallAlertDialog(final String phoneNumber, String patientName)  {
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+        alertDialog.setTitle("Call ".concat(patientName).concat("?"));
+        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener()  {
+
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        })
+        .setPositiveButton("Yes", new DialogInterface.OnClickListener()  {
+
+            @Override
+            public void onClick(DialogInterface dialog, int id)  {
+
+                callPatient(phoneNumber);
+            }
+        });
+
+        // Set the line color
+        Dialog d = alertDialog.show();
+        int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+        View divider = d.findViewById(dividerId);
+        divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
+    }
+
+    private void emailPatient(String emailStr)  {
+
+        String emailaddress[] = { emailStr };
+
+        Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+        emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, emailaddress);
+        emailIntent.setType("plain/text");
+        startActivity(emailIntent);
+    }
+
+    private void callPatient(String phoneNumber)  {
+
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:".concat(phoneNumber)));
+        startActivity(intent);
     }
 
     private void gotoPatientDataPage(String patientEmail, String patientName)  {

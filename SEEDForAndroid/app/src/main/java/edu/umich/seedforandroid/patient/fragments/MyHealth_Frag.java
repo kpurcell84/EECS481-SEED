@@ -18,6 +18,8 @@ import edu.umich.seedforandroid.patient.fragments.myhealth.MyHealth_ViewData_Fra
 
 public class MyHealth_Frag extends Fragment  {
 
+    private static final String TAG = MyHealth_Frag.class.getSimpleName();
+
     private FragmentTabHost mTabHost;
 
     public MyHealth_Frag()  {}

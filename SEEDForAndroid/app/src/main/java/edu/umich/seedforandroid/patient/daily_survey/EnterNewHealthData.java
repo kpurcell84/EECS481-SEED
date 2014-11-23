@@ -1,4 +1,4 @@
-package edu.umich.seedforandroid.patient;
+package edu.umich.seedforandroid.patient.daily_survey;
 
 import android.app.Activity;
 import android.os.Bundle;

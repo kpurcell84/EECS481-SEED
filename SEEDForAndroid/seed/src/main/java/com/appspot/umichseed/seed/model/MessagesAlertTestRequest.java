@@ -19,7 +19,8 @@
 package com.appspot.umichseed.seed.model;
 
 /**
- * ProtoRPC message definition to represent a list of patients reponse
+ * ProtoRPC message definition to represent a request to trigger a fake alert for testing/demo
+ * purposes
  *
  * <p> This is the Java data model class that specifies how to parse/serialize into the JSON that is
  * transmitted over HTTP when working with the seed. For a detailed explanation see:
@@ -29,40 +30,58 @@ package com.appspot.umichseed.seed.model;
  * @author Google, Inc.
  */
 @SuppressWarnings("javadoc")
-public final class MessagesPatientListResponse extends com.google.api.client.json.GenericJson {
+public final class MessagesAlertTestRequest extends com.google.api.client.json.GenericJson {
 
   /**
-   * ProtoRPC message definition to represent a patient
    * The value may be {@code null}.
    */
-  @com.google.api.client.util.Key
-  private java.util.List<MessagesPatientPut> patients;
+  @com.google.api.client.util.Key("patient_email")
+  private java.lang.String patientEmail;
 
   /**
-   * ProtoRPC message definition to represent a patient
+   * The value may be {@code null}.
+   */
+  @com.google.api.client.util.Key("septic_risk")
+  private java.lang.Double septicRisk;
+
+  /**
    * @return value or {@code null} for none
    */
-  public java.util.List<MessagesPatientPut> getPatients() {
-    return patients;
+  public java.lang.String getPatientEmail() {
+    return patientEmail;
   }
 
   /**
-   * ProtoRPC message definition to represent a patient
-   * @param patients patients or {@code null} for none
+   * @param patientEmail patientEmail or {@code null} for none
    */
-  public MessagesPatientListResponse setPatients(java.util.List<MessagesPatientPut> patients) {
-    this.patients = patients;
+  public MessagesAlertTestRequest setPatientEmail(java.lang.String patientEmail) {
+    this.patientEmail = patientEmail;
+    return this;
+  }
+
+  /**
+   * @return value or {@code null} for none
+   */
+  public java.lang.Double getSepticRisk() {
+    return septicRisk;
+  }
+
+  /**
+   * @param septicRisk septicRisk or {@code null} for none
+   */
+  public MessagesAlertTestRequest setSepticRisk(java.lang.Double septicRisk) {
+    this.septicRisk = septicRisk;
     return this;
   }
 
   @Override
-  public MessagesPatientListResponse set(String fieldName, Object value) {
-    return (MessagesPatientListResponse) super.set(fieldName, value);
+  public MessagesAlertTestRequest set(String fieldName, Object value) {
+    return (MessagesAlertTestRequest) super.set(fieldName, value);
   }
 
   @Override
-  public MessagesPatientListResponse clone() {
-    return (MessagesPatientListResponse) super.clone();
+  public MessagesAlertTestRequest clone() {
+    return (MessagesAlertTestRequest) super.clone();
   }
 
 }

@@ -11,7 +11,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import edu.umich.seedforandroid.R;
-import edu.umich.seedforandroid.patient.EnterNewHealthData;
 import edu.umich.seedforandroid.util.SharedPrefsUtil;
 
 public class DailySurvey extends Activity implements View.OnClickListener  {
