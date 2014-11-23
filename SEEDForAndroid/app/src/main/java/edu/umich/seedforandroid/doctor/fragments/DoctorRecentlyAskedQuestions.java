@@ -8,15 +8,15 @@ import android.view.ViewGroup;
 
 import edu.umich.seedforandroid.R;
 
-public class Doctor_Settings_Frag extends Fragment  {
+public class DoctorRecentlyAskedQuestions extends Fragment  {
 
-    public Doctor_Settings_Frag() {
-
-    }
+    public DoctorRecentlyAskedQuestions()  {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)  {
 
-        return inflater.inflate(R.layout.fragment_doctor__settings_, container, false);
+        View view = inflater.inflate(R.layout.fragment_doctor_recently_asked_questions, container, false);
+
+        return view;
     }
 }

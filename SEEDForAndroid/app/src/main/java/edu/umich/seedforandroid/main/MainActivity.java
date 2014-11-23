@@ -42,6 +42,10 @@ public class MainActivity extends Activity implements View.OnClickListener  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Intent i = new Intent(MainActivity.this, MainActivity_Doctor.class);
+        startActivity(i);
+
+
         initialSetup();
 
         loadAccountManager();
@@ -102,10 +106,9 @@ public class MainActivity extends Activity implements View.OnClickListener  {
 
     private void login() {
 
-        Intent intent = mAccountManager.getPickAccountIntent();
-        startActivityForResult(intent, PICK_ACCOUNT_RESULT);
+//        Intent intent = mAccountManager.getPickAccountIntent();
+//        startActivityForResult(intent, PICK_ACCOUNT_RESULT);
 
-        /*
         if (!mAccountManager.tryLogIn()) {
 
             Log.i("HEREEEE", "@@@@@@@@@@@@@@");
@@ -118,7 +121,6 @@ public class MainActivity extends Activity implements View.OnClickListener  {
             Toast.makeText(MainActivity.this, "ELSE STATEMENT", Toast.LENGTH_SHORT).show();
             completeLogin();
         }
-        */
     }
 
     private void completeLogin() {

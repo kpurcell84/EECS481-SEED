@@ -87,8 +87,12 @@
         </activity>
         <activity
             android:name="edu.umich.seedforandroid.patient.updates.UpdateSurveyTime"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_update_survey_time" >
+            android:label="@string/title_activity_update_survey_time"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="edu.umich.seedforandroid.doctor.patientdata.DoctorViewPatientData"
+            android:label="@string/title_activity_doctor_view_patient_data" >
         </activity>
     </application>
 

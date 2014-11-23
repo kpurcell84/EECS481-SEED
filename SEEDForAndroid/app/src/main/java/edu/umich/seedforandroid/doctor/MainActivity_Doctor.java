@@ -14,8 +14,8 @@ import android.support.v4.view.ViewPager;
 import android.text.Html;
 
 import edu.umich.seedforandroid.R;
+import edu.umich.seedforandroid.doctor.fragments.DoctorRecentlyAskedQuestions;
 import edu.umich.seedforandroid.doctor.fragments.Doctor_Profile_Frag;
-import edu.umich.seedforandroid.doctor.fragments.Doctor_Settings_Frag;
 import edu.umich.seedforandroid.doctor.fragments.MyAlerts_Frag;
 import edu.umich.seedforandroid.doctor.fragments.MyPatients_Frag;
 
@@ -84,7 +84,7 @@ public class MainActivity_Doctor extends FragmentActivity implements ActionBar.T
         ActionBar.Tab tab4 = actionBar.newTab();
         tab4.setTabListener(this);
         tab4.setIcon(R.drawable.settings_icon_inactive);
-        tab4.setContentDescription("settings");
+        tab4.setContentDescription("recentlyaskedquestions");
 
         actionBar.addTab(tab1);
         actionBar.addTab(tab2);
@@ -112,9 +112,9 @@ public class MainActivity_Doctor extends FragmentActivity implements ActionBar.T
             actionBar.setTitle((Html.fromHtml("<font color=\"#FFFFFF\">" + "Profile" + "</font>")));
             tab.setIcon(R.drawable.profile_icon_active);
         }
-        else if (tab.getContentDescription().toString().contentEquals("settings") == true)  {
+        else if (tab.getContentDescription().toString().contentEquals("recentlyaskedquestions") == true)  {
 
-            actionBar.setTitle((Html.fromHtml("<font color=\"#FFFFFF\">" + "Settings" + "</font>")));
+            actionBar.setTitle((Html.fromHtml("<font color=\"#FFFFFF\">" + "Recently Asked Questions by Patients" + "</font>")));
             tab.setIcon(R.drawable.settings_icon_active);
         }
 
@@ -136,7 +136,7 @@ public class MainActivity_Doctor extends FragmentActivity implements ActionBar.T
 
             tab.setIcon(R.drawable.profile_icon_inactive);
         }
-        else if (tab.getContentDescription().toString().contentEquals("settings") == true)  {
+        else if (tab.getContentDescription().toString().contentEquals("recentlyaskedquestions") == true)  {
 
             tab.setIcon(R.drawable.settings_icon_inactive);
         }
@@ -174,7 +174,7 @@ class MyAdapter extends FragmentStatePagerAdapter  {
         }
         if (arg == 3)  {
 
-            fragment = new Doctor_Settings_Frag();
+            fragment = new DoctorRecentlyAskedQuestions();
         }
 
         return fragment;

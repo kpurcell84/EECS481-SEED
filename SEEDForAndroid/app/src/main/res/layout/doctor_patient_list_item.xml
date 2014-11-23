@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="#F3F0EB"
+    android:padding="10dp"
+    android:id="@+id/patientRelativeLayout"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_toRightOf="@+id/imageViewPatientGender"
+            android:layout_toLeftOf="@+id/imageViewNextIcon"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Patient Name"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/tvPatientName" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Patient ID"
+                android:textSize="0sp"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/tvPatientID" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="123-456-7890"
+                android:textSize="20sp"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/tvPatientName"
+                android:id="@+id/tvPatientPhoneNumber" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="test@test.com"
+                android:textSize="20sp"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/tvPatientPhoneNumber"
+                android:id="@+id/tvPatientEmail" />
+
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/imageViewPatientGender"
+            android:src="@drawable/male_profile_icon"
+            android:layout_alignParentLeft="true" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageViewNextIcon"
+            android:layout_centerInParent="true"
+            android:src="@drawable/next_icon_final"
+            android:layout_alignParentRight="true" />
+
+    </RelativeLayout>
+
+</RelativeLayout>
