@@ -68,7 +68,9 @@ public class MyHealth_Alerts_Frag extends Fragment  {
     public void onStart() {
         super.onStart();
 
-
+        //todo refresh alerts for the default time, this is where you first fetch alerts to display
+        // if necessary, load alerts from disk to display here as well, you can pass them in as
+        // any collection type you want, the method will handle sorting them
     }
 
     @Override

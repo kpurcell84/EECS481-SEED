@@ -3,6 +3,7 @@ package edu.umich.seedforandroid.doctor.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,18 +13,44 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.appspot.umichseed.seed.Seed;
+import com.appspot.umichseed.seed.SeedRequest;
+import com.appspot.umichseed.seed.model.MessagesEmailRequest;
+import com.appspot.umichseed.seed.model.MessagesPatientListResponse;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.umich.seedforandroid.R;
+import edu.umich.seedforandroid.account.GoogleAccountManager;
+import edu.umich.seedforandroid.api.ApiThread;
+import edu.umich.seedforandroid.api.SeedApi;
 import edu.umich.seedforandroid.doctor.patientdata.DoctorViewPatientData;
 
 public class MyPatients_Frag extends Fragment  {
 
+    private static final String TAG = MyPatients_Frag.class.getSimpleName();
+
     private List<DoctorPatientWrapper> myPatientList = new ArrayList<DoctorPatientWrapper>();
-    ArrayAdapter<DoctorPatientWrapper> adapter;
+    private ArrayAdapter<DoctorPatientWrapper> adapter;
+    private ApiThread mApiThread;
 
     public MyPatients_Frag()  {}
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mApiThread = new ApiThread();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        mApiThread.stop();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)  {
@@ -42,13 +69,70 @@ public class MyPatients_Frag extends Fragment  {
         list.setAdapter(adapter);
 
         // Testing
-        DoctorPatientWrapper tmp = new DoctorPatientWrapper("1", "Andy", "Lee", "734-834-9095", "jinseok@umich.edu");
+        DoctorPatientWrapper tmp = new DoctorPatientWrapper("Andy", "Lee", "734-834-9095", "jinseok@umich.edu");
         myPatientList.add(tmp);
+    }
+
+    private void populatePatientList(MessagesPatientListResponse patients) {
+
+        //todo load up patient list, call redraw on Adapter
     }
 
     private void populatePatientList(DoctorPatientWrapper patientData)  {
 
         myPatientList.add(patientData);
+    }
+
+    private void notifyUiUserNotLoggedIn() {
+
+        //todo: user not logged in, notify and navigate back to main activity?
+    }
+
+    private void notifyUiApiError() {
+
+        //todo: api error occurred. Notify
+    }
+
+    private void updatePatientListFromServer() {
+
+        GoogleAccountManager accountManager = new GoogleAccountManager(getActivity());
+        if (!accountManager.tryLogIn()) {
+
+            Log.e(TAG, "FATAL ERROR: The user got here without being logged in somehow");
+            notifyUiUserNotLoggedIn();
+        }
+        else {
+
+            try {
+                Seed api = SeedApi.getAuthenticatedApi(accountManager.getCredential());
+                SeedRequest request = api.doctorsPatients().get(
+                        new MessagesEmailRequest()
+                                .setEmail(accountManager.getAccountName())
+                );
+                mApiThread.enqueueRequest(request, new ApiThread.ApiResultAction() {
+                    @Override
+                    public void onApiResult(Object result) {
+
+                        if (result != null && result instanceof MessagesPatientListResponse) {
+
+                            populatePatientList((MessagesPatientListResponse)result);
+                        }
+                    }
+
+                    @Override
+                    public void onApiError(Throwable error) {
+
+                        Log.e(TAG, "API error occurred with message: " + error.getMessage());
+                        notifyUiApiError();
+                    }
+                });
+            }
+            catch (IOException e) {
+
+                Log.e(TAG, "An unknown API error occurred - API could not build the request");
+                notifyUiApiError();
+            }
+        }
     }
 
     private class PatientListAdapter extends ArrayAdapter<DoctorPatientWrapper>  {
@@ -71,10 +155,6 @@ public class MyPatients_Frag extends Fragment  {
 
             // Find the item to work with.
             DoctorPatientWrapper currentPatient = myPatientList.get(position);
-
-            // ID
-            TextView tvID = (TextView) itemView.findViewById(R.id.tvPatientID);
-            tvID.setText(currentPatient.getPatientID());
 
             // Name
             TextView tvName = (TextView) itemView.findViewById(R.id.tvPatientName);
