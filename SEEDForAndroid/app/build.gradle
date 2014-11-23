@@ -11,14 +11,14 @@ apply plugin: 'android'
 apply plugin: 'com.android.application'
 
 android {
-    signingConfigs {
+    /*signingConfigs {
         debug {
             keyAlias 'test'
             keyPassword 'seedapp'
             storeFile file('C:/Users/Dominic/.android/debug.keystore.jks')
             storePassword 'seedapp'
         }
-    }
+    }*/
     compileSdkVersion 19
     buildToolsVersion '20.0.0'
     defaultConfig {
