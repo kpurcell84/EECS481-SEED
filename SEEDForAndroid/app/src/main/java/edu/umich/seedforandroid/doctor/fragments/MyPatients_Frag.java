@@ -179,21 +179,20 @@ public class MyPatients_Frag extends Fragment  {
                 @Override
                 public void onClick(View v)  {
 
-//                    TextView tvEmail
-                    TextView tvID = (TextView) v.findViewById(R.id.tvPatientID);
+                    TextView tvEmail = (TextView) v.findViewById(R.id.tvPatientEmail);
                     TextView tvName = (TextView) v.findViewById(R.id.tvPatientName);
-                    gotoPatientDataPage(tvID.getText().toString(), tvName.getText().toString());
+                    gotoPatientDataPage(tvEmail.getText().toString(), tvName.getText().toString());
                 }
             });
             return itemView;
         }
     }
 
-    private void gotoPatientDataPage(String patientID, String patientName)  {
+    private void gotoPatientDataPage(String patientEmail, String patientName)  {
 
         Intent i = new Intent(getActivity(), DoctorViewPatientData.class);
         Bundle extras = new Bundle();
-        extras.putString("patient_id", patientID);
+        extras.putString("patient_email", patientEmail);
         extras.putString("patient_name", patientName);
         i.putExtras(extras);
         startActivity(i);

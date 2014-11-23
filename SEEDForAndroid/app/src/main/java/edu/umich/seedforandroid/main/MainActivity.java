@@ -66,8 +66,6 @@ public class MainActivity extends Activity implements View.OnClickListener  {
                 extras.putInt("tabSelection", MainActivity_Doctor.MYALERTS);
                 intent.putExtras(extras);
                 startActivity(intent);
-
-                startActivity(intent);
             }
             else if (sharedPrefsUtilInst.getUserAccountType("").equals(SharedPrefsUtil.ACCOUNT_TYPE_PATIENT)) {
 
@@ -165,6 +163,9 @@ public class MainActivity extends Activity implements View.OnClickListener  {
                             if (type.equals(SharedPrefsUtil.ACCOUNT_TYPE_DOCTOR))  {
 
                                 Intent intent = new Intent(MainActivity.this, MainActivity_Doctor.class);
+                                Bundle extras = new Bundle();
+                                extras.putInt("tabSelection", MainActivity_Doctor.MYALERTS);
+                                intent.putExtras(extras);
                                 startActivity(intent);
                             }
                             else  {

@@ -22,7 +22,7 @@ import edu.umich.seedforandroid.doctor.fragments.myhealthviewdata.DoctorPatientV
 
 public class DoctorViewPatientData extends FragmentActivity implements ActionBar.TabListener  {
 
-    private String mPatientEmail;
+    private static String mPatientEmail;
     private String mPatientName;
     private ActionBar mActionBar;
     private ViewPager mViewPager;
@@ -39,12 +39,12 @@ public class DoctorViewPatientData extends FragmentActivity implements ActionBar
     private void initialSetup()  {
 
         Bundle extras = getIntent().getExtras();
-        mPatientEmail = extras.getString("patient_id");
+        mPatientEmail = extras.getString("patient_email");
         mPatientName = extras.getString("patient_name");
 
         // View
         mViewPager = (ViewPager) findViewById(R.id.pager_doctor_patient);
-        mViewPager.setAdapter(new DoctorPatientViewPagerAdapter(getSupportFragmentManager()));
+        mViewPager.setAdapter(new DoctorPatientViewPagerAdapter(getSupportFragmentManager(), mPatientEmail));
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener()  {
 
             @Override
@@ -140,18 +140,18 @@ public class DoctorViewPatientData extends FragmentActivity implements ActionBar
     }
 
     @Override
-    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft)  {
-
-
-    }
+    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft)  {}
 }
 
 
 class DoctorPatientViewPagerAdapter extends FragmentStatePagerAdapter {
 
-    public DoctorPatientViewPagerAdapter(FragmentManager fm)  {
+    private String patientEmail;
+
+    public DoctorPatientViewPagerAdapter(FragmentManager fm, String patientEmail)  {
 
         super(fm);
+        this.patientEmail = patientEmail;
     }
 
     @Override
@@ -162,6 +162,11 @@ class DoctorPatientViewPagerAdapter extends FragmentStatePagerAdapter {
         if (arg == 0)  {
 
             fragment = new DoctorPatientViewDataFrag();
+
+            Bundle extras = new Bundle();
+            extras.putString("patient_email", patientEmail);
+            fragment.setArguments(extras);
+
         }
         if (arg == 1)  {
 

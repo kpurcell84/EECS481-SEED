@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.androidplot.ui.XLayoutStyle;
 import com.androidplot.ui.YLayoutStyle;
@@ -173,10 +174,11 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
                 }
             }
         })
-        .setNegativeButton("Cancel", new DialogInterface.OnClickListener()  {
+        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 
             @Override
-            public void onClick(DialogInterface dialog, int id)  {}
+            public void onClick(DialogInterface dialog, int id) {
+            }
         })
         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
@@ -283,6 +285,9 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
 
         sharedPrefsUtilInst = new SharedPrefsUtil(getActivity().getApplicationContext());
         mUtilsInst = new Utils();
+
+        mPatientEmail = this.getArguments().getString("patient_email");
+        Toast.makeText(getActivity(), mPatientEmail, Toast.LENGTH_SHORT).show();
     }
 
     private View noInternetConnection(View view, LayoutInflater inflater, ViewGroup container)  {
