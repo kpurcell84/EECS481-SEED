@@ -13,24 +13,30 @@ public class ViewDataGraphWrapper  {
     public static final int GSR = 2;
     public static final int BLOOD_PRESSURE = 3;
     public static final int BODY_TEMP = 4;
-    public static final int ACTIVITY = 5;
+    public static final int REM = 5;
+    public static final int DEEP = 6;
+    public static final int LIGHT = 7;
+    public static final int STILL = 8;
+    public static final int WALK = 9;
+    public static final int RUN = 10;
+    public static final int BIKE = 11;
 
 
-    protected static final String REM = "Rem";
-    protected static final String DEEP = "Deep";
-    protected static final String LIGHT = "Light";
-    protected static final String STILL = "Still";
-    protected static final String WALK = "Walk";
-    protected static final String RUN = "Run";
-    protected static final String BIKE = "Bike";
+    protected static final String REM_STRING = "Rem";
+    protected static final String DEEP_STRING = "Deep";
+    protected static final String LIGHT_STRING = "Light";
+    protected static final String STILL_STRING = "Still";
+    protected static final String WALK_STRING = "Walk";
+    protected static final String RUN_STRING = "Run";
+    protected static final String BIKE_STRING = "Bike";
 
-    protected static Double REM_VAL = 1.0d;
-    protected static Double DEEP_VAL = 2.0d;
-    protected static Double LIGHT_VAL = 3.0d;
-    protected static Double STILL_VAL = 4.0d;
-    protected static Double WALK_VAL = 5.0d;
-    protected static Double RUN_VAL = 6.0d;
-    protected static Double BIKE_VAL = 7.0d;
+    protected static Double REM_VAL = 1d;
+    protected static Double DEEP_VAL = 2d;
+    protected static Double LIGHT_VAL = 3d;
+    protected static Double STILL_VAL = 4d;
+    protected static Double WALK_VAL = 5d;
+    protected static Double RUN_VAL = 6d;
+    protected static Double BIKE_VAL = 7d;
 
     protected List<Double> data = new ArrayList<Double>();
     protected List<Long> epoch = new ArrayList<Long>();
@@ -65,13 +71,13 @@ public class ViewDataGraphWrapper  {
 
     public static Double activityTypeToValue(String activityType) {
 
-        if (activityType.equals(REM)) return REM_VAL;
-        if (activityType.equals(DEEP)) return DEEP_VAL;
-        if (activityType.equals(LIGHT)) return LIGHT_VAL;
-        if (activityType.equals(STILL)) return STILL_VAL;
-        if (activityType.equals(WALK)) return WALK_VAL;
-        if (activityType.equals(RUN)) return RUN_VAL;
-        if (activityType.equals(BIKE)) return BIKE_VAL;
+        if (activityType.equals(REM_STRING)) return REM_VAL;
+        if (activityType.equals(DEEP_STRING)) return DEEP_VAL;
+        if (activityType.equals(LIGHT_STRING)) return LIGHT_VAL;
+        if (activityType.equals(STILL_STRING)) return STILL_VAL;
+        if (activityType.equals(WALK_STRING)) return WALK_VAL;
+        if (activityType.equals(RUN_STRING)) return RUN_VAL;
+        if (activityType.equals(BIKE_STRING)) return BIKE_VAL;
 
         return -1.0d;
     }

@@ -89,7 +89,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
-                    android:text="Heart Rate"
+                    android:text="Heart Rate (bpm)"
                     android:textSize="25sp"
                     android:textStyle="bold" />
 
@@ -99,7 +99,7 @@
                     androidPlot.graphWidget.domainLabelPaint.textSize="@dimen/domain_tick_label_font_size"
                     androidPlot.graphWidget.domainOriginLabelPaint.textSize="@dimen/domain_tick_label_font_size"
                     androidPlot.graphWidget.marginBottom="40dp"
-                    androidPlot.graphWidget.marginLeft="16dp"
+                    androidPlot.graphWidget.marginLeft="12dp"
                     androidPlot.graphWidget.marginRight="12dp"
                     androidPlot.graphWidget.marginTop="1dp"
                     androidPlot.graphWidget.rangeLabelPaint.textSize="@dimen/range_tick_label_font_size"
@@ -134,11 +134,12 @@
 
                 <com.androidplot.xy.XYPlot
                     android:id="@+id/gActivity_Patient"
+                    android:layout_centerHorizontal="true"
                     androidPlot.domainLabelWidget.labelPaint.textSize="@dimen/domain_label_font_size"
                     androidPlot.graphWidget.domainLabelPaint.textSize="@dimen/domain_tick_label_font_size"
                     androidPlot.graphWidget.domainOriginLabelPaint.textSize="@dimen/domain_tick_label_font_size"
-                    androidPlot.graphWidget.marginBottom="40dp"
-                    androidPlot.graphWidget.marginLeft="16dp"
+                    androidPlot.graphWidget.marginBottom="30dp"
+                    androidPlot.graphWidget.marginLeft="5dp"
                     androidPlot.graphWidget.marginRight="12dp"
                     androidPlot.graphWidget.marginTop="1dp"
                     androidPlot.graphWidget.rangeLabelPaint.textSize="@dimen/range_tick_label_font_size"
@@ -149,6 +150,152 @@
                     android:layout_height="200dp"
                     android:layout_below="@+id/tvActivityGraphTitle"
                     android:layout_marginTop="10dp" />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_below="@+id/gActivity_Patient"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="20dp"
+                    android:padding="10dp"
+                    android:layout_height="wrap_content">
+
+                    <RelativeLayout
+                        android:layout_width="125dp"
+                        android:background="#9A2EFE"
+                        android:id="@+id/remColor"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:padding="5dp"
+                        android:layout_margin="5dp"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:id="@+id/tvREM"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="REM Sleep"
+                            android:textColor="#FFFFFF"
+                            android:layout_centerHorizontal="true"
+                            android:textSize="18sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="125dp"
+                        android:background="#FF00BF"
+                        android:layout_margin="5dp"
+                        android:padding="5dp"
+                        android:layout_below="@+id/remColor"
+                        android:id="@+id/deepColor"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/tvDeep"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Deep Sleep"
+                            android:textColor="#FFFFFF"
+                            android:layout_centerHorizontal="true"
+                            android:textSize="18sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="125dp"
+                        android:background="#0B615E"
+                        android:layout_margin="5dp"
+                        android:padding="5dp"
+                        android:layout_below="@+id/deepColor"
+                        android:id="@+id/lightColor"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/tvLight"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Light Sleep"
+                            android:textColor="#FFFFFF"
+                            android:layout_centerHorizontal="true"
+                            android:textSize="18sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="125dp"
+                        android:background="#FF0000"
+                        android:layout_below="@+id/lightColor"
+                        android:layout_margin="5dp"
+                        android:padding="5dp"
+                        android:id="@+id/stillColor"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/tvStill"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Still"
+                            android:textColor="#FFFFFF"
+                            android:layout_centerHorizontal="true"
+                            android:textSize="18sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="125dp"
+                        android:background="#21610B"
+                        android:id="@+id/walkColor"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:padding="5dp"
+                        android:layout_margin="5dp"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:id="@+id/tvWalk"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Walk"
+                            android:textColor="#FFFFFF"
+                            android:layout_centerHorizontal="true"
+                            android:textSize="18sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="125dp"
+                        android:background="#FF8000"
+                        android:layout_margin="5dp"
+                        android:padding="5dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@+id/walkColor"
+                        android:id="@+id/runColor"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/tvRun"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Run"
+                            android:textColor="#FFFFFF"
+                            android:layout_centerHorizontal="true"
+                            android:textSize="18sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="125dp"
+                        android:background="#2E2EFE"
+                        android:layout_margin="5dp"
+                        android:padding="5dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@+id/runColor"
+                        android:id="@+id/bikeColor"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/tvBike"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Bike"
+                            android:textColor="#FFFFFF"
+                            android:layout_centerHorizontal="true"
+                            android:textSize="18sp" />
+                    </RelativeLayout>
+
+                </RelativeLayout>
 
             </RelativeLayout>
 
@@ -167,7 +314,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
-                    android:text="Perspiration"
+                    android:text="Perspiration (nS/cm)"
                     android:textSize="25sp"
                     android:textStyle="bold" />
 
@@ -177,7 +324,7 @@
                     androidPlot.graphWidget.domainLabelPaint.textSize="@dimen/domain_tick_label_font_size"
                     androidPlot.graphWidget.domainOriginLabelPaint.textSize="@dimen/domain_tick_label_font_size"
                     androidPlot.graphWidget.marginBottom="40dp"
-                    androidPlot.graphWidget.marginLeft="16dp"
+                    androidPlot.graphWidget.marginLeft="12dp"
                     androidPlot.graphWidget.marginRight="12dp"
                     androidPlot.graphWidget.marginTop="1dp"
                     androidPlot.graphWidget.rangeLabelPaint.textSize="@dimen/range_tick_label_font_size"
@@ -206,7 +353,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
-                    android:text="Skin Temperature"
+                    android:text="Skin Temperature (\u2109\F)"
                     android:textSize="25sp"
                     android:textStyle="bold" />
 
@@ -216,7 +363,7 @@
                     androidPlot.graphWidget.domainLabelPaint.textSize="@dimen/domain_tick_label_font_size"
                     androidPlot.graphWidget.domainOriginLabelPaint.textSize="@dimen/domain_tick_label_font_size"
                     androidPlot.graphWidget.marginBottom="40dp"
-                    androidPlot.graphWidget.marginLeft="16dp"
+                    androidPlot.graphWidget.marginLeft="12dp"
                     androidPlot.graphWidget.marginRight="12dp"
                     androidPlot.graphWidget.marginTop="1dp"
                     androidPlot.graphWidget.rangeLabelPaint.textSize="@dimen/range_tick_label_font_size"
@@ -245,7 +392,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
-                    android:text="Body Temperature"
+                    android:text="Body Temperature (\u2109\F)"
                     android:textSize="25sp"
                     android:textStyle="bold" />
 
@@ -255,7 +402,7 @@
                     androidPlot.graphWidget.domainLabelPaint.textSize="@dimen/domain_tick_label_font_size"
                     androidPlot.graphWidget.domainOriginLabelPaint.textSize="@dimen/domain_tick_label_font_size"
                     androidPlot.graphWidget.marginBottom="40dp"
-                    androidPlot.graphWidget.marginLeft="16dp"
+                    androidPlot.graphWidget.marginLeft="12dp"
                     androidPlot.graphWidget.marginRight="12dp"
                     androidPlot.graphWidget.marginTop="1dp"
                     androidPlot.graphWidget.rangeLabelPaint.textSize="@dimen/range_tick_label_font_size"
@@ -294,7 +441,7 @@
                     androidPlot.graphWidget.domainLabelPaint.textSize="@dimen/domain_tick_label_font_size"
                     androidPlot.graphWidget.domainOriginLabelPaint.textSize="@dimen/domain_tick_label_font_size"
                     androidPlot.graphWidget.marginBottom="40dp"
-                    androidPlot.graphWidget.marginLeft="16dp"
+                    androidPlot.graphWidget.marginLeft="12dp"
                     androidPlot.graphWidget.marginRight="12dp"
                     androidPlot.graphWidget.marginTop="1dp"
                     androidPlot.graphWidget.rangeLabelPaint.textSize="@dimen/range_tick_label_font_size"

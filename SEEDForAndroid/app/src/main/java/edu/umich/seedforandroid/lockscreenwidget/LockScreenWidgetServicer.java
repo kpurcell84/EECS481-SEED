@@ -21,7 +21,8 @@ public class LockScreenWidgetServicer extends Service  {
     private SharedPrefsUtil mSharedPrefsUtilInst;
     private PowerManager pm;
     private int mHour, mMinute, mDay;
-    private String mMonth, mDayOfWeek, mAmPm, mCurrentTime, mUserAccountType, mNotiState;
+    private String mMonth, mDayOfWeek, mAmPm, mCurrentTime, mUserAccountType;
+    private boolean mNotiState;
 
     public LockScreenWidgetServicer()  {}
 
@@ -37,7 +38,7 @@ public class LockScreenWidgetServicer extends Service  {
 
     private void drawWidget()  {
 
-        if (mNotiState.contentEquals("INACTIVE"))  {
+        if (mNotiState == false)  {
 
             updateClock();
         }
@@ -78,7 +79,7 @@ public class LockScreenWidgetServicer extends Service  {
         mMonth = mUtilInst.getMonth(month);
         mDayOfWeek = mUtilInst.get_Day_of_Week(c.get(Calendar.DAY_OF_WEEK));
         mUserAccountType = mSharedPrefsUtilInst.getUserAccountType("");
-        mNotiState = mSharedPrefsUtilInst.getNotificationState("INACTIVE");
+        mNotiState = mSharedPrefsUtilInst.getNotificationState(false);
     }
 
     @Override

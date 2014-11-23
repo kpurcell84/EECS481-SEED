@@ -21,6 +21,8 @@ public class SharedPrefsUtil {
     // App Stuff
     private static final String PROPERTY_USER_ACCOUNT_TYPE = "user_account_type"; // "doctor" or "patient"
     private static final String PROPERTY_NOTIFICATION_STATE = "noti_state";
+    private static final String PROPERTY_NOTIFICATION_MESSAGE = "noti_msg";
+
 
     private static final String PROPERTY_SURVEY_QA_PAIR = "survey_qa";
     private static final String PROPERTY_SURVEY_MORNING_TIME = "survey_morning_time";
@@ -121,14 +123,24 @@ public class SharedPrefsUtil {
         return mPrefs.getString(PROPERTY_USER_ACCOUNT_TYPE, defValue);
     }
 
-    public void setNotificationState(String val)  { // ACTIVE or INACTIVE
+    public void setNotificationState(boolean val)  { // ACTIVE or INACTIVE
 
         setProperty(PROPERTY_NOTIFICATION_STATE, val);
     }
 
-    public String getNotificationState(String defValue)  {
+    public boolean getNotificationState(boolean defValue)  {
 
-        return mPrefs.getString(PROPERTY_NOTIFICATION_STATE, defValue);
+        return mPrefs.getBoolean(PROPERTY_NOTIFICATION_STATE, defValue);
+    }
+
+    public void setNotificationMessage(String val)  {
+
+        setProperty(PROPERTY_NOTIFICATION_MESSAGE, val);
+    }
+
+    public String getNotificationMessage(String defValue)  {
+
+        return mPrefs.getString(PROPERTY_NOTIFICATION_MESSAGE, defValue);
     }
 
     public void setSurveyQAPair(int question, String answer)  {

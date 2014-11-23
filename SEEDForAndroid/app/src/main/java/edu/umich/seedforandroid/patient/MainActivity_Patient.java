@@ -124,6 +124,8 @@ public class MainActivity_Patient extends Activity implements NavigationDrawerFr
 
     private void logout()  {
 
+        // todo handle logout for Google Account Manager
+
         Intent intent = new Intent(MainActivity_Patient.this, MainActivity.class);
         startActivity(intent);
     }
