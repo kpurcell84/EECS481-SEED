@@ -92,7 +92,7 @@ public class ApiThread {
         private Object mmResult;
 
         private void setResult(Object result) { mmResult = result; }
-        public Object getResult() { return mmResult; }
+        public final Object getResult() { return mmResult; }
 
         private void dispatchResult() { onApiResult(getResult()); }
         private void dispatchError() { onApiError((Throwable)getResult()); }
