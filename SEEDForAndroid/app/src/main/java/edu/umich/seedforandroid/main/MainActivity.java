@@ -42,8 +42,8 @@ public class MainActivity extends Activity implements View.OnClickListener  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent i = new Intent(MainActivity.this, MainActivity_Doctor.class);
-        startActivity(i);
+//        Intent i = new Intent(MainActivity.this, MainActivity_Doctor.class);
+//        startActivity(i);
 
 
         initialSetup();
@@ -62,6 +62,11 @@ public class MainActivity extends Activity implements View.OnClickListener  {
 
                 registerGcm();
                 Intent intent = new Intent(MainActivity.this, MainActivity_Doctor.class);
+                Bundle extras = new Bundle();
+                extras.putInt("tabSelection", MainActivity_Doctor.MYALERTS);
+                intent.putExtras(extras);
+                startActivity(intent);
+
                 startActivity(intent);
             }
             else if (sharedPrefsUtilInst.getUserAccountType("").equals(SharedPrefsUtil.ACCOUNT_TYPE_PATIENT)) {
@@ -106,9 +111,10 @@ public class MainActivity extends Activity implements View.OnClickListener  {
 
     private void login() {
 
-//        Intent intent = mAccountManager.getPickAccountIntent();
-//        startActivityForResult(intent, PICK_ACCOUNT_RESULT);
+        Intent intent = mAccountManager.getPickAccountIntent();
+        startActivityForResult(intent, PICK_ACCOUNT_RESULT);
 
+        /*
         if (!mAccountManager.tryLogIn()) {
 
             Log.i("HEREEEE", "@@@@@@@@@@@@@@");
@@ -121,6 +127,7 @@ public class MainActivity extends Activity implements View.OnClickListener  {
             Toast.makeText(MainActivity.this, "ELSE STATEMENT", Toast.LENGTH_SHORT).show();
             completeLogin();
         }
+        */
     }
 
     private void completeLogin() {

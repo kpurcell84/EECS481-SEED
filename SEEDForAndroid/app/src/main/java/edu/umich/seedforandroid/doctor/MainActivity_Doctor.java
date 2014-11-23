@@ -3,6 +3,7 @@ package edu.umich.seedforandroid.doctor;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -22,42 +23,40 @@ import edu.umich.seedforandroid.doctor.fragments.MyPatients_Frag;
 public class MainActivity_Doctor extends FragmentActivity implements ActionBar.TabListener  {
 
     public static final int MYALERTS = 0;
-    private static final int MYPATIENTS = 1;
-    private static final int PROFILE = 2;
-    private static final int SETTINGS = 3;
+    public static final int MYPATIENTS = 1;
+    public static final int PROFILE = 2;
+    public static final int RECENTLYASKEDQUESTION = 3;
 
     ViewPager viewPager;
     ActionBar actionBar;
 
     @Override
-    protected void onCreate(Bundle view)  {
+    protected void onCreate(Bundle view) {
 
         super.onCreate(view);
         setContentView(R.layout.activity_main_activity__doctor);
+
+        initialSetup();
+    }
+
+    private void initialSetup() {
 
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(new MyAdapter(getSupportFragmentManager()));
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
-            public void onPageSelected(int arg0) {
-                // TODO Auto-generated method stub
+            public void onPageSelected(int arg0)  {
+
                 actionBar.setSelectedNavigationItem(arg0);
             }
 
             @Override
-            public void onPageScrolled(int arg0, float arg1, int arg2) {
-                // TODO Auto-generated method stub
-
-            }
+            public void onPageScrolled(int arg0, float arg1, int arg2)  {}
 
             @Override
-            public void onPageScrollStateChanged(int arg0) {
-                // TODO Auto-generated method stub
-
-            }
+            public void onPageScrollStateChanged(int arg0)  {}
         });
-
 
         actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -90,6 +89,28 @@ public class MainActivity_Doctor extends FragmentActivity implements ActionBar.T
         actionBar.addTab(tab2);
         actionBar.addTab(tab3);
         actionBar.addTab(tab4);
+
+        // Figure out which one to go to
+        Intent in = getIntent();
+        Bundle extras = in.getExtras();
+        int tabSelection = extras.getInt("tabSelection");
+
+        if (tabSelection == MYALERTS)  {
+
+            actionBar.selectTab(tab1);
+        }
+        else if (tabSelection == MYPATIENTS)  {
+
+            actionBar.selectTab(tab2);
+        }
+        else if (tabSelection == PROFILE)  {
+
+            actionBar.selectTab(tab3);
+        }
+        else  {
+
+            actionBar.selectTab(tab4);
+        }
     }
 
     @Override
@@ -143,7 +164,7 @@ public class MainActivity_Doctor extends FragmentActivity implements ActionBar.T
     }
 
     @Override
-    public void onTabReselected(Tab tab, FragmentTransaction ft) {
+    public void onTabReselected(Tab tab, FragmentTransaction ft)  {
 
     }
 }
@@ -176,7 +197,6 @@ class MyAdapter extends FragmentStatePagerAdapter  {
 
             fragment = new DoctorRecentlyAskedQuestions();
         }
-
         return fragment;
     }
 

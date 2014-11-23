@@ -1,13 +1,12 @@
-package edu.umich.seedforandroid.patient.fragments.myhealth;
+package edu.umich.seedforandroid.doctor.fragments.myhealthviewdata;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.Fragment;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -50,16 +49,15 @@ import edu.umich.seedforandroid.R;
 import edu.umich.seedforandroid.account.GoogleAccountManager;
 import edu.umich.seedforandroid.api.ApiThread;
 import edu.umich.seedforandroid.api.SeedApi;
+import edu.umich.seedforandroid.patient.fragments.myhealth.ViewBloodPressureGraphWrapper;
+import edu.umich.seedforandroid.patient.fragments.myhealth.ViewDataGraphWrapper;
 import edu.umich.seedforandroid.util.SharedPrefsUtil;
 import edu.umich.seedforandroid.util.Utils;
 
-public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickListener  {
+public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickListener  {
 
-    private static final String TAG = MyHealth_ViewData_Frag.class.getSimpleName();
+    private static final String TAG = DoctorPatientViewDataFrag.class.getSimpleName();
 
-    public static final String ARG_PATIENT_EMAIL = "forPatientEmail";
-
-    private String mPatientEmail;
     private SharedPrefsUtil sharedPrefsUtilInst;
     private RelativeLayout mHeartRateLayout, mSkinTempLayout, mPerspirationLayout,
             mBloodPressureLayout, mBodyTempLayout, mActivityTypeLayout;
@@ -79,14 +77,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
     private TextView tvDate;
     private Calendar mCurrentCalendar, mTodayCalendar;
 
-    public MyHealth_ViewData_Frag() {}
-
-    @Override
-    public void setArguments(Bundle args)  {
-        super.setArguments(args);
-
-        mPatientEmail = args.getString(ARG_PATIENT_EMAIL);
-    }
+    public DoctorPatientViewDataFrag()  {}
 
     @Override
     public void onCreate(Bundle savedInstanceState)  {
@@ -149,7 +140,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
         boolean[] checkedSelections = new boolean[6];
         Arrays.fill(checkedSelections, Boolean.FALSE);
 
-        String userSelections = sharedPrefsUtilInst.getPatientGraphFilter(defValueGraphFilters);
+        String userSelections = sharedPrefsUtilInst.getDoctorGraphFilter(defValueGraphFilters);
 
         if (userSelections.equals("") == false) {
 
@@ -257,7 +248,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
         }
 
         // Save the selections into SharedPrefs
-        sharedPrefsUtilInst.setPatientGraphFilter(saveVal);
+        sharedPrefsUtilInst.setDoctorGraphFilter(saveVal);
     }
 
     @Override
@@ -291,9 +282,6 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
 
         sharedPrefsUtilInst = new SharedPrefsUtil(getActivity().getApplicationContext());
         mUtilsInst = new Utils();
-
-        ActionBar actionBar = getActivity().getActionBar();
-        actionBar.setTitle("View My Health Data");
     }
 
     private View noInternetConnection(View view, LayoutInflater inflater, ViewGroup container)  {
@@ -304,7 +292,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
 
     private View fetchPatientHealthData(View view, LayoutInflater inflater, ViewGroup container)  {
 
-        view = inflater.inflate(R.layout.fragment_my_health__view_data_, container, false);
+        view = inflater.inflate(R.layout.fragment_doctor_patient_view_data, container, false);
 
         setupRelativeLayouts(view);
         setupGraphs(view);
@@ -364,7 +352,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
         hideAllGraphs();
 
         // Based on SharedPrefs, decide which graphs to show
-        String graphSelections = sharedPrefsUtilInst.getPatientGraphFilter(defValueGraphFilters);
+        String graphSelections = sharedPrefsUtilInst.getDoctorGraphFilter(defValueGraphFilters);
 
         if (graphSelections.equals("") == false)  {
 
@@ -417,7 +405,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
             SeedRequest getDataRequest = api.pQuantData().get(
 
                     new MessagesPQuantDataRequest()
-                            .setEmail(mPatientEmail)
+                            .setEmail(manager.getAccountName())
                             .setStartTime(begin)
                             .setEndTime(end)
             );
@@ -608,7 +596,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
 
         if (data.getDataType() == ViewDataGraphWrapper.HEART_RATE)  {
 
-            synchronized (MyHealth_ViewData_Frag.this)  {
+            synchronized (DoctorPatientViewDataFrag.this)  {
 
                 mHeartRateSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Heart Rate");
                 mHeartRatePlot.addSeries(mHeartRateSeries, stepFormatter);
@@ -617,7 +605,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
         }
         else if (data.getDataType() == ViewDataGraphWrapper.SKIN_TEMP)  {
 
-            synchronized (MyHealth_ViewData_Frag.this)  {
+            synchronized (DoctorPatientViewDataFrag.this)  {
 
                 mSkinTempSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Skin Temperature");
                 mSkinTempPlot.addSeries(mSkinTempSeries, stepFormatter);
@@ -626,7 +614,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
         }
         else if (data.getDataType() == ViewDataGraphWrapper.GSR)  {
 
-            synchronized (MyHealth_ViewData_Frag.this)  {
+            synchronized (DoctorPatientViewDataFrag.this)  {
                 // todo this is GSR now
                 mPerspirationSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Galvanic Skin Response");
                 mPerspirationPlot.addSeries(mPerspirationSeries, stepFormatter);
@@ -636,7 +624,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
         }
         else if (data.getDataType() == ViewDataGraphWrapper.BLOOD_PRESSURE)  {
 
-            synchronized (MyHealth_ViewData_Frag.this)  {
+            synchronized (DoctorPatientViewDataFrag.this)  {
 
                 mBloodPressureSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Blood Pressure");
                 mBloodPressurePlot.addSeries(mBloodPressureSeries, stepFormatter);
@@ -645,7 +633,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
         }
         else if (data.getDataType() == ViewDataGraphWrapper.BODY_TEMP)  {
 
-            synchronized (MyHealth_ViewData_Frag.this)  {
+            synchronized (DoctorPatientViewDataFrag.this)  {
 
                 mBodyTempSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Body Temperature");
                 mBodyTempPlot.addSeries(mBodyTempSeries, stepFormatter);
@@ -654,7 +642,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
         }
         else if (data.getDataType() == ViewDataGraphWrapper.REM)  {
 
-            synchronized (MyHealth_ViewData_Frag.this)  {
+            synchronized (DoctorPatientViewDataFrag.this)  {
 
                 mREMSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "REM");
                 mActivityTypePlot.setRangeBoundaries(0, 8, BoundaryMode.FIXED);
@@ -667,7 +655,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
         }
         else if (data.getDataType() == ViewDataGraphWrapper.DEEP)  {
 
-            synchronized (MyHealth_ViewData_Frag.this)  {
+            synchronized (DoctorPatientViewDataFrag.this)  {
 
                 mDeepSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Deep");
                 mActivityTypePlot.setRangeBoundaries(0, 8, BoundaryMode.FIXED);
@@ -680,7 +668,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
         }
         else if (data.getDataType() == ViewDataGraphWrapper.LIGHT)  {
 
-            synchronized (MyHealth_ViewData_Frag.this)  {
+            synchronized (DoctorPatientViewDataFrag.this)  {
 
                 mLightSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Light");
                 mActivityTypePlot.setRangeBoundaries(0, 8, BoundaryMode.FIXED);
@@ -692,7 +680,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
         }
         else if (data.getDataType() == ViewDataGraphWrapper.STILL)  {
 
-            synchronized (MyHealth_ViewData_Frag.this)  {
+            synchronized (DoctorPatientViewDataFrag.this)  {
 
                 mStillSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Still");
                 mActivityTypePlot.setRangeBoundaries(0, 8, BoundaryMode.FIXED);
@@ -706,7 +694,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
         }
         else if (data.getDataType() == ViewDataGraphWrapper.WALK)  {
 
-            synchronized (MyHealth_ViewData_Frag.this)  {
+            synchronized (DoctorPatientViewDataFrag.this)  {
 
                 mWalkSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Walk");
                 mActivityTypePlot.setRangeBoundaries(0, 8, BoundaryMode.FIXED);
@@ -719,7 +707,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
         }
         else if (data.getDataType() == ViewDataGraphWrapper.RUN)  {
 
-            synchronized (MyHealth_ViewData_Frag.this)  {
+            synchronized (DoctorPatientViewDataFrag.this)  {
 
                 mRunSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Run");
                 mActivityTypePlot.setRangeBoundaries(0, 8, BoundaryMode.FIXED);
@@ -732,7 +720,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
         }
         else if (data.getDataType() == ViewDataGraphWrapper.BIKE)  {
 
-            synchronized (MyHealth_ViewData_Frag.this)  {
+            synchronized (DoctorPatientViewDataFrag.this)  {
 
                 mBikeSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Bike");
                 mActivityTypePlot.setRangeBoundaries(0, 8, BoundaryMode.FIXED);
@@ -746,7 +734,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
 
     private void reDrawGraphs()  {
 
-        synchronized (MyHealth_ViewData_Frag.this)  {
+        synchronized (DoctorPatientViewDataFrag.this)  {
 
             mHeartRatePlot.redraw();
             mSkinTempPlot.redraw();
@@ -815,7 +803,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
 
     private void setupGraphs(View view)  {
 
-        synchronized (MyHealth_ViewData_Frag.this)  {
+        synchronized (DoctorPatientViewDataFrag.this)  {
 
             mHeartRatePlot = (XYPlot) view.findViewById(R.id.gHeartRate_Patient);
             mSkinTempPlot = (XYPlot) view.findViewById(R.id.gSkinTemp_Patient);
@@ -839,7 +827,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
 
         DateTime startDate = new DateTime(calStart.getTimeInMillis());
         DateTime endDate = new DateTime(calEnd.getTimeInMillis());
-        fetchDataFromServer(startDate, endDate);
+        //fetchDataFromServer(startDate, endDate);
     }
 
     private void getTodayDate()  {

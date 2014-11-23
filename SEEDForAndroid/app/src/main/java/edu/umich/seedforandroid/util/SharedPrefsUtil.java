@@ -199,6 +199,17 @@ public class SharedPrefsUtil {
         return mPrefs.getString(PROPERTY_PATIENT_GRAPH_FILTER, defValue);
     }
 
+    public void setDoctorGraphFilter(String filter)  {
+
+        setProperty(PROPERTY_PATIENT_GRAPH_FILTER, filter);
+    }
+
+    public String getDoctorGraphFilter(String defValue)  {
+
+        return mPrefs.getString(PROPERTY_PATIENT_GRAPH_FILTER, defValue);
+    }
+
+
     private void setProperty(String property, String value) {
 
         mPrefs.edit().putString(property, value).apply();

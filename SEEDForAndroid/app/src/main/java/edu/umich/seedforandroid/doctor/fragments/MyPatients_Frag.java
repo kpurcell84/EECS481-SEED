@@ -158,7 +158,8 @@ public class MyPatients_Frag extends Fragment  {
 
             // Name
             TextView tvName = (TextView) itemView.findViewById(R.id.tvPatientName);
-            tvName.setText(currentPatient.getPatientFirstName().concat(" ").concat(currentPatient.getPatientLastName()));
+            String patientNameTmp = currentPatient.getPatientFirstName().concat(" ").concat(currentPatient.getPatientLastName());
+            tvName.setText(patientNameTmp);
 
             // Phone Number
             TextView tvPhoneNumber = (TextView) itemView.findViewById(R.id.tvPatientPhoneNumber);
@@ -179,18 +180,20 @@ public class MyPatients_Frag extends Fragment  {
                 public void onClick(View v)  {
 
                     TextView tv = (TextView) v.findViewById(R.id.tvPatientID);
-                    gotoPatientDataPage(tv.getText().toString());
+                    TextView tvName = (TextView) v.findViewById(R.id.tvPatientName);
+                    gotoPatientDataPage(tv.getText().toString(), tvName.getText().toString());
                 }
             });
             return itemView;
         }
     }
 
-    private void gotoPatientDataPage(String patientID)  {
+    private void gotoPatientDataPage(String patientID, String patientName)  {
 
         Intent i = new Intent(getActivity(), DoctorViewPatientData.class);
         Bundle extras = new Bundle();
         extras.putString("patient_id", patientID);
+        extras.putString("patient_name", patientName);
         i.putExtras(extras);
         startActivity(i);
     }
