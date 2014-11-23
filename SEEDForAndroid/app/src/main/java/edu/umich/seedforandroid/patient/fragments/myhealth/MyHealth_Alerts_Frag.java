@@ -41,11 +41,6 @@ public class MyHealth_Alerts_Frag extends Fragment  {
         mPatientEmail = args.getString(ARG_PATIENT_EMAIL);
     }
 
-    public MyHealth_Alerts_Frag(String patientEmail)  {
-
-        mPatientEmail = patientEmail;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState)  {
 
