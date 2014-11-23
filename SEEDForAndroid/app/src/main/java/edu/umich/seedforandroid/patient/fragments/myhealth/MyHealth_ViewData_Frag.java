@@ -57,6 +57,9 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
 
     private static final String TAG = MyHealth_ViewData_Frag.class.getSimpleName();
 
+    public static final String ARG_PATIENT_EMAIL = "forPatientEmail";
+
+    private String mPatientEmail;
     private SharedPrefsUtil sharedPrefsUtilInst;
     private RelativeLayout mHeartRateLayout, mSkinTempLayout, mPerspirationLayout,
             mBloodPressureLayout, mBodyTempLayout, mActivityTypeLayout;
@@ -77,6 +80,13 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
     private Calendar mCurrentCalendar, mTodayCalendar;
 
     public MyHealth_ViewData_Frag() {}
+
+    @Override
+    public void setArguments(Bundle args) {
+        super.setArguments(args);
+
+        mPatientEmail = args.getString(ARG_PATIENT_EMAIL);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState)  {
@@ -407,7 +417,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
             SeedRequest getDataRequest = api.pQuantData().get(
 
                     new MessagesPQuantDataRequest()
-                            .setEmail(manager.getAccountName())
+                            .setEmail(mPatientEmail)
                             .setStartTime(begin)
                             .setEndTime(end)
             );
