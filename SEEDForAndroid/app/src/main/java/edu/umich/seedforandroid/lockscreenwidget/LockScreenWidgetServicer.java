@@ -40,7 +40,9 @@ public class LockScreenWidgetServicer extends Service  {
     }
 
     private void drawWidget()  {
+        showSurveyNotification();
 
+        /*
         if (mNotiState == false)  {
 
             // Check if there is a survey to fill out
@@ -58,15 +60,16 @@ public class LockScreenWidgetServicer extends Service  {
 
             showAlert();
         }
+        */
     }
 
     private void showSurveyNotification()  {
 
-        RemoteViews remoteView = new RemoteViews(getApplicationContext().getPackageName(), R.layout.widget_patient_alert);
+        RemoteViews remoteView = new RemoteViews(getApplicationContext().getPackageName(), R.layout.widget_survey_notification);
 
         Intent i = new Intent(getApplicationContext(), DailySurvey.class);
 
-        PendingIntent pi = PendingIntent.getService(getApplicationContext(), 0, i, 0);
+        PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 0, i, 0);
 
         remoteView.setOnClickPendingIntent(R.id.bEngageSurvey, pi);
 
