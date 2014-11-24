@@ -8,60 +8,93 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
         android:layout_height="wrap_content">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_toRightOf="@+id/imageViewPatientGender"
             android:layout_toLeftOf="@+id/imageViewNextIcon"
+            android:layout_marginRight="5dp"
             android:layout_height="wrap_content">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:text="Patient Name"
-                android:textSize="20sp"
+                android:background="#00274c"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
                 android:textStyle="bold"
+                android:padding="10dp"
                 android:layout_centerHorizontal="true"
                 android:id="@+id/tvPatientName" />
 
-            <TextView
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="123-456-7890"
-                android:textSize="18sp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_centerHorizontal="true"
                 android:layout_below="@+id/tvPatientName"
-                android:id="@+id/tvPatientPhoneNumber" />
+                android:background="#D8D8D8"
+                android:id="@+id/relativelayoutphone"
+                android:layout_height="wrap_content">
 
-            <TextView
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="123-456-7890"
+                    android:background="@drawable/grey_button"
+                    android:drawablePadding="5dp"
+                    android:padding="10dp"
+                    android:drawableStart="@drawable/phone_call_icon"
+                    android:textSize="16sp"
+                    android:id="@+id/bPatientPhoneNumber" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:background="#6E6E6E"
+                android:id="@+id/blacklinerelativelayout"
+                android:layout_below="@+id/relativelayoutphone"
+                android:layout_height="1dp">
+
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="test@test.com"
-                android:textSize="18sp"
-                android:gravity="center"
-                android:layout_marginBottom="10dp"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@+id/tvPatientPhoneNumber"
-                android:id="@+id/tvPatientEmail" />
+                android:background="#D8D8D8"
+                android:id="@+id/emailrelativelayout"
+                android:layout_below="@+id/blacklinerelativelayout"
+                android:layout_height="wrap_content">
 
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="test@test.com"
+                    android:drawableStart="@drawable/email_icon_blue"
+                    android:padding="10dp"
+                    android:background="@drawable/grey_button"
+                    android:drawablePadding="5dp"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/bPatientEmail" />
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:background="#6E6E6E"
+                android:id="@+id/blacklinerelativelayout2"
+                android:layout_below="@+id/emailrelativelayout"
+                android:layout_height="1dp">
+
+            </RelativeLayout>
         </RelativeLayout>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imageViewPatientGender"
-            android:layout_centerInParent="true"
-            android:src="@drawable/male_profile_icon"
-            android:layout_alignParentLeft="true" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/imageViewNextIcon"
+            android:layout_marginRight="10dp"
             android:layout_centerInParent="true"
             android:src="@drawable/next_icon_final"
             android:layout_alignParentRight="true" />

@@ -136,6 +136,63 @@ public class Utils {
         return monthStr;
     }
 
+
+    public String getMonthFullString(int month)  { // 1 to 12
+
+        String monthStr = "";
+        month--;
+        if (month == 0)  {
+
+            monthStr = "January";
+        }
+        else if (month == 1)  {
+
+            monthStr = "February";
+        }
+        else if (month == 2)  {
+
+            monthStr = "March";
+        }
+        else if (month == 3)  {
+
+            monthStr = "April";
+        }
+        else if (month == 4)  {
+
+            monthStr = "May";
+        }
+        else if (month == 5)  {
+
+            monthStr = "June";
+        }
+        else if (month == 6)  {
+
+            monthStr = "July";
+        }
+        else if (month == 7)  {
+
+            monthStr = "August";
+        }
+        else if (month == 8)  {
+
+            monthStr = "September";
+        }
+        else if (month == 9)  {
+
+            monthStr = "October";
+        }
+        else if (month == 10)  {
+
+            monthStr = "November";
+        }
+        else if (month == 11)  {
+
+            monthStr = "December";
+        }
+
+        return monthStr;
+    }
+
     public String get_Day_of_Week (int day)  {
 
         String dayStr = "";

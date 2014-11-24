@@ -1,42 +1,160 @@
 package edu.umich.seedforandroid.doctor.fragments;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.appspot.umichseed.seed.model.MessagesAlertListResponse;
+import com.appspot.umichseed.seed.model.MessagesAlertResponse;
+import com.google.api.client.util.DateTime;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.umich.seedforandroid.R;
 import edu.umich.seedforandroid.api.ApiThread;
 import edu.umich.seedforandroid.doctor.patientdata.DoctorViewPatientData;
+import edu.umich.seedforandroid.util.Utils;
 
 public class MyAlerts_Frag extends Fragment  {
 
     private static final String TAG = MyAlerts_Frag.class.getSimpleName();
 
+    private String emergencyDetection = "Emergency Detection";
+    private String earlyDetection = "Early Detection";
     private List<DoctorAlertsWrapper> myAlertsList = new ArrayList<DoctorAlertsWrapper>();
     private ArrayAdapter<DoctorAlertsWrapper> adapter;
+    private Utils mUtils;
     private ApiThread mApiThread;
 
     public MyAlerts_Frag()  {}
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)  {
+    public void onCreate(Bundle savedInstanceState)  {
 
-        return inflater.inflate(R.layout.fragment_my_alerts_, container, false);
+        super.onCreate(savedInstanceState);
+        mApiThread = new ApiThread();
     }
 
+    @Override
+    public void onDestroy()  {
+
+        super.onDestroy();
+        mApiThread.stop();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)  {
+
+        View view = inflater.inflate(R.layout.fragment_my_alerts_, container, false);
+
+        initialSetup(view);
+
+        return view;
+    }
+
+    private void initialSetup(View view)  {
+
+        mUtils = new Utils();
+        adapter = new AlertsListAdapter();
+        ListView list = (ListView) view.findViewById(R.id.alertListView);
+        list.setAdapter(adapter);
+
+        // Test
+        DateTime dtTmp = new DateTime(System.currentTimeMillis());
+        DoctorAlertsWrapper tmp = new DoctorAlertsWrapper("Andy", "Lee", "seedsystem00@gmail.com", dtTmp, "high");
+        myAlertsList.add(tmp);
+
+        DoctorAlertsWrapper tmp2 = new DoctorAlertsWrapper("Andy", "Lee", "seedsystem00@gmail.com", dtTmp, "low");
+        myAlertsList.add(tmp2);
+
+
+//        updateAlertsListFromServer();
+    }
+
+    private void populateAlertsList(MessagesAlertListResponse alerts)  {
+
+        myAlertsList.clear();
+        for (MessagesAlertResponse alert : alerts.getAlerts())  {
+
+            /*
+            DoctorAlertsWrapper tmp = new DoctorPatientWrapper(ge.getFirstName(),
+                    patient.getLastName(),
+                    patient.getPhone(), patient.getEmail());
+            myPatientList.add(tmp);
+            */
+        }
+
+        adapter = new AlertsListAdapter();
+        ListView list = (ListView) getView().findViewById(R.id.alertListView);
+        list.setAdapter(adapter);
+    }
+
+    private void notifyUiUserNotLoggedIn() {
+
+        //todo: user not logged in, notify and navigate back to main activity?
+    }
+
+    private void notifyUiApiError() {
+
+        //todo: api error occurred. Notify
+    }
+
+    private void updateAlertsListFromServer()  {
+
+        /*
+        GoogleAccountManager accountManager = new GoogleAccountManager(getActivity());
+        if (!accountManager.tryLogIn()) {
+
+            Log.e(TAG, "FATAL ERROR: The user got here without being logged in somehow");
+            notifyUiUserNotLoggedIn();
+        }
+        else {
+
+            try {
+                Seed api = SeedApi.getAuthenticatedApi(accountManager.getCredential());
+                SeedRequest request = api.doctorsPatients().get(
+                        new MessagesEmailRequest()
+                                .setEmail(accountManager.getAccountName())
+                );
+                mApiThread.enqueueRequest(request, new ApiThread.ApiResultAction()  {
+                    @Override
+                    public void onApiResult(Object result)  {
+
+                        if (result != null && result instanceof MessagesAlertListResponse)  {
+
+                            populateAlertsList((MessagesAlertListResponse) result);
+                        }
+                    }
+
+                    @Override
+                    public void onApiError(Throwable error) {
+
+                        Log.e(TAG, "API error occurred with message: " + error.getMessage());
+                        notifyUiApiError();
+                    }
+                });
+            }
+            catch (IOException e) {
+
+                Log.e(TAG, "An unknown API error occurred - API could not build the request");
+                notifyUiApiError();
+            }
+        }
+        */
+    }
 
     private class AlertsListAdapter extends ArrayAdapter<DoctorAlertsWrapper>  {
 
@@ -55,45 +173,47 @@ public class MyAlerts_Frag extends Fragment  {
 
                 itemView = getActivity().getLayoutInflater().inflate(R.layout.doctor_alerts_list_item, parent, false);
             }
-            /*
+
             // Find the item to work with.
-            DoctorAlertsWrapper currentPatient = myAlertsList.get(position);
-
-            // Name
-            TextView tvName = (TextView) itemView.findViewById(R.id.tvPatientName);
-            final String patientNameTmp = currentPatient.getPatientFirstName().concat(" ").concat(currentPatient.getPatientLastName());
-            tvName.setText(patientNameTmp);
-
-            // Phone Number
-            final TextView tvPhoneNumber = (TextView) itemView.findViewById(R.id.tvPatientPhoneNumber);
-            tvPhoneNumber.setText(currentPatient.getPatientPhoneNumber());
-            tvPhoneNumber.setOnClickListener(new View.OnClickListener()  {
-
-                @Override
-                public void onClick(View v)  {
-
-                    popUpPhoneCallAlertDialog(tvPhoneNumber.getText().toString(), patientNameTmp);
-                }
-            });
+            DoctorAlertsWrapper currentAlert = myAlertsList.get(position);
 
             // Email
             final TextView tvEmail = (TextView) itemView.findViewById(R.id.tvPatientEmail);
-            tvEmail.setText(currentPatient.getPatientEmail());
-            tvEmail.setOnClickListener(new View.OnClickListener()  {
+            tvEmail.setText(currentAlert.getPatientEmail());
 
-                @Override
-                public void onClick(View v)  {
+            // Name
+            TextView tvName = (TextView) itemView.findViewById(R.id.tvPatientName);
+            final String patientNameTmp = currentAlert.getPatientFirstName().concat(" ").concat(currentAlert.getPatientLastName());
+            tvName.setText(patientNameTmp);
 
-                    popUpEmailAlertDialog(tvEmail.getText().toString(), patientNameTmp);
-                }
-            });
+            // Detection Image View
+            ImageView imageViewDetection = (ImageView) itemView.findViewById(R.id.imageViewAlertType);
 
-            // ImageView
-            ImageView imageView = (ImageView) itemView.findViewById(R.id.imageViewPatientGender);
+            // Time Alerted
+            TextView tvTimeAlerted = (TextView) itemView.findViewById(R.id.tvTimeAlerted);
+            DateTime timeAlerted = currentAlert.getTimeAlerted();
+
+            DateFormat formatter = new SimpleDateFormat("yyyy:MM:dd:HH:mm");
+            tvTimeAlerted.setText(formatTimePretty(formatter.format(timeAlerted.getValue()).toString()));
+
+            // Priority Type
+            final TextView tvPriority = (TextView) itemView.findViewById(R.id.tvAlertType);
+            if (currentAlert.getPriority().equals("high"))  { // high, emergency detection
+
+                tvPriority.setText(emergencyDetection);
+                tvPriority.setBackground(new ColorDrawable(Color.parseColor("#d80000")));
+                imageViewDetection.setImageResource(R.drawable.emergency_alert_square_icon);
+            }
+            else  { // low, early detection
+
+                tvPriority.setText(earlyDetection);
+                tvPriority.setBackground(new ColorDrawable(Color.parseColor("#FFA800")));
+                imageViewDetection.setImageResource(R.drawable.early_alert_square_icon);
+            }
 
             // RelativeLayout
-            ImageView imageViewNext = (ImageView) itemView.findViewById(R.id.imageViewNextIcon);
-            imageViewNext.setOnClickListener(new View.OnClickListener()  {
+            RelativeLayout relativeLayoutThis = (RelativeLayout) itemView.findViewById(R.id.relativelayoutalert);
+            relativeLayoutThis.setOnClickListener(new View.OnClickListener()  {
 
                 @Override
                 public void onClick(View v)  {
@@ -101,78 +221,17 @@ public class MyAlerts_Frag extends Fragment  {
                     gotoPatientDataPage(tvEmail.getText().toString(), patientNameTmp);
                 }
             });
-            */
             return itemView;
         }
     }
 
-    private void popUpEmailAlertDialog(final String emailStr, String patientName)  {
+    private String formatTimePretty(String time)  {
 
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
-        alertDialog.setTitle("Email ".concat(patientName).concat("?"));
-        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener()  {
-
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-            }
-        })
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener()  {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int id)  {
-
-                        emailPatient(emailStr);
-                    }
-                });
-
-        // Set the line color
-        Dialog d = alertDialog.show();
-        int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
-        View divider = d.findViewById(dividerId);
-        divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
-    }
-
-    private void popUpPhoneCallAlertDialog(final String phoneNumber, String patientName)  {
-
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
-        alertDialog.setTitle("Call ".concat(patientName).concat("?"));
-        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener()  {
-
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-            }
-        })
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener()  {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int id)  {
-
-                        callPatient(phoneNumber);
-                    }
-                });
-
-        // Set the line color
-        Dialog d = alertDialog.show();
-        int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
-        View divider = d.findViewById(dividerId);
-        divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
-    }
-
-    private void emailPatient(String emailStr)  {
-
-        String emailaddress[] = { emailStr };
-
-        Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
-        emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, emailaddress);
-        emailIntent.setType("plain/text");
-        startActivity(emailIntent);
-    }
-
-    private void callPatient(String phoneNumber)  {
-
-        Intent intent = new Intent(Intent.ACTION_DIAL);
-        intent.setData(Uri.parse("tel:".concat(phoneNumber)));
-        startActivity(intent);
+        String[] parts = time.split(":");
+        String month = mUtils.getMonthFullString(Integer.parseInt(parts[1]));
+        String[] hour = mUtils.convert24HourTo12Hour(String.valueOf(parts[3]));
+        String output = parts[0] + " " + month + " " + parts[2] + ", " + hour[0] + ":" + parts[4] + hour[1];
+        return output;
     }
 
     private void gotoPatientDataPage(String patientEmail, String patientName)  {

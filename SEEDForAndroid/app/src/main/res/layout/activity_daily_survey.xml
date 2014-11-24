@@ -1,102 +1,657 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:padding="@dimen/default_padding"
+    android:padding="10dp"
     android:background="@drawable/seed_background"
     tools:context="edu.umich.seedforandroid.patient.daily_survey.DailySurvey">
 
-    <TextView
+    <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="25sp"
-        android:textColor="#01275d"
-        android:id="@+id/tvSurveyQuestion"
-        android:text="Is your urine output significantly lower than usual?"
-        android:layout_marginTop="20dp"
-        android:textStyle="bold"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        />
+        android:id="@+id/scrollView2">
 
-    <RelativeLayout
-        android:id="@+id/relativelayout2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#ffffff"
-        android:padding="3dp"
-        android:layout_marginBottom="75dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true">
-
-        <Button
-            android:id="@+id/bContinueSurvey"
-            android:layout_width="150dp"
-            android:layout_height="55dp"
-            android:background="@drawable/blue_button"
-            android:text="Continue"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvSurveyQuestion"
-        android:layout_marginTop="50dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:padding="20dp"
-        android:background="#F3F0EB">
-
-        <RadioGroup
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerInParent="true"
-            android:orientation="horizontal"
-            android:id="@+id/radioGroupSurvey">
+            android:layout_height="wrap_content">
 
-            <RadioButton
-                android:id="@+id/radioYes"
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:id="@+id/bodyTempRelativeLayout"
+                android:paddingBottom="10dp"
+                android:background="#F3F0EB"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#00274c"
+                    android:text="What is your body temperature?"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:textColor="#FFFFFF"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:id="@+id/tvBodyTempQuestion" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:ems="10"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:padding="10dp"
+                    android:textSize="18sp"
+                    android:hint="body temperature"
+                    android:id="@+id/etBodyTemp"
+                    android:layout_below="@+id/tvBodyTempQuestion" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="\u2109"
+                    android:layout_alignBottom="@+id/etBodyTemp"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center"
+                    android:textSize="25sp"
+                    android:textStyle="bold"
+                    android:id="@+id/bCelsius" />
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#000000"
-                android:layout_marginRight="50dp"
-                android:text="@string/survey_answer_yes"
-                android:textSize="0sp" />
+                android:id="@+id/bloodPressureRelativeLayout"
+                android:paddingBottom="10dp"
+                android:background="#F3F0EB"
+                android:layout_below="@+id/bodyTempRelativeLayout"
+                android:layout_marginTop="10dp"
+                android:layout_height="wrap_content">
 
-            <RadioButton
-                android:id="@+id/radioNo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#000000"
-                android:text="@string/survey_answer_no"
-                android:textSize="0sp" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="What is your blood pressure?"
+                    android:gravity="center"
+                    android:background="#00274c"
+                    android:textColor="#FFFFFF"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="20sp"
+                    android:padding="5dp"
+                    android:textStyle="bold"
+                    android:id="@+id/tvBloodPressureQuestion" />
 
-        </RadioGroup>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:ems="10"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:padding="10dp"
+                    android:layout_marginTop="10dp"
+                    android:hint="Systolic (top number)"
+                    android:textSize="18sp"
+                    android:id="@+id/etBloodPressureSystolic"
+                    android:gravity="center"
+                    android:layout_below="@+id/tvBloodPressureQuestion"
+                    android:layout_centerHorizontal="true" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Yes"
-            android:textSize="25sp"
-            android:textColor="#01275d"
-            android:textStyle="bold"
-            android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@+id/radioGroupSurvey"
-            android:id="@+id/tvYes" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:background="#848484"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:id="@+id/relativelayoutblacklinebloodpressure"
+                    android:layout_below="@+id/etBloodPressureSystolic"
+                    android:layout_height="2dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="No"
-            android:textSize="25sp"
-            android:textColor="#01275d"
-            android:textStyle="bold"
-            android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@+id/radioGroupSurvey"
-            android:id="@+id/tvNo" />
-    </RelativeLayout>
+                </RelativeLayout>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:ems="10"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:textSize="18sp"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:hint="Diastolic (bottom number)"
+                    android:id="@+id/etBloodPressureDiastolic"
+                    android:layout_marginTop="5dp"
+                    android:layout_below="@+id/relativelayoutblacklinebloodpressure"
+                    android:layout_centerHorizontal="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/etBloodPressureDiastolic"
+                    android:textSize="25sp"
+                    android:text="mm Hg"
+                    android:textStyle="bold"
+                    android:id="@+id/tvBloodPressureUnit" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:id="@+id/question1RelativeLayout"
+                android:layout_below="@+id/bloodPressureRelativeLayout"
+                android:layout_marginTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="#F3F0EB"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#00274c"
+                    android:text="@string/survey_1_question"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:textColor="#FFFFFF"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:id="@+id/tvQuestion1" />
+
+                <RadioGroup
+                    android:id="@+id/radioGroup_Question_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvQuestion1"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal" >
+
+                    <RadioButton
+                        android:id="@+id/radioYes_Question1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Yes"
+                        android:textSize="18sp" />
+
+                    <RadioButton
+                        android:id="@+id/radioNo_Question1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="30dp"
+                        android:text="No"
+                        android:textSize="18sp" />
+                </RadioGroup>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:id="@+id/question2RelativeLayout"
+                android:layout_below="@+id/question1RelativeLayout"
+                android:layout_marginTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="#F3F0EB"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#00274c"
+                    android:text="@string/survey_2_question"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:textColor="#FFFFFF"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:id="@+id/tvQuestion2" />
+
+                <RadioGroup
+                    android:id="@+id/radioGroup_Question_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvQuestion2"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal" >
+
+                    <RadioButton
+                        android:id="@+id/radioYes_Question2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Yes"
+                        android:textSize="18sp" />
+
+                    <RadioButton
+                        android:id="@+id/radioNo_Question2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="30dp"
+                        android:text="No"
+                        android:textSize="18sp" />
+                </RadioGroup>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:id="@+id/question3RelativeLayout"
+                android:layout_below="@+id/question2RelativeLayout"
+                android:layout_marginTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="#F3F0EB"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#00274c"
+                    android:text="@string/survey_3_question"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:textColor="#FFFFFF"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:id="@+id/tvQuestion3" />
+
+                <RadioGroup
+                    android:id="@+id/radioGroup_Question_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvQuestion3"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal" >
+
+                    <RadioButton
+                        android:id="@+id/radioYes_Question3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Yes"
+                        android:textSize="18sp" />
+
+                    <RadioButton
+                        android:id="@+id/radioNo_Question3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="30dp"
+                        android:text="No"
+                        android:textSize="18sp" />
+                </RadioGroup>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:id="@+id/question4RelativeLayout"
+                android:layout_below="@+id/question3RelativeLayout"
+                android:layout_marginTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="#F3F0EB"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#00274c"
+                    android:text="@string/survey_4_question"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:textColor="#FFFFFF"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:id="@+id/tvQuestion4" />
+
+                <RadioGroup
+                    android:id="@+id/radioGroup_Question_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvQuestion4"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal" >
+
+                    <RadioButton
+                        android:id="@+id/radioYes_Question4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Yes"
+                        android:textSize="18sp" />
+
+                    <RadioButton
+                        android:id="@+id/radioNo_Question4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="30dp"
+                        android:text="No"
+                        android:textSize="18sp" />
+                </RadioGroup>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:id="@+id/question5RelativeLayout"
+                android:layout_below="@+id/question4RelativeLayout"
+                android:layout_marginTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="#F3F0EB"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#00274c"
+                    android:text="@string/survey_5_question"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:textColor="#FFFFFF"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:id="@+id/tvQuestion5" />
+
+                <RadioGroup
+                    android:id="@+id/radioGroup_Question_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvQuestion5"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal" >
+
+                    <RadioButton
+                        android:id="@+id/radioYes_Question5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Yes"
+                        android:textSize="18sp" />
+
+                    <RadioButton
+                        android:id="@+id/radioNo_Question5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="30dp"
+                        android:text="No"
+                        android:textSize="18sp" />
+                </RadioGroup>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:id="@+id/question6RelativeLayout"
+                android:layout_below="@+id/question5RelativeLayout"
+                android:layout_marginTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="#F3F0EB"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#00274c"
+                    android:text="@string/survey_6_question"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:textColor="#FFFFFF"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:id="@+id/tvQuestion6" />
+
+                <RadioGroup
+                    android:id="@+id/radioGroup_Question_6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvQuestion6"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal" >
+
+                    <RadioButton
+                        android:id="@+id/radioYes_Question6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Yes"
+                        android:textSize="18sp" />
+
+                    <RadioButton
+                        android:id="@+id/radioNo_Question6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="30dp"
+                        android:text="No"
+                        android:textSize="18sp" />
+                </RadioGroup>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:id="@+id/question7RelativeLayout"
+                android:layout_below="@+id/question6RelativeLayout"
+                android:layout_marginTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="#F3F0EB"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#00274c"
+                    android:text="@string/survey_7_question"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:textColor="#FFFFFF"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:id="@+id/tvQuestion7" />
+
+                <RadioGroup
+                    android:id="@+id/radioGroup_Question_7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvQuestion7"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal" >
+
+                    <RadioButton
+                        android:id="@+id/radioYes_Question7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Yes"
+                        android:textSize="18sp" />
+
+                    <RadioButton
+                        android:id="@+id/radioNo_Question7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="30dp"
+                        android:text="No"
+                        android:textSize="18sp" />
+                </RadioGroup>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:id="@+id/question8RelativeLayout"
+                android:layout_below="@+id/question7RelativeLayout"
+                android:layout_marginTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="#F3F0EB"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#00274c"
+                    android:text="@string/survey_8_question"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:textColor="#FFFFFF"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:id="@+id/tvQuestion8" />
+
+                <RadioGroup
+                    android:id="@+id/radioGroup_Question_8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvQuestion8"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal" >
+
+                    <RadioButton
+                        android:id="@+id/radioYes_Question8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Yes"
+                        android:textSize="18sp" />
+
+                    <RadioButton
+                        android:id="@+id/radioNo_Question8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="30dp"
+                        android:text="No"
+                        android:textSize="18sp" />
+                </RadioGroup>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:id="@+id/question9RelativeLayout"
+                android:layout_below="@+id/question8RelativeLayout"
+                android:layout_marginTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="#F3F0EB"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#00274c"
+                    android:text="@string/survey_9_question"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:textColor="#FFFFFF"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:id="@+id/tvQuestion9" />
+
+                <RadioGroup
+                    android:id="@+id/radioGroup_Question_9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvQuestion9"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal" >
+
+                    <RadioButton
+                        android:id="@+id/radioYes_Question9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Yes"
+                        android:textSize="18sp" />
+
+                    <RadioButton
+                        android:id="@+id/radioNo_Question9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="30dp"
+                        android:text="No"
+                        android:textSize="18sp" />
+                </RadioGroup>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:id="@+id/question10RelativeLayout"
+                android:layout_below="@+id/question9RelativeLayout"
+                android:layout_marginTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="#F3F0EB"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#00274c"
+                    android:text="@string/survey_10_question"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:textColor="#FFFFFF"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:id="@+id/tvQuestion10" />
+
+                <RadioGroup
+                    android:id="@+id/radioGroup_Question_10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvQuestion10"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal" >
+
+                    <RadioButton
+                        android:id="@+id/radioYes_Question10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Yes"
+                        android:textSize="18sp" />
+
+                    <RadioButton
+                        android:id="@+id/radioNo_Question10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="30dp"
+                        android:text="No"
+                        android:textSize="18sp" />
+                </RadioGroup>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relativelayoutSubmit"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:background="#ffffff"
+                android:padding="3dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_below="@+id/question10RelativeLayout">
+
+                <Button
+                    android:id="@+id/bSubmitSurvey"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/blue_button"
+                    android:text="Submit"
+                    android:padding="10dp"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
 
 </RelativeLayout>

@@ -81,8 +81,8 @@
             -->
         </activity>
         <activity
-            android:name="edu.umich.seedforandroid.patient.EnterNewHealthData"
-            android:label="@string/title_activity_enter_new_health_data"
+            android:name="edu.umich.seedforandroid.patient.daily_survey.DailySurvey"
+            android:label="@string/title_activity_daily_survey"
             android:screenOrientation="portrait" >
         </activity>
         <activity

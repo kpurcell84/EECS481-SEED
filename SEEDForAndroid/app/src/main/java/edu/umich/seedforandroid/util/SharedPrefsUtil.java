@@ -23,8 +23,7 @@ public class SharedPrefsUtil {
     private static final String PROPERTY_NOTIFICATION_STATE = "noti_state";
     private static final String PROPERTY_NOTIFICATION_MESSAGE = "noti_msg";
 
-
-    private static final String PROPERTY_SURVEY_QA_PAIR = "survey_qa";
+    // Survey Notification
     private static final String PROPERTY_SURVEY_MORNING_TIME = "survey_morning_time";
     private static final String PROPERTY_SURVEY_EVENING_TIME = "survey_evening_time";
 
@@ -161,18 +160,6 @@ public class SharedPrefsUtil {
     public void clearNotificationMessage() {
 
         removeProperty(PROPERTY_NOTIFICATION_MESSAGE);
-    }
-
-    public void setSurveyQAPair(int question, String answer)  {
-
-        String thisQuestionAnswerPair = PROPERTY_SURVEY_QA_PAIR.concat(String.valueOf(question));
-        setProperty(thisQuestionAnswerPair, answer);
-    }
-
-    public String getSurveyQAPair(int question, String defValue)  {
-
-        String thisQuestionAnswerPair = PROPERTY_SURVEY_QA_PAIR.concat(String.valueOf(question));
-        return mPrefs.getString(thisQuestionAnswerPair, defValue);
     }
 
     public void setMorningSurveyNotificationTime(int hour, int minute)  { // 24 hour clock (23:00)

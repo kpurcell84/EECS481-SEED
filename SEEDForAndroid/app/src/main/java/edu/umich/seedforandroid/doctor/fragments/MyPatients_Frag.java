@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -79,7 +80,6 @@ public class MyPatients_Frag extends Fragment  {
 
     private void populatePatientList(MessagesPatientListResponse patients) {
 
-        //todo load up patient list, call redraw on Adapter
         myPatientList.clear();
         for (MessagesPatientPut patient : patients.getPatients())  {
 
@@ -173,31 +173,28 @@ public class MyPatients_Frag extends Fragment  {
             tvName.setText(patientNameTmp);
 
             // Phone Number
-            final TextView tvPhoneNumber = (TextView) itemView.findViewById(R.id.tvPatientPhoneNumber);
-            tvPhoneNumber.setText(currentPatient.getPatientPhoneNumber());
-            tvPhoneNumber.setOnClickListener(new View.OnClickListener()  {
+            final Button bPhoneNumber = (Button) itemView.findViewById(R.id.bPatientPhoneNumber);
+            bPhoneNumber.setText(currentPatient.getPatientPhoneNumber());
+            bPhoneNumber.setOnClickListener(new View.OnClickListener()  {
 
                 @Override
                 public void onClick(View v)  {
 
-                    popUpPhoneCallAlertDialog(tvPhoneNumber.getText().toString(), patientNameTmp);
+                    popUpPhoneCallAlertDialog(bPhoneNumber.getText().toString(), patientNameTmp);
                 }
             });
 
             // Email
-            final TextView tvEmail = (TextView) itemView.findViewById(R.id.tvPatientEmail);
-            tvEmail.setText(currentPatient.getPatientEmail());
-            tvEmail.setOnClickListener(new View.OnClickListener()  {
+            final Button bEmail = (Button) itemView.findViewById(R.id.bPatientEmail);
+            bEmail.setText(currentPatient.getPatientEmail());
+            bEmail.setOnClickListener(new View.OnClickListener()  {
 
                 @Override
                 public void onClick(View v)  {
 
-                    popUpEmailAlertDialog(tvEmail.getText().toString(), patientNameTmp);
+                    popUpEmailAlertDialog(bEmail.getText().toString(), patientNameTmp);
                 }
             });
-
-            // ImageView
-            ImageView imageView = (ImageView) itemView.findViewById(R.id.imageViewPatientGender);
 
             // RelativeLayout
             ImageView imageViewNext = (ImageView) itemView.findViewById(R.id.imageViewNextIcon);
@@ -206,7 +203,7 @@ public class MyPatients_Frag extends Fragment  {
                 @Override
                 public void onClick(View v)  {
 
-                    gotoPatientDataPage(tvEmail.getText().toString(), patientNameTmp);
+                    gotoPatientDataPage(bEmail.getText().toString(), patientNameTmp);
                 }
             });
             return itemView;

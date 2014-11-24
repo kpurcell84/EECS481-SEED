@@ -7,63 +7,70 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
+        android:id="@+id/relativelayoutalert"
         android:layout_height="wrap_content">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_toRightOf="@+id/imageViewPatientGender"
-            android:layout_toLeftOf="@+id/imageViewNextIcon"
+            android:layout_toRightOf="@+id/imageViewAlertType"
+            android:layout_below="@+id/tvAlertType"
+            android:padding="15dp"
             android:layout_height="wrap_content">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:text="Patient Name"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
-                android:layout_centerHorizontal="true"
                 android:id="@+id/tvPatientName" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="123-456-7890"
-                android:textSize="18sp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@+id/tvPatientName"
-                android:id="@+id/tvPatientPhoneNumber" />
+                android:text="Patient Email"
+                android:textSize="0sp"
+                android:id="@+id/tvPatientEmail" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="test@test.com"
-                android:textSize="18sp"
-                android:gravity="center"
-                android:layout_marginBottom="10dp"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@+id/tvPatientPhoneNumber"
-                android:id="@+id/tvPatientEmail" />
+                android:layout_below="@+id/tvPatientName"
+                android:layout_marginTop="15dp"
+                android:text="Time Alerted :"
+                android:textSize="16sp"
+                android:id="@+id/tvTimeAlertedStr" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvTimeAlertedStr"
+                android:text="2014 November 21, 1:30 PM"
+                android:textSize="16sp"
+                android:id="@+id/tvTimeAlerted" />
 
         </RelativeLayout>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imageViewPatientGender"
-            android:layout_centerInParent="true"
-            android:src="@drawable/male_profile_icon"
-            android:layout_alignParentLeft="true" />
+            android:id="@+id/imageViewAlertType"
+            android:layout_below="@+id/tvAlertType"
+            android:src="@drawable/emergency_alert_square_icon"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/tvAlertType"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/imageViewNextIcon"
-            android:layout_centerInParent="true"
-            android:src="@drawable/next_icon_final"
-            android:layout_alignParentRight="true" />
+            android:background="#d80000"
+            android:gravity="center"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:text="Emergency Detection"
+            android:textColor="#ffffff"
+            android:layout_alignParentTop="true"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
     </RelativeLayout>
 
