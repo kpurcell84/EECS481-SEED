@@ -51,4 +51,14 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_doctor_view_patient_data">DoctorViewPatientData</string>
 
+    <!-- Alerts Values -->
+    <string name="notif_header_early">Early Sepsis Alert!</string>
+    <string name="notif_body_early">%1$s may be at risk of sepsis.</string>
+    <string name="notif_header_emergency">Emergency Sepsis Alert!</string>
+    <string name="notif_body_emergency">%1$s at high risk of sepsis. Contact %2$s immediately!</string>
+    <string name="notif_body_emergency_patient_format">You are</string>
+    <string name="notif_body_emergency_doctor_format">%1$s is</string>
+    <string name="notif_body_emergency_patient_contact_message">your doctor</string>
+    <string name="notif_body_emergency_doctor_contact_message">them</string>
+
 </resources>

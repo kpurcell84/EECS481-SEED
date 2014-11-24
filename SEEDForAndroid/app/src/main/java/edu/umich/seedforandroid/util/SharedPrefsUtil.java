@@ -22,8 +22,10 @@ public class SharedPrefsUtil {
     private static final String PROPERTY_USER_ACCOUNT_TYPE = "user_account_type"; // "doctor" or "patient"
     private static final String PROPERTY_NOTIFICATION_STATE = "noti_state";
     private static final String PROPERTY_NOTIFICATION_MESSAGE = "noti_msg";
+    private static final String PROPERTY_NOTIFICATION_EMAIL = "noti_email";
 
     // Survey Notification
+    private static final String PROPERTY_SURVEY_QA_PAIR = "survey_qa";
     private static final String PROPERTY_SURVEY_MORNING_TIME = "survey_morning_time";
     private static final String PROPERTY_SURVEY_EVENING_TIME = "survey_evening_time";
 
@@ -160,6 +162,26 @@ public class SharedPrefsUtil {
     public void clearNotificationMessage() {
 
         removeProperty(PROPERTY_NOTIFICATION_MESSAGE);
+    }
+
+    public void setNotificationEmail(String val)  {
+
+        setProperty(PROPERTY_NOTIFICATION_EMAIL, val);
+    }
+
+    public String getNotificationEmail() {
+
+        return getNotificationEmail("");
+    }
+
+    public String getNotificationEmail(String defValue)  {
+
+        return mPrefs.getString(PROPERTY_NOTIFICATION_EMAIL, defValue);
+    }
+
+    public void clearNotificationEmail() {
+
+        removeProperty(PROPERTY_NOTIFICATION_EMAIL);
     }
 
     public void setMorningSurveyNotificationTime(int hour, int minute)  { // 24 hour clock (23:00)

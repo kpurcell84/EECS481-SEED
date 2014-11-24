@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import edu.umich.seedforandroid.R;
 import edu.umich.seedforandroid.account.GoogleAccountManager;
 import edu.umich.seedforandroid.api.ApiThread;
 import edu.umich.seedforandroid.api.SeedApi;
@@ -178,6 +179,25 @@ public class AlertsManager {
             );
         }
         return remoteAlerts;
+    }
+
+    public static String buildEarlyAlertString(Context context, String patientName) {
+
+        return context.getString(R.string.notif_body_early, patientName);
+    }
+
+    public static String buildDoctorEmergencyAlertString(Context context, String patientName) {
+
+        String firstArg = context.getString(R.string.notif_body_emergency_doctor_format, patientName);
+        String secondArg = context.getString(R.string.notif_body_emergency_doctor_contact_message);
+        return context.getString(R.string.notif_body_emergency, firstArg, secondArg);
+    }
+
+    public static String buildPatientEmergencyAlertString(Context context) {
+
+        String firstArg = context.getString(R.string.notif_body_emergency_patient_format);
+        String secondArg = context.getString(R.string.notif_body_emergency_patient_contact_message);
+        return context.getString(R.string.notif_body_emergency, firstArg, secondArg);
     }
 
     public interface IAlertsFetchCompleteListener {
