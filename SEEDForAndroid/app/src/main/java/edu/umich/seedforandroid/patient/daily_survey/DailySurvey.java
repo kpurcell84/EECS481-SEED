@@ -1,6 +1,12 @@
 package edu.umich.seedforandroid.patient.daily_survey;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -10,6 +16,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import edu.umich.seedforandroid.R;
+import edu.umich.seedforandroid.patient.MainActivity_Patient;
 
 public class DailySurvey extends Activity implements View.OnClickListener  {
 
@@ -77,7 +84,7 @@ public class DailySurvey extends Activity implements View.OnClickListener  {
 
     private void changeTempUnit()  {
 
-        if (bChangeTempUnit.getText().toString().equals("\\u2109"))  { // F to C
+        if (bChangeTempUnit.getText().toString().equals("\u2109"))  { // F to C
 
             // See if the user has input anything
             if (etBodyTemp.getText().toString().equals("") == false)  {
@@ -89,7 +96,7 @@ public class DailySurvey extends Activity implements View.OnClickListener  {
                 etBodyTemp.setText(String.valueOf(temp));
             }
 
-            bChangeTempUnit.setText("\\u2103");
+            bChangeTempUnit.setText("\u2103");
         }
         else  { // C to F
 
@@ -103,7 +110,7 @@ public class DailySurvey extends Activity implements View.OnClickListener  {
                 etBodyTemp.setText(String.valueOf(temp));
             }
 
-            bChangeTempUnit.setText("\\u2109");
+            bChangeTempUnit.setText("\u2109");
         }
     }
 
@@ -166,5 +173,34 @@ public class DailySurvey extends Activity implements View.OnClickListener  {
     @Override
     public void onBackPressed()  {
 
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(DailySurvey.this);
+        View convertView = getLayoutInflater().inflate(R.layout.patient_survey_exit_alert, null);
+        alertDialog.setCustomTitle(convertView);
+        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        })
+        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+
+                goBackToMainActivityPatient();
+            }
+        });
+
+        // Set the line color
+        Dialog d = alertDialog.show();
+        int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+        View divider = d.findViewById(dividerId);
+        divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
+    }
+
+    private void goBackToMainActivityPatient()  {
+
+        Intent intent = new Intent(DailySurvey.this, MainActivity_Patient.class);
+        startActivity(intent);
     }
 }

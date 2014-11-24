@@ -3,8 +3,6 @@
     android:minHeight="1000dp"
     android:minWidth="1000dp"
     android:updatePeriodMillis="1000"
-    android:widgetCategory="home_screen|keyguard" android:initialLayout="@layout/lockscreen_widget_clock"
-    android:layout_height="1000dp"
-    android:layout_width="1000dp">
+    android:widgetCategory="home_screen|keyguard" android:initialLayout="@layout/widget_clock">
 
 </appwidget-provider>

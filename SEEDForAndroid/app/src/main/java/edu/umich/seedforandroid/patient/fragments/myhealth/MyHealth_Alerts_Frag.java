@@ -19,6 +19,7 @@ import com.google.api.client.util.DateTime;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -111,10 +112,6 @@ public class MyHealth_Alerts_Frag extends Fragment  {
 
                     refreshUi(alerts);
                 }
-                else  {
-
-                    Toast.makeText(getActivity(), "SORTED SET IS NULL", Toast.LENGTH_SHORT).show();
-                }
             }
 
             @Override
@@ -133,7 +130,7 @@ public class MyHealth_Alerts_Frag extends Fragment  {
 
         if (sortedSet.isEmpty())  {
 
-            Toast.makeText(getActivity(), "SORTED SET IS EMPTY", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "You do not have any alerts", Toast.LENGTH_SHORT).show();
             return;
         }
         for (AlertsDataWrapper alert : sortedSet)  {
@@ -156,13 +153,16 @@ public class MyHealth_Alerts_Frag extends Fragment  {
         ActionBar actionBar = getActivity().getActionBar();
         actionBar.setTitle("My Sepsis Alerts");
 
+        myAlertsList.clear();
         mUtils = new Utils();
         adapter = new AlertsListAdapter();
         ListView list = (ListView) view.findViewById(R.id.alertListViewPatient);
         list.setAdapter(adapter);
 
-        long threeMonthsAgo = 1000 * 60 * 60 * 24 * 31 * 3;
-        DateTime startTime = new DateTime(System.currentTimeMillis() - threeMonthsAgo);
+        Calendar calStart = Calendar.getInstance();
+        calStart.set(2014, Calendar.OCTOBER, 1);
+
+        DateTime startTime = new DateTime(calStart.getTimeInMillis());
         DateTime endTime = new DateTime(System.currentTimeMillis());
         refreshAlerts(startTime, endTime);
     }

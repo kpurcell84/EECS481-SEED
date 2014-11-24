@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/tv_PM_AM_Widget_Clock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tvTime_Widget_Clock"
+        android:layout_alignBottom="@+id/tvTime_Widget_Clock"
+        android:layout_toRightOf="@+id/tvTime_Widget_Clock"
+        android:padding="3dp"
+        android:text="PM"
+        android:textColor="#ffffff"
+        android:textSize="25sp" />
+
+    <TextView
+        android:id="@+id/tvTime_Widget_Clock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="6:30"
+        android:textColor="#ffffff"
+        android:textSize="70sp" />
+
+    <TextView
+        android:id="@+id/tvDate_Widget_Clock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_PM_AM_Widget_Clock"
+        android:layout_centerHorizontal="true"
+        android:padding="5dp"
+        android:text="Jun 2"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SEED System"
+        android:drawableStart="@drawable/seed_system_icon"
+        android:drawablePadding="10dp"
+        android:layout_below="@+id/tvDate_Widget_Clock"
+        android:id="@+id/textView4"
+        android:textColor="#FFFFFF"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>

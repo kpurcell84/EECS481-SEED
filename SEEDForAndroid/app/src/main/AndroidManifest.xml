@@ -94,6 +94,29 @@
             android:name="edu.umich.seedforandroid.doctor.patientdata.DoctorViewPatientData"
             android:label="@string/title_activity_doctor_view_patient_data" >
         </activity>
+
+        <receiver android:name="edu.umich.seedforandroid.lockscreenwidget.LockScreenWidget" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/lock_screen_widget_info" />
+        </receiver>
+
+        <service
+            android:name="edu.umich.seedforandroid.lockscreenwidget.LockScreenWidgetServicer"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
+
+        <receiver
+            android:name="edu.umich.seedforandroid.lockscreenwidget.LockScreenWidgetReceiver"
+            android:enabled="true"
+            android:exported="true" >
+        </receiver>
+
     </application>
 
 </manifest>

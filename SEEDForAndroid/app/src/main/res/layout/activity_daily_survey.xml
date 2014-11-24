@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:padding="10dp"
+    android:padding="20dp"
     android:background="@drawable/seed_background"
     tools:context="edu.umich.seedforandroid.patient.daily_survey.DailySurvey">
 
@@ -18,7 +18,6 @@
                 android:layout_width="match_parent"
                 android:id="@+id/bodyTempRelativeLayout"
                 android:paddingBottom="10dp"
-                android:background="#F3F0EB"
                 android:layout_height="wrap_content">
 
                 <TextView
@@ -37,7 +36,7 @@
                 <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
+                    android:inputType="numberDecimal"
                     android:ems="10"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
@@ -63,7 +62,6 @@
                 android:layout_width="wrap_content"
                 android:id="@+id/bloodPressureRelativeLayout"
                 android:paddingBottom="10dp"
-                android:background="#F3F0EB"
                 android:layout_below="@+id/bodyTempRelativeLayout"
                 android:layout_marginTop="10dp"
                 android:layout_height="wrap_content">
@@ -77,15 +75,16 @@
                     android:textColor="#FFFFFF"
                     android:layout_centerHorizontal="true"
                     android:textSize="20sp"
-                    android:padding="5dp"
+                    android:padding="10dp"
                     android:textStyle="bold"
                     android:id="@+id/tvBloodPressureQuestion" />
 
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
+                    android:inputType="numberDecimal"
                     android:ems="10"
+                    android:background="#F3F0EB"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:padding="10dp"
@@ -111,12 +110,13 @@
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
+                    android:inputType="numberDecimal"
                     android:ems="10"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:textSize="18sp"
                     android:gravity="center"
+                    android:background="#F3F0EB"
                     android:padding="10dp"
                     android:hint="Diastolic (bottom number)"
                     android:id="@+id/etBloodPressureDiastolic"
@@ -130,7 +130,8 @@
                     android:gravity="center"
                     android:layout_centerHorizontal="true"
                     android:layout_below="@+id/etBloodPressureDiastolic"
-                    android:textSize="25sp"
+                    android:textSize="20sp"
+                    android:layout_marginTop="5dp"
                     android:text="mm Hg"
                     android:textStyle="bold"
                     android:id="@+id/tvBloodPressureUnit" />
@@ -142,7 +143,6 @@
                 android:layout_below="@+id/bloodPressureRelativeLayout"
                 android:layout_marginTop="10dp"
                 android:paddingBottom="10dp"
-                android:background="#F3F0EB"
                 android:layout_height="wrap_content">
 
                 <TextView
@@ -151,7 +151,7 @@
                     android:background="#00274c"
                     android:text="@string/survey_1_question"
                     android:gravity="center"
-                    android:padding="5dp"
+                    android:padding="10dp"
                     android:textColor="#FFFFFF"
                     android:layout_centerHorizontal="true"
                     android:textSize="20sp"
@@ -191,7 +191,6 @@
                 android:layout_below="@+id/question1RelativeLayout"
                 android:layout_marginTop="10dp"
                 android:paddingBottom="10dp"
-                android:background="#F3F0EB"
                 android:layout_height="wrap_content">
 
                 <TextView
@@ -200,7 +199,7 @@
                     android:background="#00274c"
                     android:text="@string/survey_2_question"
                     android:gravity="center"
-                    android:padding="5dp"
+                    android:padding="10dp"
                     android:textColor="#FFFFFF"
                     android:layout_centerHorizontal="true"
                     android:textSize="20sp"
@@ -240,7 +239,6 @@
                 android:layout_below="@+id/question2RelativeLayout"
                 android:layout_marginTop="10dp"
                 android:paddingBottom="10dp"
-                android:background="#F3F0EB"
                 android:layout_height="wrap_content">
 
                 <TextView
@@ -249,7 +247,7 @@
                     android:background="#00274c"
                     android:text="@string/survey_3_question"
                     android:gravity="center"
-                    android:padding="5dp"
+                    android:padding="10dp"
                     android:textColor="#FFFFFF"
                     android:layout_centerHorizontal="true"
                     android:textSize="20sp"
@@ -289,7 +287,6 @@
                 android:layout_below="@+id/question3RelativeLayout"
                 android:layout_marginTop="10dp"
                 android:paddingBottom="10dp"
-                android:background="#F3F0EB"
                 android:layout_height="wrap_content">
 
                 <TextView
@@ -298,7 +295,7 @@
                     android:background="#00274c"
                     android:text="@string/survey_4_question"
                     android:gravity="center"
-                    android:padding="5dp"
+                    android:padding="10dp"
                     android:textColor="#FFFFFF"
                     android:layout_centerHorizontal="true"
                     android:textSize="20sp"
@@ -338,7 +335,6 @@
                 android:layout_below="@+id/question4RelativeLayout"
                 android:layout_marginTop="10dp"
                 android:paddingBottom="10dp"
-                android:background="#F3F0EB"
                 android:layout_height="wrap_content">
 
                 <TextView
@@ -347,7 +343,7 @@
                     android:background="#00274c"
                     android:text="@string/survey_5_question"
                     android:gravity="center"
-                    android:padding="5dp"
+                    android:padding="10dp"
                     android:textColor="#FFFFFF"
                     android:layout_centerHorizontal="true"
                     android:textSize="20sp"
@@ -387,7 +383,6 @@
                 android:layout_below="@+id/question5RelativeLayout"
                 android:layout_marginTop="10dp"
                 android:paddingBottom="10dp"
-                android:background="#F3F0EB"
                 android:layout_height="wrap_content">
 
                 <TextView
@@ -396,7 +391,7 @@
                     android:background="#00274c"
                     android:text="@string/survey_6_question"
                     android:gravity="center"
-                    android:padding="5dp"
+                    android:padding="10dp"
                     android:textColor="#FFFFFF"
                     android:layout_centerHorizontal="true"
                     android:textSize="20sp"
@@ -436,7 +431,6 @@
                 android:layout_below="@+id/question6RelativeLayout"
                 android:layout_marginTop="10dp"
                 android:paddingBottom="10dp"
-                android:background="#F3F0EB"
                 android:layout_height="wrap_content">
 
                 <TextView
@@ -445,7 +439,7 @@
                     android:background="#00274c"
                     android:text="@string/survey_7_question"
                     android:gravity="center"
-                    android:padding="5dp"
+                    android:padding="10dp"
                     android:textColor="#FFFFFF"
                     android:layout_centerHorizontal="true"
                     android:textSize="20sp"
@@ -485,7 +479,6 @@
                 android:layout_below="@+id/question7RelativeLayout"
                 android:layout_marginTop="10dp"
                 android:paddingBottom="10dp"
-                android:background="#F3F0EB"
                 android:layout_height="wrap_content">
 
                 <TextView
@@ -494,7 +487,7 @@
                     android:background="#00274c"
                     android:text="@string/survey_8_question"
                     android:gravity="center"
-                    android:padding="5dp"
+                    android:padding="10dp"
                     android:textColor="#FFFFFF"
                     android:layout_centerHorizontal="true"
                     android:textSize="20sp"
@@ -534,7 +527,6 @@
                 android:layout_below="@+id/question8RelativeLayout"
                 android:layout_marginTop="10dp"
                 android:paddingBottom="10dp"
-                android:background="#F3F0EB"
                 android:layout_height="wrap_content">
 
                 <TextView
@@ -543,7 +535,7 @@
                     android:background="#00274c"
                     android:text="@string/survey_9_question"
                     android:gravity="center"
-                    android:padding="5dp"
+                    android:padding="10dp"
                     android:textColor="#FFFFFF"
                     android:layout_centerHorizontal="true"
                     android:textSize="20sp"
@@ -583,7 +575,6 @@
                 android:layout_below="@+id/question9RelativeLayout"
                 android:layout_marginTop="10dp"
                 android:paddingBottom="10dp"
-                android:background="#F3F0EB"
                 android:layout_height="wrap_content">
 
                 <TextView
@@ -592,7 +583,7 @@
                     android:background="#00274c"
                     android:text="@string/survey_10_question"
                     android:gravity="center"
-                    android:padding="5dp"
+                    android:padding="10dp"
                     android:textColor="#FFFFFF"
                     android:layout_centerHorizontal="true"
                     android:textSize="20sp"
