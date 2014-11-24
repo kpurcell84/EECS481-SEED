@@ -28,8 +28,12 @@ public class AlertsManager {
 
     private static final String TAG = AlertsManager.class.getSimpleName();
 
+    public static final String PRIORITY_EARLY = "Early";
+    public static final String PRIORITY_EMERGENCY = "Emergency";
+
     private Seed mApi;
     private ApiThread mApiThread;
+    private Context mContext;
 
     public AlertsManager(Context context) {
 
@@ -54,6 +58,7 @@ public class AlertsManager {
 
         mApi = SeedApi.getAuthenticatedApi(accountManager.getCredential());
         mApiThread = apiThread;
+        mContext = context;
     }
 
     public boolean mergeLocalWithRemote
@@ -170,11 +175,33 @@ public class AlertsManager {
         // remote alerts will be built in sorted order
         SortedSet<AlertsDataWrapper> remoteAlerts =
                 new TreeSet<AlertsDataWrapper>(AlertsDataWrapper.getComparator());
+        SharedPrefsUtil prefsUtil = new SharedPrefsUtil(mContext);
+        String accountType = prefsUtil.getUserAccountType("");
         for (MessagesAlertResponse a : result.getAlerts()) {
+
+            String priority = a.getPriority();
+            String name = String.format("%1$s %2$s", a.getFirstName(), a.getLastName());
+            String message;
+            if (priority.equals(PRIORITY_EARLY)) {
+
+                //contentTitle = context.getString(R.string.notif_header_early);
+                message = AlertsManager.buildEarlyAlertString(mContext, name);
+            }
+            else {
+                //contentTitle = context.getString(R.string.notif_header_emergency);
+                if (accountType.equals(SharedPrefsUtil.ACCOUNT_TYPE_DOCTOR)) {
+
+                    message = AlertsManager.buildDoctorEmergencyAlertString(mContext, name);
+                }
+                else {
+
+                    message = AlertsManager.buildPatientEmergencyAlertString(mContext);
+                }
+            }
 
             remoteAlerts.add(
                     new AlertsDataWrapper()
-                            .setMessage(a.getPriority())
+                            .setMessage(message)
                             .setTimeStamp(a.getTimeAlerted())
             );
         }

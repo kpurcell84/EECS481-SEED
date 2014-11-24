@@ -3,6 +3,7 @@ package edu.umich.seedforandroid.gcm;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +18,7 @@ import java.util.Calendar;
 import java.util.Random;
 
 import edu.umich.seedforandroid.R;
+import edu.umich.seedforandroid.main.MainActivity;
 import edu.umich.seedforandroid.util.AlertsManager;
 import edu.umich.seedforandroid.util.SharedPrefsUtil;
 
@@ -27,8 +29,6 @@ public class GcmBroadcastReceiver extends BroadcastReceiver  {
     private static final String PRIORITY = "priority";
     private static final String PATIENT_EMAIL = "patient_email";
     private static final String PATIENT_NAME = "patient_name";
-    private static final String PRIORITY_EARLY = "Early";
-    private static final String PRIORITY_EMERGENCY = "Emergency";
 
 
     public GcmBroadcastReceiver() {
@@ -38,10 +38,6 @@ public class GcmBroadcastReceiver extends BroadcastReceiver  {
     public void onReceive(Context context, Intent intent)  {
 
         Bundle extras = intent.getExtras();
-        Log.i(TAG, "Received message: " + extras.toString());
-        Toast.makeText(context.getApplicationContext(), extras.get("message").toString(), Toast.LENGTH_SHORT).show();
-
-        setResultCode(Activity.RESULT_OK);
 
         String priority = extras.getString(PRIORITY);
         String email = extras.getString(PATIENT_EMAIL);
@@ -53,7 +49,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver  {
 
             String contentTitle;
             String contentBody;
-            if (priority.equals(PRIORITY_EARLY)) {
+            if (priority.equals(AlertsManager.PRIORITY_EARLY)) {
 
                 contentTitle = context.getString(R.string.notif_header_early);
                 contentBody = AlertsManager.buildEarlyAlertString(context, name);
@@ -70,17 +66,20 @@ public class GcmBroadcastReceiver extends BroadcastReceiver  {
                 }
             }
 
-            //todo make intent take directly to patient portal
+            int notifId = Calendar.getInstance().get(Calendar.MILLISECOND);
+            Intent launchIntent = new Intent(context, MainActivity.class);
+            PendingIntent pIntent = PendingIntent.getActivity(context, notifId, launchIntent, 0);
+
             Notification notification = new Notification.Builder(context)
                     .setContentTitle(contentTitle)
                     .setContentText(contentBody)
-                    //.setSmallIcon()
+                    .setContentIntent(pIntent)
+                    .setSmallIcon(R.drawable.evening_icon)
                     //.setLargeIcon()
                     .build();
 
             NotificationManager notificationManager =
                     (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-            int notifId = Calendar.getInstance().get(Calendar.SECOND);
             notificationManager.notify(notifId, notification);
 
             prefsUtil.setNotificationMessage(contentBody);
