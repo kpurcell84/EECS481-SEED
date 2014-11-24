@@ -9,16 +9,24 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.api.client.util.DateTime;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.SortedSet;
 
 import edu.umich.seedforandroid.R;
-import edu.umich.seedforandroid.account.GoogleAccountManager;
 import edu.umich.seedforandroid.api.ApiThread;
 import edu.umich.seedforandroid.util.AlertsManager;
+import edu.umich.seedforandroid.util.Utils;
 
 public class MyHealth_Alerts_Frag extends Fragment  {
 
@@ -28,14 +36,15 @@ public class MyHealth_Alerts_Frag extends Fragment  {
 
     private String mPatientEmail;
     private ApiThread mApiThread;
-    private SortedSet<AlertsDataWrapper> mAlerts;
+    private List<AlertsDataWrapper> myAlertsList = new ArrayList<AlertsDataWrapper>();
+    private ArrayAdapter<AlertsDataWrapper> adapter;
+    private Utils mUtils;
 
-    public MyHealth_Alerts_Frag() {
-
-    }
+    public MyHealth_Alerts_Frag()  {}
 
     @Override
-    public void setArguments(Bundle args) {
+    public void setArguments(Bundle args)  {
+
         super.setArguments(args);
 
         mPatientEmail = args.getString(ARG_PATIENT_EMAIL);
@@ -47,10 +56,12 @@ public class MyHealth_Alerts_Frag extends Fragment  {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(false);
         mApiThread = new ApiThread();
+        mPatientEmail = "seedsystem00@gmail.com";
     }
 
     @Override
-    public void onDestroy() {
+    public void onDestroy()  {
+
         super.onDestroy();
 
         mApiThread.stop();
@@ -60,12 +71,13 @@ public class MyHealth_Alerts_Frag extends Fragment  {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)  {
 
         View view = inflater.inflate(R.layout.fragment_my_health__alerts_, container, false);
-        initialSetup();
+        initialSetup(view);
         return view;
     }
 
     @Override
-    public void onStart() {
+    public void onStart()  {
+
         super.onStart();
 
         //todo refresh alerts for the default time, this is where you first fetch alerts to display
@@ -77,34 +89,35 @@ public class MyHealth_Alerts_Frag extends Fragment  {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)  {
 
         super.onCreateOptionsMenu(menu, inflater);
-
-//        menu.findItem(R.id.action_graph_options).setVisible(false).setEnabled(false);
-      //  menu.findItem(R.id.action_graph_options).setVisible(false);
-
-        //menu.findItem(R.id.action_refresh).setVisible(false);
     }
 
-    private void refreshAlerts(DateTime from, DateTime to) {
+    private void refreshAlerts(DateTime from, DateTime to)  {
 
         refreshAlerts(from, to, null);
     }
 
     private void refreshAlerts(DateTime from, DateTime to,
-                               Collection<AlertsDataWrapper> existingAlerts) {
+                               Collection<AlertsDataWrapper> existingAlerts)  {
 
         new AlertsManager(this.getActivity(), mApiThread)
                 .mergeLocalWithRemote(mPatientEmail, from, to, existingAlerts,
-                                      new AlertsManager.IAlertsFetchCompleteListener() {
+                                      new AlertsManager.IAlertsFetchCompleteListener()  {
 
             @Override
-            public void onAlertsFetchComplete(SortedSet<AlertsDataWrapper> alerts) {
+            public void onAlertsFetchComplete(SortedSet<AlertsDataWrapper> alerts)  {
 
-                mAlerts = alerts;
-                refreshUi();
+                if (alerts != null)  {
+
+                    refreshUi(alerts);
+                }
+                else  {
+
+                    Toast.makeText(getActivity(), "SORTED SET IS NULL", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
-            public void onAlertsFetchFailure(Throwable error) {
+            public void onAlertsFetchFailure(Throwable error)  {
 
                 Log.e(TAG, "Refreshing alerts failed with error: " + error.getMessage());
                 notifyUiOfAlertsRefreshFailure();
@@ -112,19 +125,85 @@ public class MyHealth_Alerts_Frag extends Fragment  {
         });
     }
 
-    private void refreshUi() {
+    private void refreshUi(SortedSet<AlertsDataWrapper> sortedSet)  {
 
         //todo load the data stored in mAlerts into the UI
+        myAlertsList.clear();
+
+        if (sortedSet.isEmpty())  {
+
+            Toast.makeText(getActivity(), "SORTED SET IS EMPTY", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        for (AlertsDataWrapper alert : sortedSet)  {
+
+            myAlertsList.add(alert);
+        }
+
+        adapter = new AlertsListAdapter();
+        ListView list = (ListView) getView().findViewById(R.id.alertListViewPatient);
+        list.setAdapter(adapter);
     }
 
-    private void notifyUiOfAlertsRefreshFailure() {
+    private void notifyUiOfAlertsRefreshFailure()  {
 
         //todo the alerts couldn't refresh. Notify the user in the UI
     }
 
-    private void initialSetup()  {
+    private void initialSetup(View view)  {
 
         ActionBar actionBar = getActivity().getActionBar();
         actionBar.setTitle("My Sepsis Alerts");
+
+        mUtils = new Utils();
+        adapter = new AlertsListAdapter();
+        ListView list = (ListView) view.findViewById(R.id.alertListViewPatient);
+        list.setAdapter(adapter);
+
+        long threeMonthsAgo = 1000 * 60 * 60 * 24 * 31 * 3;
+        DateTime startTime = new DateTime(System.currentTimeMillis() - threeMonthsAgo);
+        DateTime endTime = new DateTime(System.currentTimeMillis());
+        refreshAlerts(startTime, endTime);
+    }
+
+    private class AlertsListAdapter extends ArrayAdapter<AlertsDataWrapper>  {
+
+        public AlertsListAdapter()  {
+
+            super(getActivity().getApplicationContext(), R.layout.patient_alerts_item_view, myAlertsList);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent)  {
+
+            // Make sure we have a view to work with (may have been given null)
+            View itemView = convertView;
+
+            if (itemView == null)  {
+
+                itemView = getActivity().getLayoutInflater().inflate(R.layout.patient_alerts_item_view, parent, false);
+            }
+
+            // Find the item to work with.
+            AlertsDataWrapper currentAlert = myAlertsList.get(position);
+
+            // Time Alerted
+            TextView tvTimeAlerted = (TextView) itemView.findViewById(R.id.tvTimeAlerted);
+            DateTime timeAlerted = currentAlert.getTimeStamp();
+
+            DateFormat formatter = new SimpleDateFormat("yyyy:MM:dd:HH:mm");
+            tvTimeAlerted.setText(formatTimePretty(formatter.format(timeAlerted.getValue()).toString()));
+
+            return itemView;
+        }
+    }
+
+    private String formatTimePretty(String time)  {
+
+        String[] parts = time.split(":");
+        String month = mUtils.getMonthFullString(Integer.parseInt(parts[1]));
+        String[] hour = mUtils.convert24HourTo12Hour(String.valueOf(parts[3]));
+        String output = parts[0] + " " + month + " " + parts[2] + ", " + hour[0] + ":" + parts[4] + hour[1];
+        return output;
     }
 }

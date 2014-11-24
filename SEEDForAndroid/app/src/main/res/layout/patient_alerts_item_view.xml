@@ -14,23 +14,8 @@
             android:layout_width="match_parent"
             android:layout_toRightOf="@+id/imageViewAlertType"
             android:layout_below="@+id/tvAlertType"
-            android:padding="10dp"
+            android:padding="15dp"
             android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Patient Name"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:id="@+id/tvPatientName" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Patient Email"
-                android:textSize="0sp"
-                android:id="@+id/tvPatientEmail" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -38,7 +23,7 @@
                 android:layout_below="@+id/tvPatientName"
                 android:layout_marginTop="15dp"
                 android:text="Time Alerted :"
-                android:textSize="15sp"
+                android:textSize="16sp"
                 android:id="@+id/tvTimeAlertedStr" />
 
             <TextView
@@ -46,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tvTimeAlertedStr"
                 android:text="2014 November 21, 1:30 PM"
-                android:textSize="15sp"
+                android:textSize="16sp"
                 android:id="@+id/tvTimeAlerted" />
 
         </RelativeLayout>
