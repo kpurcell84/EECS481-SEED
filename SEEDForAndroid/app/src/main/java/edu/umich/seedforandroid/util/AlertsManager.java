@@ -203,6 +203,7 @@ public class AlertsManager {
                     new AlertsDataWrapper()
                             .setMessage(message)
                             .setTimeStamp(a.getTimeAlerted())
+                            .setPriority(priority)
             );
         }
         return remoteAlerts;

@@ -36,6 +36,19 @@ public class AlertsDataWrapper implements Comparable<AlertsDataWrapper>{
         return this;
     }
 
+    @Expose
+    @SerializedName("priority")
+    private String priority;
+    public String getPriority() {
+
+        return priority;
+    }
+    public AlertsDataWrapper setPriority(String priority) {
+
+        this.priority = priority;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
 
