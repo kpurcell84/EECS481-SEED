@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,10 +16,21 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.appspot.umichseed.seed.Seed;
+import com.appspot.umichseed.seed.SeedRequest;
+import com.appspot.umichseed.seed.model.MessagesPManDataPut;
+
+import java.io.IOException;
+
 import edu.umich.seedforandroid.R;
+import edu.umich.seedforandroid.account.GoogleAccountManager;
+import edu.umich.seedforandroid.api.ApiThread;
+import edu.umich.seedforandroid.api.SeedApi;
 import edu.umich.seedforandroid.patient.MainActivity_Patient;
 
 public class DailySurvey extends Activity implements View.OnClickListener  {
+
+    private static final String TAG = DailySurvey.class.getSimpleName();
 
     private EditText etBodyTemp, etBloodPressureSystolic, etBloodPressureDiastolic;
     private RadioGroup radioGroupAnswer1, radioGroupAnswer2, radioGroupAnswer3, radioGroupAnswer4,
@@ -29,13 +41,30 @@ public class DailySurvey extends Activity implements View.OnClickListener  {
     private String mBodyTempType; // Cel or Fahrenheit
     private Double mBodyTemp, mSystolic, mDiastolic;
 
+    private GoogleAccountManager mAccountManager;
+    private ApiThread mApiThread;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_daily_survey);
 
+        mAccountManager = new GoogleAccountManager(this);
+        if (!mAccountManager.tryLogIn()) {
+
+            Log.e(TAG, "FATAL ERROR: Somehow, the user got here without being logged in");
+            notifyUiAuthenticationError();
+        }
+        mApiThread = new ApiThread();
         initialSetup();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        mApiThread.stop();
     }
 
     private void initialSetup()  {
@@ -114,10 +143,18 @@ public class DailySurvey extends Activity implements View.OnClickListener  {
         }
     }
 
-    private void submitSurvey()  {
+    private void notifyUiAuthenticationError() {
 
+        //todo somehow, the user isn't logged in. Alert them and redirect to MainActivity
+    }
+
+    private void notifyUiApiError() {
+
+        //todo there was an API error. Notify the user
+    }
+
+    private void submitSurvey() {
         // Make sure that all questions are answered
-
         int answer1 = radioGroupAnswer1.getCheckedRadioButtonId();
         int answer2 = radioGroupAnswer2.getCheckedRadioButtonId();
         int answer3 = radioGroupAnswer3.getCheckedRadioButtonId();
@@ -131,12 +168,12 @@ public class DailySurvey extends Activity implements View.OnClickListener  {
 
         if (answer1 < 0 || answer2 < 0 || answer3 < 0 || answer4 < 0 || answer5 < 0 ||
                 answer6 < 0 || answer7 < 0 || answer8 < 0 || answer9 < 0 || answer10 < 0 ||
-                etBodyTemp.getText().toString().equals("") || etBloodPressureSystolic.getText().toString().equals("") ||
-                etBloodPressureDiastolic.getText().toString().equals(""))  {
+                etBodyTemp.getText().toString().isEmpty() || etBloodPressureSystolic.getText().toString().isEmpty() ||
+                etBloodPressureDiastolic.getText().toString().isEmpty()) {
 
+            //todo lets use a popup here instead of a toast. Make the user manually dismiss the message
             Toast.makeText(getApplicationContext(), "Please answer all questions", Toast.LENGTH_SHORT).show();
-        }
-        else  {
+        } else {
 
             RadioButton radioButton1 = (RadioButton) findViewById(answer1);
             RadioButton radioButton2 = (RadioButton) findViewById(answer2);
@@ -166,7 +203,45 @@ public class DailySurvey extends Activity implements View.OnClickListener  {
             mSystolic = Double.parseDouble(etBloodPressureSystolic.getText().toString());
             mDiastolic = Double.parseDouble(etBloodPressureDiastolic.getText().toString());
 
-            // todo submit the answers and go to MainActivity_Patient
+            //todo see if body temp needs to be a consistent unit
+            try {
+
+                Seed api = SeedApi.getAuthenticatedApi(mAccountManager.getCredential());
+                SeedRequest request = api.pManData().put(
+                        new MessagesPManDataPut()
+                                .setEmail(mAccountManager.getAccountName())
+                                .setA1(mSurveyQuestionAnswers[0])
+                                .setA2(mSurveyQuestionAnswers[1])
+                                .setA3(mSurveyQuestionAnswers[2])
+                                .setA4(mSurveyQuestionAnswers[3])
+                                .setA5(mSurveyQuestionAnswers[4])
+                                .setA6(mSurveyQuestionAnswers[5])
+                                .setA7(mSurveyQuestionAnswers[6])
+                                .setA8(mSurveyQuestionAnswers[7])
+                                .setA9(mSurveyQuestionAnswers[8])
+                                .setA10(mSurveyQuestionAnswers[9])
+                                .setBodyTemp(mBodyTemp)
+                                .setBloodPressure(String.format("%1$s/%2$s", mSystolic, mDiastolic))
+                );
+                mApiThread.enqueueRequest(request, new ApiThread.ApiResultAction() {
+                    @Override
+                    public void onApiResult(Object result) {
+                        //result doesn't matter here. Just navigate back
+                        //todo navigate back, or specifically to patient profile?
+                    }
+
+                    @Override
+                    public void onApiError(Throwable error) {
+
+                        Log.e(TAG, "API Error: Api returned an error with message " + error.getMessage());
+                        notifyUiApiError();
+                    }
+                });
+            } catch (IOException e) {
+
+                Log.e(TAG, "API Error: the API couldn't create the request");
+                notifyUiApiError();
+            }
         }
     }
 
@@ -197,6 +272,7 @@ public class DailySurvey extends Activity implements View.OnClickListener  {
         View divider = d.findViewById(dividerId);
         divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
     }
+
 
     private void goBackToMainActivityPatient()  {
 
