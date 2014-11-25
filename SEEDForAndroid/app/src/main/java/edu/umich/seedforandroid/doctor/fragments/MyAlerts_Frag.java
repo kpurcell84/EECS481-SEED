@@ -36,7 +36,6 @@ public class MyAlerts_Frag extends Fragment  {
     private String earlyDetection = "Early Detection";
     private List<DoctorAlertsWrapper> myAlertsList = new ArrayList<DoctorAlertsWrapper>();
     private ArrayAdapter<DoctorAlertsWrapper> adapter;
-    private Utils mUtils;
     private ApiThread mApiThread;
 
     public MyAlerts_Frag()  {}
@@ -67,7 +66,6 @@ public class MyAlerts_Frag extends Fragment  {
 
     private void initialSetup(View view)  {
 
-        mUtils = new Utils();
         adapter = new AlertsListAdapter();
         ListView list = (ListView) view.findViewById(R.id.alertListView);
         list.setAdapter(adapter);
@@ -228,8 +226,8 @@ public class MyAlerts_Frag extends Fragment  {
     private String formatTimePretty(String time)  {
 
         String[] parts = time.split(":");
-        String month = mUtils.getMonthFullString(Integer.parseInt(parts[1]));
-        String[] hour = mUtils.convert24HourTo12Hour(String.valueOf(parts[3]));
+        String month = Utils.getMonthFullString(Integer.parseInt(parts[1]));
+        String[] hour = Utils.convert24HourTo12Hour(String.valueOf(parts[3]));
         String output = parts[0] + " " + month + " " + parts[2] + ", " + hour[0] + ":" + parts[4] + hour[1];
         return output;
     }

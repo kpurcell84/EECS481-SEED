@@ -19,7 +19,6 @@ import edu.umich.seedforandroid.util.Utils;
 
 public class LockScreenWidgetServicer extends Service  {
 
-    private Utils mUtilInst;
     private SharedPrefsUtil mSharedPrefsUtilInst;
     private PowerManager pm;
     private int mHour, mMinute, mDay;
@@ -94,7 +93,7 @@ public class LockScreenWidgetServicer extends Service  {
             RemoteViews remoteView = new RemoteViews(getPackageName(), R.layout.widget_clock);
             remoteView.setTextViewText(R.id.tvDate_Widget_Clock, mDayOfWeek.concat(", ").concat(mMonth).concat(" ").concat(String.valueOf(mDay)));
 
-            remoteView.setTextViewText(R.id.tvTime_Widget_Clock, String.valueOf(mHour).concat(":").concat(mUtilInst.formatMinutePretty(mMinute)));
+            remoteView.setTextViewText(R.id.tvTime_Widget_Clock, String.valueOf(mHour).concat(":").concat(Utils.formatMinutePretty(mMinute)));
             remoteView.setTextViewText(R.id.tv_PM_AM_Widget_Clock, mAmPm);
 
             ComponentName thisWidget = new ComponentName(getApplicationContext(), LockScreenWidget.class);
@@ -105,23 +104,22 @@ public class LockScreenWidgetServicer extends Service  {
 
     private void initialSetup()  {
 
-        mUtilInst = new Utils();
         mSharedPrefsUtilInst = new SharedPrefsUtil(getApplicationContext());
         pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 
         // Setup the time
         Calendar c = Calendar.getInstance();
-        mCurrentTime = mUtilInst.getCurrentTime();
+        mCurrentTime = Utils.getCurrentTime();
         String[] timeParts=  mCurrentTime.split(":"); // yyyy:MM:dd:HH:mm:ss
         int month = Integer.parseInt(timeParts[1]);
-        String[] twelveHourTime = mUtilInst.convert24HourTo12Hour(timeParts[3]);
+        String[] twelveHourTime = Utils.convert24HourTo12Hour(timeParts[3]);
         mHour = Integer.parseInt(twelveHourTime[0]);
         mMinute = Integer.parseInt(timeParts[4]);
         mDay = Integer.parseInt(timeParts[2]);
         mAmPm = twelveHourTime[1];
         month--;
-        mMonth = mUtilInst.getMonth(month);
-        mDayOfWeek = mUtilInst.get_Day_of_Week(c.get(Calendar.DAY_OF_WEEK));
+        mMonth = Utils.getMonth(month);
+        mDayOfWeek = Utils.getDayOfWeek(c.get(Calendar.DAY_OF_WEEK));
         mUserAccountType = mSharedPrefsUtilInst.getUserAccountType("");
         mNotiState = mSharedPrefsUtilInst.getNotificationState(false);
 

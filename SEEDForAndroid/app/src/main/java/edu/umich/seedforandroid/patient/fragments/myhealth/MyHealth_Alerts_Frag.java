@@ -40,7 +40,6 @@ public class MyHealth_Alerts_Frag extends Fragment  {
     private ApiThread mApiThread;
     private List<AlertsDataWrapper> myAlertsList = new ArrayList<AlertsDataWrapper>();
     private ArrayAdapter<AlertsDataWrapper> adapter;
-    private Utils mUtils;
 
     public MyHealth_Alerts_Frag()  {}
 
@@ -154,7 +153,6 @@ public class MyHealth_Alerts_Frag extends Fragment  {
         actionBar.setTitle("My Sepsis Alerts");
 
         myAlertsList.clear();
-        mUtils = new Utils();
         adapter = new AlertsListAdapter();
         ListView list = (ListView) view.findViewById(R.id.alertListViewPatient);
         list.setAdapter(adapter);
@@ -202,8 +200,8 @@ public class MyHealth_Alerts_Frag extends Fragment  {
     private String formatTimePretty(String time)  {
 
         String[] parts = time.split(":");
-        String month = mUtils.getMonthFullString(Integer.parseInt(parts[1]));
-        String[] hour = mUtils.convert24HourTo12Hour(String.valueOf(parts[3]));
+        String month = Utils.getMonthFullString(Integer.parseInt(parts[1]));
+        String[] hour = Utils.convert24HourTo12Hour(String.valueOf(parts[3]));
         String output = parts[0] + " " + month + " " + parts[2] + ", " + hour[0] + ":" + parts[4] + hour[1];
         return output;
     }

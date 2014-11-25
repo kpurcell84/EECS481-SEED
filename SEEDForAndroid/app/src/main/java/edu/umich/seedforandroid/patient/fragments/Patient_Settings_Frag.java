@@ -20,7 +20,6 @@ public class Patient_Settings_Frag extends Fragment implements View.OnClickListe
     private Button bUpdateSurveyTimeSlots;
     private TextView tvMorningSlot, tvEveningSlot;
     private SharedPrefsUtil sharedPrefsUtilInst;
-    private Utils utilsInst;
 
     public Patient_Settings_Frag() {
 
@@ -46,7 +45,6 @@ public class Patient_Settings_Frag extends Fragment implements View.OnClickListe
     private void initialSetup(View view)  {
 
         sharedPrefsUtilInst = new SharedPrefsUtil(getActivity().getApplicationContext());
-        utilsInst = new Utils();
 
         ActionBar actionBar = getActivity().getActionBar();
         actionBar.setTitle("Settings");
@@ -54,14 +52,14 @@ public class Patient_Settings_Frag extends Fragment implements View.OnClickListe
         int[] morningTime = sharedPrefsUtilInst.getMorningSurveyNotificationTime(9, 0);
         int[] eveningTime = sharedPrefsUtilInst.getEveningSurveyNotificationTime(21, 0);
 
-        String[] morningTime12Hour = utilsInst.convert24HourTo12Hour(String.valueOf(morningTime[0]));
-        String[] eveningTime12Hour = utilsInst.convert24HourTo12Hour(String.valueOf(eveningTime[0]));
+        String[] morningTime12Hour = Utils.convert24HourTo12Hour(String.valueOf(morningTime[0]));
+        String[] eveningTime12Hour = Utils.convert24HourTo12Hour(String.valueOf(eveningTime[0]));
 
         tvMorningSlot = (TextView) view.findViewById(R.id.tvMorningTimeSlot);
         tvEveningSlot = (TextView) view.findViewById(R.id.tvEveningTimeSlot);
 
-        tvMorningSlot.setText(morningTime12Hour[0].concat(":").concat(utilsInst.formatMinutePretty(morningTime[1])).concat(" ").concat(morningTime12Hour[1]));
-        tvEveningSlot.setText(eveningTime12Hour[0].concat(":").concat(utilsInst.formatMinutePretty(eveningTime[1])).concat(" ").concat(eveningTime12Hour[1]));
+        tvMorningSlot.setText(morningTime12Hour[0].concat(":").concat(Utils.formatMinutePretty(morningTime[1])).concat(" ").concat(morningTime12Hour[1]));
+        tvEveningSlot.setText(eveningTime12Hour[0].concat(":").concat(Utils.formatMinutePretty(eveningTime[1])).concat(" ").concat(eveningTime12Hour[1]));
 
         bUpdateSurveyTimeSlots = (Button) view.findViewById(R.id.bUpdateSurveyTimeSlots);
         bUpdateSurveyTimeSlots.setOnClickListener(this);

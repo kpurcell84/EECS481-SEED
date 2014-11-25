@@ -34,6 +34,7 @@ import edu.umich.seedforandroid.patient.fragments.Patient_Help_Frag;
 import edu.umich.seedforandroid.patient.fragments.Patient_Profile_Frag;
 import edu.umich.seedforandroid.patient.fragments.Patient_Settings_Frag;
 import edu.umich.seedforandroid.util.SharedPrefsUtil;
+import edu.umich.seedforandroid.util.Utils;
 
 public class MainActivity_Patient extends Activity implements NavigationDrawerFragment_Patient.NavigationDrawerCallbacks {
 
@@ -146,57 +147,13 @@ public class MainActivity_Patient extends Activity implements NavigationDrawerFr
 
     private void logout()  {
 
-        final GoogleAccountManager manager = new GoogleAccountManager(this);
-        if (manager.tryLogIn()) {
-            //user is logged in, log them out
-            SharedPrefsUtil prefsUtil = new SharedPrefsUtil(this);
-            String oldToken = prefsUtil.getRegistrationId("");
-            if (!oldToken.equals("")) {
-
-                try {
-                    Seed api = SeedApi.getAuthenticatedApi(manager.getCredential());
-                    SeedRequest request = api.gcmCreds().put(
-                            new MessagesGcmCredsPut()
-                                    .setEmail(manager.getAccountName())
-                                    .setOldRegId(oldToken)
-                    );
-                    final ApiThread apiThread = new ApiThread();
-                    apiThread.enqueueRequest(request, new ApiThread.ApiResultAction() {
-                        @Override
-                        public void onApiResult(Object result) {
-
-                            apiThread.stop();
-                            manager.logOutCurrentAccount();
-                            navigateHome();
-                        }
-
-                        @Override
-                        public void onApiError(Throwable error) {
-
-                            Log.e(TAG, "API error received with message: " + error.getMessage());
-                            apiThread.stop();
-                            manager.logOutCurrentAccount();
-                            notifyUiOfUnregisterPushNotificationError();
-                        }
-                    });
-                }
-                catch (IOException e) {
-
-                    Log.e(TAG, "Unknown API error occurred - API could not create request");
-                    manager.logOutCurrentAccount();
-                    notifyUiOfUnregisterPushNotificationError();
-                }
+        Utils.logout(this, new Utils.ILogoutResultListener() {
+            @Override
+            public void onLogoutComplete(boolean pushNotificationsUnregistered) {
+                if (pushNotificationsUnregistered) navigateHome();
+                else notifyUiOfUnregisterPushNotificationError();
             }
-            else {
-
-                manager.logOutCurrentAccount();
-                navigateHome();
-            }
-        }
-        else {
-
-            navigateHome();
-        }
+        });
     }
 
     private void navigateHome() {

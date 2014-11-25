@@ -8,12 +8,20 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import com.appspot.umichseed.seed.Seed;
+import com.appspot.umichseed.seed.SeedRequest;
+import com.appspot.umichseed.seed.model.MessagesGcmCredsPut;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import edu.umich.seedforandroid.account.GoogleAccountManager;
+import edu.umich.seedforandroid.api.ApiThread;
+import edu.umich.seedforandroid.api.SeedApi;
 
 /**
  * Created by Dominic on 11/10/2014.
@@ -59,7 +67,7 @@ public class Utils {
         }
     }
 
-    public boolean checkInternetConnection(Context context)  {
+    public static boolean checkInternetConnection(Context context)  {
 
         ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -74,13 +82,14 @@ public class Utils {
         }
     }
 
-    public String getCurrentTime()  { // yyyy:MM:dd:HH:mm:ss
+    public static String getCurrentTime()  { // yyyy:MM:dd:HH:mm:ss
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy:MM:dd:HH:mm:ss");
         return sdf.format(new Date());
     }
 
-    public String getMonth(int month)  { // 0 to 11
+    //todo the below 4 methods should be chanced to use values from the strings file
+    public static String getMonth(int month)  { // 0 to 11
 
         String monthStr = "";
 
@@ -136,8 +145,7 @@ public class Utils {
         return monthStr;
     }
 
-
-    public String getMonthFullString(int month)  { // 1 to 12
+    public static String getMonthFullString(int month)  { // 1 to 12
 
         String monthStr = "";
         month--;
@@ -193,7 +201,7 @@ public class Utils {
         return monthStr;
     }
 
-    public String get_Day_of_Week (int day)  {
+    public static String getDayOfWeek(int day)  {
 
         String dayStr = "";
 
@@ -228,7 +236,7 @@ public class Utils {
         return dayStr;
     }
 
-    public String getDayOfWeekFullString (int day)  {
+    public static String getDayOfWeekFullString (int day)  {
 
         String dayStr = "";
 
@@ -263,7 +271,7 @@ public class Utils {
         return dayStr;
     }
 
-    public String[] convert24HourTo12Hour(String hour)  { // take hour from 0 to 23 and convert it to 12 hour clock, 0 : hour, 1 : "AM" or "PM"
+    public static String[] convert24HourTo12Hour(String hour)  { // take hour from 0 to 23 and convert it to 12 hour clock, 0 : hour, 1 : "AM" or "PM"
 
         String[] retArr = new String[2];
         String amPm;
@@ -296,7 +304,7 @@ public class Utils {
         return retArr;
     }
 
-    public String formatMinutePretty(int minute)  { // adds padding to minute (if less than 10)
+    public static String formatMinutePretty(int minute)  { // adds padding to minute (if less than 10)
 
         String retVal;
         if (minute < 10)  {
@@ -310,15 +318,74 @@ public class Utils {
         return retVal;
     }
 
-    public Calendar getNextDate(Calendar cal)  {
+    public static Calendar getNextDate(Calendar cal)  {
 
         cal.add(Calendar.DATE, +1);
         return cal;
     }
 
-    public Calendar getPrevDate(Calendar cal)  {
+    public static Calendar getPrevDate(Calendar cal)  {
 
         cal.add(Calendar.DATE, -1);
         return cal;
+    }
+
+    public static void logout(final Context context, final ILogoutResultListener listener) {
+
+        final GoogleAccountManager manager = new GoogleAccountManager(context);
+        if (manager.tryLogIn()) {
+            //user is logged in, log them out
+            SharedPrefsUtil prefsUtil = new SharedPrefsUtil(context);
+            String oldToken = prefsUtil.getRegistrationId("");
+            if (!oldToken.equals("")) {
+
+                try {
+                    Seed api = SeedApi.getAuthenticatedApi(manager.getCredential());
+                    SeedRequest request = api.gcmCreds().put(
+                            new MessagesGcmCredsPut()
+                                    .setEmail(manager.getAccountName())
+                                    .setOldRegId(oldToken)
+                    );
+                    final ApiThread apiThread = new ApiThread();
+                    apiThread.enqueueRequest(request, new ApiThread.ApiResultAction() {
+                        @Override
+                        public void onApiResult(Object result) {
+
+                            apiThread.stop();
+                            manager.logOutCurrentAccount();
+                            listener.onLogoutComplete(true);
+                        }
+
+                        @Override
+                        public void onApiError(Throwable error) {
+
+                            Log.e(TAG, "API error received with message: " + error.getMessage());
+                            apiThread.stop();
+                            manager.logOutCurrentAccount();
+                            listener.onLogoutComplete(false);
+                        }
+                    });
+                }
+                catch (IOException e) {
+
+                    Log.e(TAG, "Unknown API error occurred - API could not create request");
+                    manager.logOutCurrentAccount();
+                    listener.onLogoutComplete(false);
+                }
+            }
+            else {
+
+                manager.logOutCurrentAccount();
+                listener.onLogoutComplete(true);
+            }
+        }
+        else {
+
+            listener.onLogoutComplete(true);
+        }
+    }
+
+    public interface ILogoutResultListener {
+        public void onLogoutComplete(boolean pushNotificationsUnregistered);
     }
 }

@@ -18,6 +18,7 @@ import edu.umich.seedforandroid.R;
 import edu.umich.seedforandroid.account.GoogleAccountManager;
 import edu.umich.seedforandroid.api.ApiThread;
 import edu.umich.seedforandroid.api.SeedApi;
+import edu.umich.seedforandroid.util.Utils;
 
 public class Doctor_Profile_Frag extends Fragment  {
 
@@ -106,5 +107,30 @@ public class Doctor_Profile_Frag extends Fragment  {
             Log.e(TAG, "An API Error Occurred: The API couldn't instantiate the request");
             notifyUiApiError();
         }
+    }
+
+    private void navigateHome() {
+
+        //todo logout successful, navigate home
+    }
+
+    private void notifyUiOfUnregisterPushNotificationError() {
+
+        // todo: notify the user that we couldn't unregister their push notifications
+        // tell them something like "an error occurred while logging you out. Unfortunately, you may
+        // still receive push notifications on this device. To fix this issue, please uninstall and reinstall
+        // the app. We apologize for this inconvenience". And then navigate home afterwards.
+        navigateHome();
+    }
+
+    private void logout() {
+
+        Utils.logout(getActivity(), new Utils.ILogoutResultListener() {
+            @Override
+            public void onLogoutComplete(boolean pushNotificationsUnregistered) {
+                if (pushNotificationsUnregistered) navigateHome();
+                else notifyUiOfUnregisterPushNotificationError();
+            }
+        });
     }
 }

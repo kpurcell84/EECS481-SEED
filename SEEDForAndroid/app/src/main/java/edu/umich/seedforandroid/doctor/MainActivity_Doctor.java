@@ -167,42 +167,43 @@ public class MainActivity_Doctor extends FragmentActivity implements ActionBar.T
     public void onTabReselected(Tab tab, FragmentTransaction ft)  {
 
     }
+
+    class MyAdapter extends FragmentStatePagerAdapter  {
+
+        public MyAdapter(FragmentManager fm)  {
+
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int arg)  {
+
+            Fragment fragment = null;
+
+            if (arg == 0)  {
+
+                fragment = new MyAlerts_Frag();
+            }
+            if (arg == 1)  {
+
+                fragment = new MyPatients_Frag();
+            }
+            if (arg == 2)  {
+
+                fragment = new Doctor_Profile_Frag();
+            }
+            if (arg == 3)  {
+
+                fragment = new DoctorRecentlyAskedQuestions();
+            }
+            return fragment;
+        }
+
+        @Override
+        public int getCount()  {
+
+            return 4;
+        }
+    }
 }
 
-class MyAdapter extends FragmentStatePagerAdapter  {
-
-    public MyAdapter(FragmentManager fm)  {
-
-        super(fm);
-    }
-
-    @Override
-    public Fragment getItem(int arg)  {
-
-        Fragment fragment = null;
-
-        if (arg == 0)  {
-
-            fragment = new MyAlerts_Frag();
-        }
-        if (arg == 1)  {
-
-            fragment = new MyPatients_Frag();
-        }
-        if (arg == 2)  {
-
-            fragment = new Doctor_Profile_Frag();
-        }
-        if (arg == 3)  {
-
-            fragment = new DoctorRecentlyAskedQuestions();
-        }
-        return fragment;
-    }
-
-    @Override
-    public int getCount()  {
-
-        return 4;
-    }
-}

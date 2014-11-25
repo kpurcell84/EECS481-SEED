@@ -62,7 +62,6 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
     private SharedPrefsUtil sharedPrefsUtilInst;
     private RelativeLayout mHeartRateLayout, mSkinTempLayout, mPerspirationLayout,
             mBloodPressureLayout, mBodyTempLayout, mActivityTypeLayout;
-    private Utils mUtilsInst;
     private Menu mMenu;
     private XYPlot mHeartRatePlot, mSkinTempPlot, mPerspirationPlot,
             mBloodPressurePlot, mBodyTempPlot, mActivityTypePlot;
@@ -268,7 +267,7 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
 
         View v = null;
 
-        if (mUtilsInst.checkInternetConnection(getActivity().getApplicationContext())) { // There is internet connection
+        if (Utils.checkInternetConnection(getActivity().getApplicationContext())) { // There is internet connection
 
             v = fetchPatientHealthData(v, inflater, container);
         }
@@ -283,7 +282,6 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
     private void initialSetup()  {
 
         sharedPrefsUtilInst = new SharedPrefsUtil(getActivity().getApplicationContext());
-        mUtilsInst = new Utils();
 
         mPatientEmail = this.getArguments().getString("patient_email");
     }
@@ -841,10 +839,10 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
         String[] parts = today.split(":");
 
         int day = mCurrentCalendar.get(Calendar.DAY_OF_WEEK);
-        String dayStr = mUtilsInst.getDayOfWeekFullString(day);
+        String dayStr = Utils.getDayOfWeekFullString(day);
         int month = Integer.parseInt(parts[1]);
         month--;
-        String monthStr = mUtilsInst.getMonth(month);
+        String monthStr = Utils.getMonth(month);
 
         tvDate.setText(dayStr.concat(" ").concat(String.valueOf(parts[2])).concat(" ").concat(monthStr));
     }
@@ -857,16 +855,16 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
 
         if (currentTime <= todayTime)  {
 
-            mCurrentCalendar = mUtilsInst.getNextDate(mCurrentCalendar);
+            mCurrentCalendar = Utils.getNextDate(mCurrentCalendar);
             DateFormat dateFormat = new SimpleDateFormat("yyyy:MM:dd:HH:mm:ss");
             String tomorrow = dateFormat.format(mCurrentCalendar.getTime());
             String[] parts = tomorrow.split(":");
 
             int day = mCurrentCalendar.get(Calendar.DAY_OF_WEEK);
-            String dayStr = mUtilsInst.getDayOfWeekFullString(day);
+            String dayStr = Utils.getDayOfWeekFullString(day);
             int month = Integer.parseInt(parts[1]);
             month--;
-            String monthStr = mUtilsInst.getMonth(month);
+            String monthStr = Utils.getMonth(month);
 
             tvDate.setText(dayStr.concat(" ").concat(String.valueOf(parts[2])).concat(" ").concat(monthStr));
         }
@@ -874,16 +872,16 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
 
     private void getPrevDateData()  {
 
-        mCurrentCalendar = mUtilsInst.getPrevDate(mCurrentCalendar);
+        mCurrentCalendar = Utils.getPrevDate(mCurrentCalendar);
         DateFormat dateFormat = new SimpleDateFormat("yyyy:MM:dd:HH:mm:ss");
         String yesterday = dateFormat.format(mCurrentCalendar.getTime());
         String[] parts = yesterday.split(":");
 
         int day = mCurrentCalendar.get(Calendar.DAY_OF_WEEK);
-        String dayStr = mUtilsInst.getDayOfWeekFullString(day);
+        String dayStr = Utils.getDayOfWeekFullString(day);
         int month = Integer.parseInt(parts[1]);
         month--;
-        String monthStr = mUtilsInst.getMonth(month);
+        String monthStr = Utils.getMonth(month);
 
         tvDate.setText(dayStr.concat(" ").concat(String.valueOf(parts[2])).concat(" ").concat(monthStr));
     }

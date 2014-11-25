@@ -18,7 +18,6 @@ public class UpdateSurveyTime extends Activity implements View.OnClickListener  
 
     private Button bMorningTimeSlot, bEveningTimeSlot, bSave;
     private SharedPrefsUtil mSharedPrefsUtilInst;
-    private Utils utilsInst;
     private int[] mMorningTimeSlot, mEveningTimeSlot;
 
     @Override
@@ -34,7 +33,6 @@ public class UpdateSurveyTime extends Activity implements View.OnClickListener  
 
         getActionBar().hide();
         mSharedPrefsUtilInst = new SharedPrefsUtil(UpdateSurveyTime.this);
-        utilsInst = new Utils();
         mMorningTimeSlot = new int[2];
         mEveningTimeSlot = new int[2];
 
@@ -50,11 +48,11 @@ public class UpdateSurveyTime extends Activity implements View.OnClickListener  
         mMorningTimeSlot = mSharedPrefsUtilInst.getMorningSurveyNotificationTime(9, 0);
         mEveningTimeSlot = mSharedPrefsUtilInst.getEveningSurveyNotificationTime(21, 0);
 
-        String[] morningTime12Hour = utilsInst.convert24HourTo12Hour(String.valueOf(mMorningTimeSlot[0]));
-        String[] eveningTime12Hour = utilsInst.convert24HourTo12Hour(String.valueOf(mEveningTimeSlot[0]));
+        String[] morningTime12Hour = Utils.convert24HourTo12Hour(String.valueOf(mMorningTimeSlot[0]));
+        String[] eveningTime12Hour = Utils.convert24HourTo12Hour(String.valueOf(mEveningTimeSlot[0]));
 
-        bMorningTimeSlot.setText(morningTime12Hour[0].concat(":").concat(utilsInst.formatMinutePretty(mMorningTimeSlot[1])).concat(" ").concat(morningTime12Hour[1]));
-        bEveningTimeSlot.setText(eveningTime12Hour[0].concat(":").concat(utilsInst.formatMinutePretty(mEveningTimeSlot[1])).concat(" ").concat(eveningTime12Hour[1]));
+        bMorningTimeSlot.setText(morningTime12Hour[0].concat(":").concat(Utils.formatMinutePretty(mMorningTimeSlot[1])).concat(" ").concat(morningTime12Hour[1]));
+        bEveningTimeSlot.setText(eveningTime12Hour[0].concat(":").concat(Utils.formatMinutePretty(mEveningTimeSlot[1])).concat(" ").concat(eveningTime12Hour[1]));
     }
 
     private void updateMorningTime()  {
@@ -81,8 +79,8 @@ public class UpdateSurveyTime extends Activity implements View.OnClickListener  
                 mMorningTimeSlot[0] = view.getCurrentHour();
                 mMorningTimeSlot[1] = view.getCurrentMinute();
 
-                String[] time = utilsInst.convert24HourTo12Hour(String.valueOf(mMorningTimeSlot[0]));
-                bMorningTimeSlot.setText(time[0].concat(":").concat(utilsInst.formatMinutePretty(mMorningTimeSlot[1])).concat(" ").concat(time[1]));
+                String[] time = Utils.convert24HourTo12Hour(String.valueOf(mMorningTimeSlot[0]));
+                bMorningTimeSlot.setText(time[0].concat(":").concat(Utils.formatMinutePretty(mMorningTimeSlot[1])).concat(" ").concat(time[1]));
             }
         }, mMorningTimeSlot[0], mMorningTimeSlot[1], false);
 
@@ -114,8 +112,8 @@ public class UpdateSurveyTime extends Activity implements View.OnClickListener  
                 mEveningTimeSlot[0] = view.getCurrentHour();
                 mEveningTimeSlot[1] = view.getCurrentMinute();
 
-                String[] time = utilsInst.convert24HourTo12Hour(String.valueOf(mEveningTimeSlot[0]));
-                bEveningTimeSlot.setText(time[0].concat(":").concat(utilsInst.formatMinutePretty(mEveningTimeSlot[1])).concat(" ").concat(time[1]));
+                String[] time = Utils.convert24HourTo12Hour(String.valueOf(mEveningTimeSlot[0]));
+                bEveningTimeSlot.setText(time[0].concat(":").concat(Utils.formatMinutePretty(mEveningTimeSlot[1])).concat(" ").concat(time[1]));
             }
         }, mEveningTimeSlot[0], mEveningTimeSlot[1], false);
 
