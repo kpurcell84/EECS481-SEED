@@ -11,6 +11,10 @@ public class SharedPrefsUtil {
     public static final String ACCOUNT_TYPE_DOCTOR = "Doctor";
     public static final String ACCOUNT_TYPE_PATIENT = "Patient";
     public static final String ACCOUNT_TYPE_NONE = "None";
+    public static final String ACTIVE_NOTIFICATION = "ACTIVE";
+    public static final String INACTIVE_NOTIFICATION = "INACTIVE";
+    public static final String SURVEY_NOTIFICATION = "SURVEy";
+
 
     private static final String SHARED_PREFS_FILENAME = "seed_shared_prefs";
     private static final String PROPERTY_CHOSEN_ACCOUNT = "chosen_account";
@@ -30,6 +34,7 @@ public class SharedPrefsUtil {
     private static final String PROPERTY_SURVEY_MORNING_TIME = "survey_morning_time";
     private static final String PROPERTY_SURVEY_EVENING_TIME = "survey_evening_time";
 
+    // Graph
     private static final String PROPERTY_PATIENT_GRAPH_FILTER = "patient_graph_filter";
 
     private SharedPreferences mPrefs;
@@ -134,14 +139,14 @@ public class SharedPrefsUtil {
         removeProperty(PROPERTY_USER_ACCOUNT_TYPE);
     }
 
-    public void setNotificationState(boolean val)  { // ACTIVE or INACTIVE
+    public void setNotificationState(String val)  { // ACTIVE, INACTIVE, SURVEY
 
         setProperty(PROPERTY_NOTIFICATION_STATE, val);
     }
 
-    public boolean getNotificationState(boolean defValue)  {
+    public String getNotificationState(String defValue)  {
 
-        return mPrefs.getBoolean(PROPERTY_NOTIFICATION_STATE, defValue);
+        return mPrefs.getString(PROPERTY_NOTIFICATION_STATE, defValue);
     }
 
     public void clearNotificationState() {

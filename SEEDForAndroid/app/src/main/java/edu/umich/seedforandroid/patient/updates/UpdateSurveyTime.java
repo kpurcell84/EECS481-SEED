@@ -95,19 +95,19 @@ public class UpdateSurveyTime extends Activity implements View.OnClickListener  
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute)  {
 
-                if (hourOfDay < 19)  {
-
-                    view.setCurrentHour(19);
-                    view.setCurrentMinute(0);
-                    Toast.makeText(UpdateSurveyTime.this, "For evening survey notification, please pick a time between 7:00 PM and 10:00 PM", Toast.LENGTH_SHORT).show();
-                }
-
-                if (hourOfDay > 22)  {
-
-                    view.setCurrentHour(22);
-                    view.setCurrentMinute(0);
-                    Toast.makeText(UpdateSurveyTime.this, "For evening survey notification, please pick a time between 7:00 PM and 10:00 PM", Toast.LENGTH_SHORT).show();
-                }
+//                if (hourOfDay < 19)  {
+//
+//                    view.setCurrentHour(19);
+//                    view.setCurrentMinute(0);
+//                    Toast.makeText(UpdateSurveyTime.this, "For evening survey notification, please pick a time between 7:00 PM and 10:00 PM", Toast.LENGTH_SHORT).show();
+//                }
+//
+//                if (hourOfDay > 22)  {
+//
+//                    view.setCurrentHour(22);
+//                    view.setCurrentMinute(0);
+//                    Toast.makeText(UpdateSurveyTime.this, "For evening survey notification, please pick a time between 7:00 PM and 10:00 PM", Toast.LENGTH_SHORT).show();
+//                }
 
                 mEveningTimeSlot[0] = view.getCurrentHour();
                 mEveningTimeSlot[1] = view.getCurrentMinute();

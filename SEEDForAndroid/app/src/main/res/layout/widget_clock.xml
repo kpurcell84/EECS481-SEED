@@ -41,8 +41,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="SEED System"
-        android:drawableStart="@drawable/seed_system_icon"
-        android:drawablePadding="10dp"
         android:layout_below="@+id/tvDate_Widget_Clock"
         android:id="@+id/textView4"
         android:textColor="#FFFFFF"

@@ -1,11 +1,14 @@
 package edu.umich.seedforandroid.lockscreenwidget;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.widget.RemoteViews;
@@ -22,11 +25,13 @@ public class LockScreenWidgetServicer extends Service  {
 
     private SharedPrefsUtil mSharedPrefsUtilInst;
     private PowerManager pm;
-    private int mHour, mMinute, mDay;
+    private NotificationManager mgr;
+    private Notification.Builder builder;
+    private static final int SURVEY_NOTIFY_ID = 3;
+    private int mHour, mMinute, mDay, mSecond;
     private int[] mMorningTimeSlot, mEveningTimeSlot;
     private String mMonth, mDayOfWeek, mAmPm, mCurrentTime, mUserAccountType,
-                   mPriority, mTimeAlerted, mNotificationMessage;
-    private boolean mNotiState;
+                   mPriority, mTimeAlerted, mNotificationMessage, mNotiState;
 
     public LockScreenWidgetServicer()  {}
 
@@ -34,36 +39,63 @@ public class LockScreenWidgetServicer extends Service  {
     public int onStartCommand(Intent intent, int flags, int startId)  {
 
         initialSetup();
+        checkIfSurveyTime();
         drawWidget();
 
         stopSelf();
         return START_NOT_STICKY;
     }
 
+    private void checkIfSurveyTime()  {
+
+//        if ((mHour == mMorningTimeSlot[0] && mMinute == mMorningTimeSlot[1] && mSecond == 5) ||
+//                (mHour == mEveningTimeSlot[0] && mMinute == mEveningTimeSlot[1] && mSecond == 5))  {
+          if (mHour == 5 && mMinute == 19 && mSecond == 5)  {
+
+            mSharedPrefsUtilInst.setNotificationState(SharedPrefsUtil.SURVEY_NOTIFICATION);
+            createNotificationForSurvey();
+        }
+    }
+
+    private void createNotificationForSurvey()  {
+
+        mgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
+
+        builder = new Notification.Builder(getApplicationContext());
+
+        builder.setSmallIcon(R.drawable.seed_system_icon_small)
+                .setContentTitle("SEED System Daily Survey")
+                .setContentText("Please complete your daily survey.")
+                .setLights(Color.parseColor("#00274c"), 5000, 1000);
+
+        Intent i = new Intent(getApplicationContext(), DailySurvey.class);
+
+        PendingIntent pIntent = PendingIntent.getActivity(getApplicationContext(), 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        builder.setContentIntent(pIntent);
+
+        Notification n = builder.build();
+
+        mgr.notify(SURVEY_NOTIFY_ID, n);
+
+        //Wakes up the lock screen
+        if (pm.isScreenOn() == false)  {
+
+            PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK |PowerManager.ACQUIRE_CAUSES_WAKEUP |PowerManager.ON_AFTER_RELEASE,"MyLock");
+            wl.acquire(5000);
+            PowerManager.WakeLock wl_cpu = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,"MyCpuLock");
+            wl_cpu.acquire(5000);
+        }
+    }
+
     private void drawWidget()  {
 
-        if (mNotiState == false)  {
+        if (mNotiState.contentEquals(SharedPrefsUtil.INACTIVE_NOTIFICATION))  {
 
-            // Check if patient
-            if (mUserAccountType.equals(SharedPrefsUtil.ACCOUNT_TYPE_PATIENT))  {
-
-                // Check if there is a survey to fill out
-                if ((mHour == mMorningTimeSlot[0] && mMinute == mMorningTimeSlot[1]) ||
-                        (mHour == mEveningTimeSlot[0] && mMinute == mEveningTimeSlot[1]))  {
-
-                    showSurveyNotification();
-                }
-                else  {
-
-                    updateClock();
-                }
-            }
-            else  {
-
-                updateClock();
-            }
+            updateClock();
         }
-        else  {
+        else if (mNotiState.contentEquals(SharedPrefsUtil.ACTIVE_NOTIFICATION)) {
 
             // Check if patient or doctor
             if (mUserAccountType.equals(SharedPrefsUtil.ACCOUNT_TYPE_DOCTOR))  { // doctor
@@ -80,6 +112,14 @@ public class LockScreenWidgetServicer extends Service  {
             else  { // patient
 
                 showAlertPatient();
+            }
+        }
+        else if (mNotiState.contentEquals(SharedPrefsUtil.SURVEY_NOTIFICATION))  {
+
+            // Check if patient
+            if (mUserAccountType.equals(SharedPrefsUtil.ACCOUNT_TYPE_PATIENT))  {
+
+                showSurveyNotification();
             }
         }
     }
@@ -165,6 +205,7 @@ public class LockScreenWidgetServicer extends Service  {
         String[] twelveHourTime = Utils.convert24HourTo12Hour(timeParts[3]);
         mHour = Integer.parseInt(twelveHourTime[0]);
         mMinute = Integer.parseInt(timeParts[4]);
+        mSecond = Integer.parseInt(timeParts[5]);
         mDay = Integer.parseInt(timeParts[2]);
         mAmPm = twelveHourTime[1];
         month--;
@@ -180,7 +221,7 @@ public class LockScreenWidgetServicer extends Service  {
         mUserAccountType = mSharedPrefsUtilInst.getUserAccountType("");
 
         // Get Notification Stuff
-        mNotiState = mSharedPrefsUtilInst.getNotificationState(false);
+        mNotiState = mSharedPrefsUtilInst.getNotificationState("INACTIVE");
         mNotificationMessage = mSharedPrefsUtilInst.getNotificationMessage("");
         mPriority = mSharedPrefsUtilInst.getNotificationPriority(AlertsManager.PRIORITY_EARLY);
         mTimeAlerted = mSharedPrefsUtilInst.getNotificationTimeAlerted("");

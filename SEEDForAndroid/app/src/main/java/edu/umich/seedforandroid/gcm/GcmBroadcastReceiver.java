@@ -83,7 +83,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver  {
 
             prefsUtil.setNotificationMessage(contentBody);
             prefsUtil.setNotificationEmail(email);
-            prefsUtil.setNotificationState(true);
+            prefsUtil.setNotificationState(SharedPrefsUtil.ACTIVE_NOTIFICATION);
             prefsUtil.setNotificationTimeAlerted(sdf.format(new Date()));
         }
         else {
