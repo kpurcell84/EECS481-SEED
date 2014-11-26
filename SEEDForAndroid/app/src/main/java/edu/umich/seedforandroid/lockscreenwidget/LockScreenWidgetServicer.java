@@ -48,9 +48,8 @@ public class LockScreenWidgetServicer extends Service  {
 
     private void checkIfSurveyTime()  {
 
-//        if ((mHour == mMorningTimeSlot[0] && mMinute == mMorningTimeSlot[1] && mSecond == 5) ||
-//                (mHour == mEveningTimeSlot[0] && mMinute == mEveningTimeSlot[1] && mSecond == 5))  {
-          if (mHour == 5 && mMinute == 19 && mSecond == 5)  {
+        if ((mHour == mMorningTimeSlot[0] && mMinute == mMorningTimeSlot[1] && mSecond == 5) ||
+                (mHour == mEveningTimeSlot[0] && mMinute == mEveningTimeSlot[1] && mSecond == 5))  {
 
             mSharedPrefsUtilInst.setNotificationState(SharedPrefsUtil.SURVEY_NOTIFICATION);
             createNotificationForSurvey();

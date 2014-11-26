@@ -26,6 +26,7 @@ import edu.umich.seedforandroid.account.GoogleAccountManager;
 import edu.umich.seedforandroid.api.ApiThread;
 import edu.umich.seedforandroid.api.SeedApi;
 import edu.umich.seedforandroid.patient.MainActivity_Patient;
+import edu.umich.seedforandroid.util.SharedPrefsUtil;
 
 public class DailySurvey extends Activity implements View.OnClickListener  {
 
@@ -39,6 +40,7 @@ public class DailySurvey extends Activity implements View.OnClickListener  {
     private String[] mSurveyQuestionAnswers; // 10
     private String mBodyTempType; // Cel or Fahrenheit
     private Double mBodyTemp, mSystolic, mDiastolic;
+    private SharedPrefsUtil mSharedPrefs;
 
     private GoogleAccountManager mAccountManager;
     private ApiThread mApiThread;
@@ -70,6 +72,8 @@ public class DailySurvey extends Activity implements View.OnClickListener  {
 
         getActionBar().hide();
 
+        mSharedPrefs = new SharedPrefsUtil(DailySurvey.this);
+        mSharedPrefs.setNotificationState(SharedPrefsUtil.INACTIVE_NOTIFICATION);
         mSurveyQuestionAnswers = new String[10];
 
         // Buttons
