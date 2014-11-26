@@ -865,6 +865,16 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
         mRunSeries = null;
         mBikeSeries = null;
 
+        if (mPatientEmail != null && mPatientEmail.split("@")[1] == "lotr.com") {
+
+            Calendar start = Calendar.getInstance();
+            start.set(2000, Calendar.JANUARY, 1);
+            Calendar end = Calendar.getInstance();
+            start.set(2000, Calendar.JANUARY, 2);
+            startDate = new DateTime(start.getTimeInMillis());
+            endDate = new DateTime(end.getTimeInMillis());
+        }
+
         fetchDataFromServer(startDate, endDate);
     }
 
