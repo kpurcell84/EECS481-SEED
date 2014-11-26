@@ -1,5 +1,8 @@
 package edu.umich.seedforandroid.doctor.fragments;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -29,10 +32,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.umich.seedforandroid.R;
-import edu.umich.seedforandroid.api.ApiThread;
 import edu.umich.seedforandroid.account.GoogleAccountManager;
+import edu.umich.seedforandroid.api.ApiThread;
 import edu.umich.seedforandroid.api.SeedApi;
 import edu.umich.seedforandroid.doctor.patientdata.DoctorViewPatientData;
+import edu.umich.seedforandroid.main.MainActivity;
 import edu.umich.seedforandroid.util.Utils;
 
 public class MyAlerts_Frag extends Fragment  {
@@ -100,12 +104,41 @@ public class MyAlerts_Frag extends Fragment  {
 
     private void notifyUiUserNotLoggedIn() {
 
-        //todo: user not logged in, notify and navigate back to main activity?
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+        View convertView = getActivity().getLayoutInflater().inflate(R.layout.loggedout_alert_title, null);
+        alertDialog.setCustomTitle(convertView);
+        alertDialog.setNegativeButton("Ok", new DialogInterface.OnClickListener()  {
+
+            @Override
+            public void onClick(DialogInterface dialog, int id)  {
+
+                goToMainActivity();
+            }
+        });
+
+        // Set the line color
+        Dialog d = alertDialog.show();
+        int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+        View divider = d.findViewById(dividerId);
+        divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
     }
 
     private void notifyUiApiError() {
 
-        //todo: api error occurred. Notify
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+        View convertView = getActivity().getLayoutInflater().inflate(R.layout.api_error_alert_title, null);
+        alertDialog.setCustomTitle(convertView);
+        alertDialog.setNegativeButton("Ok", new DialogInterface.OnClickListener()  {
+
+            @Override
+            public void onClick(DialogInterface dialog, int id)  {}
+        });
+
+        // Set the line color
+        Dialog d = alertDialog.show();
+        int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+        View divider = d.findViewById(dividerId);
+        divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
     }
 
     private void updateAlertsListFromServer()  {
@@ -235,6 +268,12 @@ public class MyAlerts_Frag extends Fragment  {
         extras.putString("patient_email", patientEmail);
         extras.putString("patient_name", patientName);
         i.putExtras(extras);
+        startActivity(i);
+    }
+
+    private void goToMainActivity()  {
+
+        Intent i = new Intent(getActivity(), MainActivity.class);
         startActivity(i);
     }
 }

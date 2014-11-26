@@ -453,23 +453,6 @@
                     android:layout_marginTop="10dp" />
 
             </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_below="@+id/relativeLayoutBloodPressure"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:text="Last Sync : Nov 17 5:31 PM"
-                    android:id="@+id/tvDataLastSync"
-                    android:textSize="18sp"
-                    android:layout_height="wrap_content" />
-
-            </RelativeLayout>
         </RelativeLayout>
 
     </ScrollView>

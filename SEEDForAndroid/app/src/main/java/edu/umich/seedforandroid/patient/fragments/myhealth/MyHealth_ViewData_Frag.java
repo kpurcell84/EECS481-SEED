@@ -106,6 +106,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
         if (id == R.id.action_refresh) { // rotate the refresh icon
 
             startProgressBar();
+            getDataFromServerBasedOnThis(mCurrentCalendar);
             return true;
         }
         else if (id == R.id.action_graph_options)  {
@@ -543,6 +544,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
                             populateDataIntoGraphs(walkData);
                             populateDataIntoGraphs(runData);
                             populateDataIntoGraphs(bikeData);
+
                             return true;
                         }
                     }
@@ -551,6 +553,8 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
 
                 @Override
                 public void onApiResult(Object result)  {
+
+                    stopProgressBar();
 
                     if (result != null && result instanceof Boolean)  {
 
@@ -566,6 +570,9 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
 
                 @Override
                 public void onApiError(Throwable error)  {
+
+                    stopProgressBar();
+
                     //todo the data failed to load from the API, handle this in the UI here
                 }
             });
@@ -822,7 +829,6 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
         }
 
         // For today's date, set the time to be 00:01 and the ending time to be 11:59 PM
-
         Calendar calStart = Calendar.getInstance();
         getDataFromServerBasedOnThis(calStart);
     }
@@ -838,13 +844,26 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
         DateTime startDate = new DateTime(calStart.getTimeInMillis());
         DateTime endDate = new DateTime(calEnd.getTimeInMillis());
 
-        Log.i("FETCH DATA", "@@@@@@@@@@@@@@@@@@");
-        Log.i("START DATE", String.valueOf(calStart.get(Calendar.MONTH)).concat(" ").concat(String.valueOf(calStart.get(Calendar.DAY_OF_MONTH))));
-        Log.i("END DATE", String.valueOf(calEnd.get(Calendar.MONTH)).concat(" ").concat(String.valueOf(calEnd.get(Calendar.DAY_OF_MONTH))));
-
         // Remove existing series in the graphs
         mHeartRatePlot.clear();
+        mSkinTempPlot.clear();;
+        mPerspirationPlot.clear();
+        mBloodPressurePlot.clear();
+        mBodyTempPlot.clear();
+        mActivityTypePlot.clear();
+
         mHeartRateSeries = null;
+        mSkinTempSeries = null;
+        mPerspirationSeries = null;
+        mBloodPressureSeries = null;
+        mBodyTempSeries = null;
+        mREMSeries = null;
+        mDeepSeries = null;
+        mLightSeries = null;
+        mStillSeries = null;
+        mWalkSeries = null;
+        mRunSeries = null;
+        mBikeSeries = null;
 
         fetchDataFromServer(startDate, endDate);
     }

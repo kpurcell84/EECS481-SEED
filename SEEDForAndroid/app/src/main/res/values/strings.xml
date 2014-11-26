@@ -62,5 +62,7 @@
     <string name="notif_body_emergency_doctor_contact_message">them</string>
     <string name="title_activity_update_doctor_profile">UpdateDoctorProfile</string>
     <string name="title_activity_update_patient_profile">UpdatePatientProfile</string>
+    <string name="title_activity_abous_us_doctor">AbousUsDoctor</string>
+    <string name="title_activity_add_new_patient">AddNewPatient</string>
 
 </resources>

@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" >
+
+    <item
+        android:id="@+id/home"
+        android:showAsAction="always"
+        android:title="@string/action_refresh"
+        android:icon="@drawable/home_icon_back"></item>
+
+</menu>

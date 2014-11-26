@@ -34,6 +34,7 @@ import edu.umich.seedforandroid.account.GoogleAccountManager;
 import edu.umich.seedforandroid.api.ApiThread;
 import edu.umich.seedforandroid.api.SeedApi;
 import edu.umich.seedforandroid.doctor.patientdata.DoctorViewPatientData;
+import edu.umich.seedforandroid.main.MainActivity;
 
 public class MyPatients_Frag extends Fragment  {
 
@@ -96,12 +97,41 @@ public class MyPatients_Frag extends Fragment  {
 
     private void notifyUiUserNotLoggedIn() {
 
-        //todo: user not logged in, notify and navigate back to main activity?
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+        View convertView = getActivity().getLayoutInflater().inflate(R.layout.loggedout_alert_title, null);
+        alertDialog.setCustomTitle(convertView);
+        alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int id)  {
+
+                gotoMainActivity();
+            }
+        });
+
+        // Set the line color
+        Dialog d = alertDialog.show();
+        int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+        View divider = d.findViewById(dividerId);
+        divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
     }
 
-    private void notifyUiApiError() {
+    private void notifyUiApiError()  {
 
-        //todo: api error occurred. Notify
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+        View convertView = getActivity().getLayoutInflater().inflate(R.layout.api_error_alert_title, null);
+        alertDialog.setCustomTitle(convertView);
+        alertDialog.setNegativeButton("Ok", new DialogInterface.OnClickListener()  {
+
+            @Override
+            public void onClick(DialogInterface dialog, int id)  {}
+        });
+
+        // Set the line color
+        Dialog d = alertDialog.show();
+        int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+        View divider = d.findViewById(dividerId);
+        divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
     }
 
     private void updatePatientListFromServer() {
@@ -286,6 +316,12 @@ public class MyPatients_Frag extends Fragment  {
         extras.putString("patient_email", patientEmail);
         extras.putString("patient_name", patientName);
         i.putExtras(extras);
+        startActivity(i);
+    }
+
+    private void gotoMainActivity()  {
+
+        Intent i = new Intent(getActivity(), MainActivity.class);
         startActivity(i);
     }
 }

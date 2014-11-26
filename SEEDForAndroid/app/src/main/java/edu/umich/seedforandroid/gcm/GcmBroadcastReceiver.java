@@ -9,13 +9,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.appspot.umichseed.seed.model.MessagesAlertResponse;
-import com.google.api.client.util.DateTime;
-
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Random;
+import java.util.Date;
 
 import edu.umich.seedforandroid.R;
 import edu.umich.seedforandroid.main.MainActivity;
@@ -82,9 +79,12 @@ public class GcmBroadcastReceiver extends BroadcastReceiver  {
                     (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.notify(notifId, notification);
 
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy:MM:dd:HH:mm");
+
             prefsUtil.setNotificationMessage(contentBody);
             prefsUtil.setNotificationEmail(email);
             prefsUtil.setNotificationState(true);
+            prefsUtil.setNotificationTimeAlerted(sdf.format(new Date()));
         }
         else {
 

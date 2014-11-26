@@ -14,6 +14,7 @@ import java.util.Calendar;
 
 import edu.umich.seedforandroid.R;
 import edu.umich.seedforandroid.patient.daily_survey.DailySurvey;
+import edu.umich.seedforandroid.util.AlertsManager;
 import edu.umich.seedforandroid.util.SharedPrefsUtil;
 import edu.umich.seedforandroid.util.Utils;
 
@@ -23,7 +24,8 @@ public class LockScreenWidgetServicer extends Service  {
     private PowerManager pm;
     private int mHour, mMinute, mDay;
     private int[] mMorningTimeSlot, mEveningTimeSlot;
-    private String mMonth, mDayOfWeek, mAmPm, mCurrentTime, mUserAccountType;
+    private String mMonth, mDayOfWeek, mAmPm, mCurrentTime, mUserAccountType,
+                   mPriority, mTimeAlerted, mNotificationMessage;
     private boolean mNotiState;
 
     public LockScreenWidgetServicer()  {}
@@ -39,16 +41,22 @@ public class LockScreenWidgetServicer extends Service  {
     }
 
     private void drawWidget()  {
-        showAlert();
 
-        /*
         if (mNotiState == false)  {
 
-            // Check if there is a survey to fill out
-            if ((mHour == mMorningTimeSlot[0] && mMinute == mMorningTimeSlot[1]) ||
-                    (mHour == mEveningTimeSlot[0] && mMinute == mEveningTimeSlot[1]))  {
+            // Check if patient
+            if (mUserAccountType.equals(SharedPrefsUtil.ACCOUNT_TYPE_PATIENT))  {
 
-                showSurveyNotification();
+                // Check if there is a survey to fill out
+                if ((mHour == mMorningTimeSlot[0] && mMinute == mMorningTimeSlot[1]) ||
+                        (mHour == mEveningTimeSlot[0] && mMinute == mEveningTimeSlot[1]))  {
+
+                    showSurveyNotification();
+                }
+                else  {
+
+                    updateClock();
+                }
             }
             else  {
 
@@ -57,9 +65,23 @@ public class LockScreenWidgetServicer extends Service  {
         }
         else  {
 
-            showAlert();
+            // Check if patient or doctor
+            if (mUserAccountType.equals(SharedPrefsUtil.ACCOUNT_TYPE_DOCTOR))  { // doctor
+
+                if (mPriority.equals(AlertsManager.PRIORITY_EARLY))  {
+
+                    showEarlyAlertDoctor();
+                }
+                else  {
+
+                    showEmergencyAlertDoctor();
+                }
+            }
+            else  { // patient
+
+                showAlertPatient();
+            }
         }
-        */
     }
 
     private void showSurveyNotification()  {
@@ -77,9 +99,37 @@ public class LockScreenWidgetServicer extends Service  {
         manager.updateAppWidget(thiswidget, remoteView);
     }
 
-    private void showAlert()  {
+    private void showEmergencyAlertDoctor()  {
+
+        RemoteViews remoteView = new RemoteViews(getPackageName(), R.layout.widget_doctor_emergency_alert);
+
+        remoteView.setTextViewText(R.id.tvAlertMessage, mNotificationMessage);
+        remoteView.setTextViewText(R.id.tvTimeAlerted, "(".concat(mTimeAlerted).concat(")"));
+
+        ComponentName thisWidget = new ComponentName(getApplicationContext(), LockScreenWidget.class);
+        AppWidgetManager manager = AppWidgetManager.getInstance(getApplicationContext());
+        manager.updateAppWidget(thisWidget, remoteView);
+    }
+
+
+    private void showEarlyAlertDoctor()  {
+
+        RemoteViews remoteView = new RemoteViews(getPackageName(), R.layout.widget_doctor_early_alert);
+
+        remoteView.setTextViewText(R.id.tvAlertMessage, mNotificationMessage);
+        remoteView.setTextViewText(R.id.tvTimeAlerted, "(".concat(mTimeAlerted).concat(")"));
+
+        ComponentName thisWidget = new ComponentName(getApplicationContext(), LockScreenWidget.class);
+        AppWidgetManager manager = AppWidgetManager.getInstance(getApplicationContext());
+        manager.updateAppWidget(thisWidget, remoteView);
+    }
+
+    private void showAlertPatient()  {
 
         RemoteViews remoteView = new RemoteViews(getPackageName(), R.layout.widget_patient_alert);
+
+        remoteView.setTextViewText(R.id.tvAlertMessage, mNotificationMessage);
+        remoteView.setTextViewText(R.id.tvTimeAlerted, "(".concat(mTimeAlerted).concat(")"));
 
         ComponentName thisWidget = new ComponentName(getApplicationContext(), LockScreenWidget.class);
         AppWidgetManager manager = AppWidgetManager.getInstance(getApplicationContext());
@@ -121,11 +171,19 @@ public class LockScreenWidgetServicer extends Service  {
         mMonth = Utils.getMonth(month);
         mDayOfWeek = Utils.getDayOfWeek(c.get(Calendar.DAY_OF_WEEK));
         mUserAccountType = mSharedPrefsUtilInst.getUserAccountType("");
-        mNotiState = mSharedPrefsUtilInst.getNotificationState(false);
 
         // Get the morning and evening survey times
         mMorningTimeSlot = mSharedPrefsUtilInst.getMorningSurveyNotificationTime(9, 0);
         mEveningTimeSlot = mSharedPrefsUtilInst.getEveningSurveyNotificationTime(21, 0);
+
+        // Get User Account Type
+        mUserAccountType = mSharedPrefsUtilInst.getUserAccountType("");
+
+        // Get Notification Stuff
+        mNotiState = mSharedPrefsUtilInst.getNotificationState(false);
+        mNotificationMessage = mSharedPrefsUtilInst.getNotificationMessage("");
+        mPriority = mSharedPrefsUtilInst.getNotificationPriority(AlertsManager.PRIORITY_EARLY);
+        mTimeAlerted = mSharedPrefsUtilInst.getNotificationTimeAlerted("");
     }
 
     @Override

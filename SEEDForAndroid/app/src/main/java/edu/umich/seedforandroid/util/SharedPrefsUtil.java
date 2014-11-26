@@ -23,14 +23,14 @@ public class SharedPrefsUtil {
     private static final String PROPERTY_NOTIFICATION_STATE = "noti_state";
     private static final String PROPERTY_NOTIFICATION_MESSAGE = "noti_msg";
     private static final String PROPERTY_NOTIFICATION_EMAIL = "noti_email";
+    private static final String PROPERTY_NOTIFICATION_TIME_ALERTED = "noti_time_alerted";
+    private static final String PROPERTY_NOTIFICATION_PRIORITY = "noti_priority";
 
     // Survey Notification
-    private static final String PROPERTY_SURVEY_QA_PAIR = "survey_qa";
     private static final String PROPERTY_SURVEY_MORNING_TIME = "survey_morning_time";
     private static final String PROPERTY_SURVEY_EVENING_TIME = "survey_evening_time";
 
     private static final String PROPERTY_PATIENT_GRAPH_FILTER = "patient_graph_filter";
-
 
     private SharedPreferences mPrefs;
 
@@ -172,6 +172,26 @@ public class SharedPrefsUtil {
     public String getNotificationEmail() {
 
         return getNotificationEmail("");
+    }
+
+    public void setNotificationTimeAlerted(String val)  {
+
+        setProperty(PROPERTY_NOTIFICATION_TIME_ALERTED, val);
+    }
+
+    public String getNotificationTimeAlerted(String defValue) {
+
+        return mPrefs.getString(PROPERTY_NOTIFICATION_TIME_ALERTED, defValue);
+    }
+
+    public void setNotificationPriority(String val)  {
+
+        setProperty(PROPERTY_NOTIFICATION_PRIORITY, val);
+    }
+
+    public String getNotificationPriority(String defValue) {
+
+        return mPrefs.getString(PROPERTY_NOTIFICATION_PRIORITY, defValue);
     }
 
     public String getNotificationEmail(String defValue)  {

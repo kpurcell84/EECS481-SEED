@@ -126,6 +126,14 @@
             android:name="edu.umich.seedforandroid.patient.updates.UpdatePatientProfile"
             android:label="@string/title_activity_update_patient_profile" >
         </activity>
+        <activity
+            android:name="edu.umich.seedforandroid.doctor.AbousUsDoctor"
+            android:label="@string/title_activity_abous_us_doctor" >
+        </activity>
+        <activity
+            android:name="edu.umich.seedforandroid.doctor.AddNewPatient"
+            android:label="@string/title_activity_add_new_patient" >
+        </activity>
     </application>
 
 </manifest>

@@ -171,6 +171,10 @@ class DoctorPatientViewPagerAdapter extends FragmentStatePagerAdapter {
         if (arg == 1)  {
 
             fragment = new DoctorPatientAlertsFrag();
+
+            Bundle extras = new Bundle();
+            extras.putString("patient_email", patientEmail);
+            fragment.setArguments(extras);
         }
 
         return fragment;

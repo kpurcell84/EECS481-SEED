@@ -1,12 +1,14 @@
 package edu.umich.seedforandroid.patient.fragments.mysepsisnurse;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -87,6 +89,11 @@ public class PatientAskWatsonFragment extends Fragment implements View.OnClickLi
             if (etAskWatsonQuestion.getText().toString().contentEquals("") == false)  {
 
                 mProgressBar.setVisibility(View.VISIBLE);
+
+                // Hide Keyboard
+                InputMethodManager inputMethodManager = (InputMethodManager)  getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+
                 askWatson();
             }
             else  {

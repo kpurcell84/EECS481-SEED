@@ -2,14 +2,15 @@
     xmlns:tools="http://schemas.android.com/tools" >
 
     <item
-        android:id="@+id/action_refresh"
+        android:id="@+id/info"
         android:showAsAction="always"
         android:title="@string/action_refresh"
-        android:icon="@drawable/refresh_icon"></item>
+        android:icon="@drawable/about_us_icon_home"></item>
 
     <item
-        android:id="@+id/action_graph_options"
+        android:id="@+id/addNewPatient"
         android:showAsAction="always"
-        android:title="@string/action_graphs_options"
-        android:icon="@drawable/graph_white_icon"></item>
+        android:title="@string/action_refresh"
+        android:icon="@drawable/add_patient_icon"></item>
+
 </menu>

@@ -97,6 +97,7 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
         if (id == R.id.action_refresh) { // rotate the refresh icon
 
             startProgressBar();
+            getDataFromServerBasedOnThis(mCurrentCalendar);
             return true;
         }
         else if (id == R.id.action_graph_options)  {
@@ -556,6 +557,7 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
                 @Override
                 public void onApiResult(Object result)  {
 
+                    stopProgressBar();
                     if (result != null && result instanceof Boolean)  {
 
                         Boolean success = (Boolean) result;
@@ -570,6 +572,8 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
 
                 @Override
                 public void onApiError(Throwable error)  {
+
+                    stopProgressBar();
                     //todo the data failed to load from the API, handle this in the UI here
                 }
             });
@@ -821,14 +825,48 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
             setupGraphSettings(mBodyTempPlot);
             setupGraphSettings(mActivityTypePlot);
         }
+
+        // For today's date, set the time to be 00:01 and the ending time to be 11:59 PM
         Calendar calStart = Calendar.getInstance();
-        calStart.set(2014, Calendar.NOVEMBER, 22, 0, 1, 0);
+        getDataFromServerBasedOnThis(calStart);
+    }
+
+    private void getDataFromServerBasedOnThis(Calendar cal)  {
+
+        Calendar calStart = Calendar.getInstance();
+        calStart.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 0, 1);
 
         Calendar calEnd = Calendar.getInstance();
-        calEnd.set(2014, Calendar.NOVEMBER, 22, 23, 59, 0);
+        calEnd.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 23, 59);
 
         DateTime startDate = new DateTime(calStart.getTimeInMillis());
         DateTime endDate = new DateTime(calEnd.getTimeInMillis());
+
+        Log.i("FETCH DATA", "@@@@@@@@@@@@@@@@@@");
+        Log.i("START DATE", String.valueOf(calStart.get(Calendar.MONTH)).concat(" ").concat(String.valueOf(calStart.get(Calendar.DAY_OF_MONTH))));
+        Log.i("END DATE", String.valueOf(calEnd.get(Calendar.MONTH)).concat(" ").concat(String.valueOf(calEnd.get(Calendar.DAY_OF_MONTH))));
+
+        // Remove existing series in the graphs
+        mHeartRatePlot.clear();
+        mSkinTempPlot.clear();;
+        mPerspirationPlot.clear();
+        mBloodPressurePlot.clear();
+        mBodyTempPlot.clear();
+        mActivityTypePlot.clear();
+
+        mHeartRateSeries = null;
+        mSkinTempSeries = null;
+        mPerspirationSeries = null;
+        mBloodPressureSeries = null;
+        mBodyTempSeries = null;
+        mREMSeries = null;
+        mDeepSeries = null;
+        mLightSeries = null;
+        mStillSeries = null;
+        mWalkSeries = null;
+        mRunSeries = null;
+        mBikeSeries = null;
+
         fetchDataFromServer(startDate, endDate);
     }
 
@@ -857,7 +895,7 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
 
             mCurrentCalendar = Utils.getNextDate(mCurrentCalendar);
             DateFormat dateFormat = new SimpleDateFormat("yyyy:MM:dd:HH:mm:ss");
-            String tomorrow = dateFormat.format(mCurrentCalendar.getTime());
+            String tomorrow = dateFormat.format(mCurrentCalendar.getTimeInMillis());
             String[] parts = tomorrow.split(":");
 
             int day = mCurrentCalendar.get(Calendar.DAY_OF_WEEK);
@@ -867,6 +905,9 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
             String monthStr = Utils.getMonth(month);
 
             tvDate.setText(dayStr.concat(" ").concat(String.valueOf(parts[2])).concat(" ").concat(monthStr));
+
+            // Fetch Data
+            getDataFromServerBasedOnThis(mCurrentCalendar);
         }
     }
 
@@ -874,7 +915,7 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
 
         mCurrentCalendar = Utils.getPrevDate(mCurrentCalendar);
         DateFormat dateFormat = new SimpleDateFormat("yyyy:MM:dd:HH:mm:ss");
-        String yesterday = dateFormat.format(mCurrentCalendar.getTime());
+        String yesterday = dateFormat.format(mCurrentCalendar.getTimeInMillis());
         String[] parts = yesterday.split(":");
 
         int day = mCurrentCalendar.get(Calendar.DAY_OF_WEEK);
@@ -884,8 +925,10 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
         String monthStr = Utils.getMonth(month);
 
         tvDate.setText(dayStr.concat(" ").concat(String.valueOf(parts[2])).concat(" ").concat(monthStr));
-    }
 
+        // Fetch Data
+        getDataFromServerBasedOnThis(mCurrentCalendar);
+    }
     @Override
     public void onClick(View v)  {
 

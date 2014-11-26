@@ -1,0 +1,92 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/seed_background"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp">
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:id="@+id/imageViewLogo"
+        android:src="@drawable/seed_system_logo_standalone"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Version"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/imageViewLogo"
+        android:id="@+id/tvVersionText"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1.0"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_alignParentRight="true"
+        android:layout_alignBottom="@+id/tvVersionText"
+        android:layout_below="@+id/imageViewLogo"
+        android:id="@+id/tvVersion"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/tvVersionText"
+        android:background="#000000"
+        android:id="@+id/relativeLayout7">
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="SEED (Sepsis Early and Emergency Detection) System uses machine learning in order to detect the onset of sepsis for postoperative patients."
+        android:id="@+id/tvHelpDescription"
+        android:textSize="18sp"
+        android:layout_below="@+id/relativeLayout7"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_marginTop="15dp"
+        android:text="For any concerns or questions, please email us."
+        android:gravity="center"
+        android:textStyle="bold"
+        android:layout_below="@+id/tvHelpDescription"
+        android:id="@+id/tvConcern"/>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:layout_below="@+id/tvConcern"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:padding="3dp">
+
+        <Button
+            android:id="@+id/bEmail"
+            android:layout_width="150dp"
+            android:layout_height="55dp"
+            android:background="@drawable/blue_button"
+            android:drawableStart="@drawable/email_icon"
+            android:padding="10dp"
+            android:text="Email"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+</RelativeLayout>
