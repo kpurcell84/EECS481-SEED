@@ -99,7 +99,7 @@ public class LockScreenWidgetServicer extends Service  {
             // Check if patient or doctor
             if (mUserAccountType.equals(SharedPrefsUtil.ACCOUNT_TYPE_DOCTOR))  { // doctor
 
-                if (mPriority.equals(AlertsManager.PRIORITY_EARLY))  {
+                if (mPriority.contentEquals(AlertsManager.PRIORITY_EARLY))  {
 
                     showEarlyAlertDoctor();
                 }

@@ -239,4 +239,3 @@ public class MainActivity_Doctor extends FragmentActivity implements ActionBar.T
         }
     }
 }
-
