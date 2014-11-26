@@ -1,7 +1,12 @@
 package edu.umich.seedforandroid.patient.fragments.myhealth;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,7 +26,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.SortedSet;
 
@@ -124,7 +128,6 @@ public class MyHealth_Alerts_Frag extends Fragment  {
 
     private void refreshUi(SortedSet<AlertsDataWrapper> sortedSet)  {
 
-        //todo load the data stored in mAlerts into the UI
         myAlertsList.clear();
 
         if (sortedSet.isEmpty())  {
@@ -132,6 +135,7 @@ public class MyHealth_Alerts_Frag extends Fragment  {
             Toast.makeText(getActivity(), "You do not have any alerts", Toast.LENGTH_SHORT).show();
             return;
         }
+
         for (AlertsDataWrapper alert : sortedSet)  {
 
             myAlertsList.add(alert);
@@ -144,7 +148,20 @@ public class MyHealth_Alerts_Frag extends Fragment  {
 
     private void notifyUiOfAlertsRefreshFailure()  {
 
-        //todo the alerts couldn't refresh. Notify the user in the UI
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+        View convertView = getActivity().getLayoutInflater().inflate(R.layout.api_error_alert_title, null);
+        alertDialog.setCustomTitle(convertView);
+        alertDialog.setNegativeButton("Ok", new DialogInterface.OnClickListener()  {
+
+            @Override
+            public void onClick(DialogInterface dialog, int id)  {}
+        });
+
+        // Set the line color
+        Dialog d = alertDialog.show();
+        int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+        View divider = d.findViewById(dividerId);
+        divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
     }
 
     private void initialSetup(View view)  {
@@ -158,7 +175,7 @@ public class MyHealth_Alerts_Frag extends Fragment  {
         list.setAdapter(adapter);
 
         Calendar calStart = Calendar.getInstance();
-        calStart.set(2014, Calendar.OCTOBER, 1);
+        calStart.set(1992, Calendar.APRIL, 18);
 
         DateTime startTime = new DateTime(calStart.getTimeInMillis());
         DateTime endTime = new DateTime(System.currentTimeMillis());

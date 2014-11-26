@@ -82,6 +82,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
 
     @Override
     public void setArguments(Bundle args)  {
+
         super.setArguments(args);
 
         mPatientEmail = args.getString(ARG_PATIENT_EMAIL);
@@ -305,7 +306,6 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
         view = inflater.inflate(R.layout.fragment_my_health__view_data_, container, false);
 
         setupRelativeLayouts(view);
-        setupGraphs(view);
 
         tvDate = (TextView) view.findViewById(R.id.tvDataTimeStamp);
         bNextDate = (Button) view.findViewById(R.id.bNextRight);
@@ -315,28 +315,8 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
 
         getTodayDate();
 
-        /*
-        ViewDataGraphWrapper temp = new ViewDataGraphWrapper(ViewDataGraphWrapper.ACTIVITY);
+        setupGraphs(view);
 
-        Random rand = new Random(System.currentTimeMillis());
-        for (double d = 0; d < 10; ++d)  {
-
-            double t = (double) rand.nextInt(6) + 1;
-            temp.getHealthData().add(t);
-        }
-
-        long currTime = System.currentTimeMillis();
-        currTime = currTime / 1000;
-        currTime -= 60 * 60 * 10;
-
-        for (double d = 0; d < 10; ++d)  {
-
-            currTime += (long) d * 60 * 60;
-            temp.getEpoch().add(currTime);
-        }
-
-        populateDataIntoGraphs(temp);
-        */
         return view;
     }
 
@@ -400,7 +380,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
 
     private void fetchDataFromServer(DateTime begin, DateTime end)  {
 
-        GoogleAccountManager manager = new GoogleAccountManager(this.getActivity());
+        GoogleAccountManager manager = new GoogleAccountManager(getActivity());
 
         if (!manager.tryLogIn())  {
 
@@ -424,7 +404,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
             mApiThread.enqueueRequest(getDataRequest, new ApiThread.ApiResultAction()  {
 
                 @Override
-                public Object doInBackground(Object result) {
+                public Object doInBackground(Object result)  {
 
                     if (result != null && result instanceof MessagesPQuantDataListResponse)  {
 
@@ -469,6 +449,9 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
                                         Double data = r.getHeartRate().doubleValue();
                                         heartRateData.getHealthData().add(data);
                                         heartRateData.getEpoch().add(epoch);
+
+                                        Log.i("EPOCH FROM SERVER", String.valueOf(epoch));
+                                        Log.i("HEART RATE FROM SERVER", String.valueOf(data));
                                     }
                                     if (r.getSkinTemp() != null)  {
 
@@ -543,6 +526,10 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
                                         }
                                     }
                                 }
+                                else  {
+
+                                    Log.e(TAG, "Error occurred while fetching patient data @@@@@@@@@@@@@");
+                                }
                             }
                             populateDataIntoGraphs(heartRateData);
                             populateDataIntoGraphs(skinTempData);
@@ -592,8 +579,11 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
 
         if (data.getHealthData().isEmpty() || data.getEpoch().isEmpty())  {
 
+            Log.e(TAG, "DATA IS EMPTY #####################");
             return;
         }
+
+        Log.i("POPULATE DATA INTO GRAPH CALLED", "@@@@@@@@@@@@@@@@@@@@@");
 
         LineAndPointFormatter stepFormatter = new LineAndPointFormatter();
         stepFormatter.getFillPaint().setColor(Color.TRANSPARENT);
@@ -830,14 +820,32 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
             setupGraphSettings(mBodyTempPlot);
             setupGraphSettings(mActivityTypePlot);
         }
+
+        // For today's date, set the time to be 00:01 and the ending time to be 11:59 PM
+
         Calendar calStart = Calendar.getInstance();
-        calStart.set(2014, Calendar.NOVEMBER, 22, 0, 1, 0);
+        getDataFromServerBasedOnThis(calStart);
+    }
+
+    private void getDataFromServerBasedOnThis(Calendar cal)  {
+
+        Calendar calStart = Calendar.getInstance();
+        calStart.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 0, 1);
 
         Calendar calEnd = Calendar.getInstance();
-        calEnd.set(2014, Calendar.NOVEMBER, 22, 23, 59, 0);
+        calEnd.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 23, 59);
 
         DateTime startDate = new DateTime(calStart.getTimeInMillis());
         DateTime endDate = new DateTime(calEnd.getTimeInMillis());
+
+        Log.i("FETCH DATA", "@@@@@@@@@@@@@@@@@@");
+        Log.i("START DATE", String.valueOf(calStart.get(Calendar.MONTH)).concat(" ").concat(String.valueOf(calStart.get(Calendar.DAY_OF_MONTH))));
+        Log.i("END DATE", String.valueOf(calEnd.get(Calendar.MONTH)).concat(" ").concat(String.valueOf(calEnd.get(Calendar.DAY_OF_MONTH))));
+
+        // Remove existing series in the graphs
+        mHeartRatePlot.clear();
+        mHeartRateSeries = null;
+
         fetchDataFromServer(startDate, endDate);
     }
 
@@ -866,7 +874,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
 
             mCurrentCalendar = Utils.getNextDate(mCurrentCalendar);
             DateFormat dateFormat = new SimpleDateFormat("yyyy:MM:dd:HH:mm:ss");
-            String tomorrow = dateFormat.format(mCurrentCalendar.getTime());
+            String tomorrow = dateFormat.format(mCurrentCalendar.getTimeInMillis());
             String[] parts = tomorrow.split(":");
 
             int day = mCurrentCalendar.get(Calendar.DAY_OF_WEEK);
@@ -876,6 +884,9 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
             String monthStr = Utils.getMonth(month);
 
             tvDate.setText(dayStr.concat(" ").concat(String.valueOf(parts[2])).concat(" ").concat(monthStr));
+
+            // Fetch Data
+            getDataFromServerBasedOnThis(mCurrentCalendar);
         }
     }
 
@@ -883,7 +894,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
 
         mCurrentCalendar = Utils.getPrevDate(mCurrentCalendar);
         DateFormat dateFormat = new SimpleDateFormat("yyyy:MM:dd:HH:mm:ss");
-        String yesterday = dateFormat.format(mCurrentCalendar.getTime());
+        String yesterday = dateFormat.format(mCurrentCalendar.getTimeInMillis());
         String[] parts = yesterday.split(":");
 
         int day = mCurrentCalendar.get(Calendar.DAY_OF_WEEK);
@@ -893,6 +904,9 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
         String monthStr = Utils.getMonth(month);
 
         tvDate.setText(dayStr.concat(" ").concat(String.valueOf(parts[2])).concat(" ").concat(monthStr));
+
+        // Fetch Data
+        getDataFromServerBasedOnThis(mCurrentCalendar);
     }
 
     @Override

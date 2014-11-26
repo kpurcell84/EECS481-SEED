@@ -2,7 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="50dp"
     android:background="@drawable/seed_background"
     tools:context="seed.um.com.seed_andy.doctor.fragments.Doctor_Profile_Frag">
 
@@ -16,65 +15,94 @@
         <ImageView
             android:layout_width="150dp"
             android:layout_height="150dp"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="5dp"
             android:id="@+id/imageView2"
             android:src="@drawable/profile_icon"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Dr. Alan Alquist"
-            android:textSize="25sp"
-            android:textStyle="bold"
-            android:id="@+id/tvDoctorName"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Tel: 734-353-2915"
-            android:textSize="20sp"
-            android:id="@+id/textView"
-            android:layout_alignBottom="@+id/imageView2"
-            android:layout_alignParentEnd="true" />
+            android:layout_centerHorizontal="true"/>
 
     </RelativeLayout>
 
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:padding="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
         android:layout_below="@+id/relativeLayout"
-        android:layout_height="wrap_content"
-        android:id="@+id/relativeLayout2">
+        android:padding="10dp"
+        android:id="@+id/relativeLayout2"
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="1770 Broadway St\nAnn Arbor, MI 48105"
-            android:id="@+id/textView2"
-            android:layout_marginTop="5dp"
-
-            android:layout_below="@+id/textView3"
-            android:layout_centerHorizontal="true" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Address"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:id="@+id/textView3"
+            android:text=""
+            android:textSize="25sp"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:textStyle="bold"
+            android:id="@+id/tvDoctorName"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text=""
+            android:textSize="20sp"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/tvHospital"
+            android:layout_below="@+id/tvDoctorName"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text=""
+            android:textSize="20sp"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:id="@+id/tvPhoneNumber"
+            android:layout_below="@+id/tvEmail"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text=""
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:textSize="20sp"
+            android:id="@+id/tvEmail"
+            android:gravity="center"
+            android:layout_below="@+id/tvHospital"/>
+
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/relativelayout4"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="#ffffff"
+        android:padding="3dp"
+        android:layout_marginTop="2dp"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/bLogoutDoctor"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/blue_button"
+            android:text="Log Out"
+            android:paddingStart="10dp"
+            android:drawableLeft="@drawable/logout_icon"
+            android:textColor="#FFFFFF"
+            android:drawablePadding="-40dp"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/relativelayout3"
@@ -82,11 +110,7 @@
         android:layout_height="55dp"
         android:background="#ffffff"
         android:padding="3dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true">
+        android:layout_above="@+id/relativelayout4">
 
         <Button
             android:id="@+id/bEditProfile"
@@ -97,6 +121,7 @@
             android:paddingStart="10dp"
             android:drawableLeft="@drawable/update_profile_icon"
             android:textColor="#FFFFFF"
+            android:drawablePadding="-40dp"
             android:textSize="20dp"
             android:textStyle="bold" />
     </RelativeLayout>

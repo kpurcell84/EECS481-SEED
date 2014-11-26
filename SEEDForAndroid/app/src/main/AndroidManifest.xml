@@ -117,6 +117,15 @@
             android:exported="true" >
         </receiver>
 
+        <activity
+            android:name="edu.umich.seedforandroid.doctor.doctor_update.UpdateDoctorProfile"
+            android:label="@string/title_activity_update_doctor_profile"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="edu.umich.seedforandroid.patient.updates.UpdatePatientProfile"
+            android:label="@string/title_activity_update_patient_profile" >
+        </activity>
     </application>
 
 </manifest>

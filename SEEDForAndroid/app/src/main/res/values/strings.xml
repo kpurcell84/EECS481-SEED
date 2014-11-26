@@ -60,5 +60,7 @@
     <string name="notif_body_emergency_doctor_format">%1$s is</string>
     <string name="notif_body_emergency_patient_contact_message">your doctor</string>
     <string name="notif_body_emergency_doctor_contact_message">them</string>
+    <string name="title_activity_update_doctor_profile">UpdateDoctorProfile</string>
+    <string name="title_activity_update_patient_profile">UpdatePatientProfile</string>
 
 </resources>

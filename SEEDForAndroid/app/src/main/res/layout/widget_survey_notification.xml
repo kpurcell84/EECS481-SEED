@@ -1,41 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@drawable/seed_background"
     android:layout_height="match_parent">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Please complete your daily survey."
-        android:textSize="18sp"
-        android:layout_marginTop="2dp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:textColor="#00274c"
-        android:id="@+id/tvSurveyNotificationTitle"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
 
     <RelativeLayout
         android:id="@+id/relativelayoutSubmit"
         android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:background="#ffffff"
-        android:padding="3dp"
-        android:layout_marginTop="5dp"
-        android:layout_below="@+id/tvSurveyNotificationTitle">
+        android:layout_height="200dp">
 
         <Button
-            android:id="@+id/bEngageSurvey"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/blue_button"
-            android:text="complete"
-            android:padding="10dp"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/bEngageSurvey"
+            android:background="@drawable/lockscreenwidget_survey_button"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:id="@+id/tvSEEDTitle"
+            android:text="SEED System"
             android:textColor="#FFFFFF"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textSize="20sp"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:drawablePadding="1dp"
+            android:layout_alignParentTop="true"
+            android:drawableStart="@drawable/seed_system_letter_icon_small"
+            android:textStyle="bold"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="Please complete\nyour daily survey."
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:layout_below="@+id/tvSEEDTitle"
+            android:layout_centerHorizontal="true"
+            android:drawableStart="@drawable/fill_out_survey_icon"
+            android:drawablePadding="10dp"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:textStyle="bold"
+            android:layout_height="wrap_content" />
+
     </RelativeLayout>
 </RelativeLayout>

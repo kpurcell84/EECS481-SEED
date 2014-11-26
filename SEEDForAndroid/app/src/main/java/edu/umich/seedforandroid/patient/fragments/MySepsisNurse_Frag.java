@@ -54,7 +54,7 @@ public class MySepsisNurse_Frag extends Fragment  {
     private View initialSetup(View view)  {
 
         mTabHost = (FragmentTabHost) view.findViewById(android.R.id.tabhost);
-        mTabHost.setup(getActivity(), getChildFragmentManager(), R.id.realtabcontent);
+        mTabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
 
         mTabHost.addTab(mTabHost.newTabSpec("fragmentb")
                         .setIndicator("", getResources()

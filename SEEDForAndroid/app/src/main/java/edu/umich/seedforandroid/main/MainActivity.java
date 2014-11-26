@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.appspot.umichseed.seed.Seed;
@@ -31,6 +32,7 @@ public class MainActivity extends Activity implements View.OnClickListener  {
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int PICK_ACCOUNT_RESULT = 2;
 
+    private ProgressBar mProgressBar;
     private Button bLogin;
     private GoogleAccountManager mAccountManager;
     private ApiThread mApiThread;
@@ -41,10 +43,6 @@ public class MainActivity extends Activity implements View.OnClickListener  {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-//        Intent i = new Intent(MainActivity.this, MainActivity_Doctor.class);
-//        startActivity(i);
-
 
         initialSetup();
 
@@ -87,6 +85,9 @@ public class MainActivity extends Activity implements View.OnClickListener  {
         sharedPrefsUtilInst = new SharedPrefsUtil(MainActivity.this);
         bLogin = (Button) findViewById(R.id.bLogin);
         bLogin.setOnClickListener(this);
+
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mProgressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -111,21 +112,6 @@ public class MainActivity extends Activity implements View.OnClickListener  {
 
         Intent intent = mAccountManager.getPickAccountIntent();
         startActivityForResult(intent, PICK_ACCOUNT_RESULT);
-
-        /*
-        if (!mAccountManager.tryLogIn()) {
-
-            Log.i("HEREEEE", "@@@@@@@@@@@@@@");
-            Intent intent = mAccountManager.getPickAccountIntent();
-            startActivityForResult(intent, PICK_ACCOUNT_RESULT);
-            Toast.makeText(MainActivity.this, "IF STATEMENT", Toast.LENGTH_SHORT).show();
-        }
-        else {
-
-            Toast.makeText(MainActivity.this, "ELSE STATEMENT", Toast.LENGTH_SHORT).show();
-            completeLogin();
-        }
-        */
     }
 
     private void completeLogin() {
@@ -141,7 +127,9 @@ public class MainActivity extends Activity implements View.OnClickListener  {
             mApiThread.enqueueRequest(checkUser, new ApiThread.ApiResultAction() {
 
                 @Override
-                public void onApiResult(Object result) {
+                public void onApiResult(Object result)  {
+
+                    mProgressBar.setVisibility(View.INVISIBLE);
 
                     if (result != null && result instanceof MessagesUserCheckResponse)  {
 
@@ -188,6 +176,8 @@ public class MainActivity extends Activity implements View.OnClickListener  {
 
                 @Override
                 public void onApiError(Throwable error) {
+
+                    mProgressBar.setVisibility(View.INVISIBLE);
 
                     Log.e(TAG, "FATAL ERROR: Could not validate the user. An API Error occurred:\n" + error.getMessage());
                     //todo: logic for handling login failure here
@@ -284,6 +274,8 @@ public class MainActivity extends Activity implements View.OnClickListener  {
                     String accountName = data.getExtras().getString(AccountManager.KEY_ACCOUNT_NAME);
 
                     if (accountName != null) {
+
+                        mProgressBar.setVisibility(View.VISIBLE);
 
                         // User is authorized.
                         mAccountManager.setSelectedAccountName(accountName);

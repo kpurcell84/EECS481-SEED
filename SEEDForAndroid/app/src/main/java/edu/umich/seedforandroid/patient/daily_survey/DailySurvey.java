@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import com.appspot.umichseed.seed.Seed;
 import com.appspot.umichseed.seed.SeedRequest;
@@ -143,17 +142,50 @@ public class DailySurvey extends Activity implements View.OnClickListener  {
         }
     }
 
-    private void notifyUiAuthenticationError() {
+    private void notifyUiAuthenticationError()  {
 
-        //todo somehow, the user isn't logged in. Alert them and redirect to MainActivity
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(DailySurvey.this);
+        View convertView = getLayoutInflater().inflate(R.layout.loggedout_alert_title, null);
+        alertDialog.setCustomTitle(convertView);
+        alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener()  {
+
+            @Override
+            public void onClick(DialogInterface dialog, int id)  {
+
+                goBackToMainActivityPatient();
+            }
+        });
+
+        // Set the line color
+        Dialog d = alertDialog.show();
+        int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+        View divider = d.findViewById(dividerId);
+        divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
     }
 
-    private void notifyUiApiError() {
+    private void notifyUiApiError()  {
 
-        //todo there was an API error. Notify the user
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(DailySurvey.this);
+        View convertView = getLayoutInflater().inflate(R.layout.api_error_alert_title, null);
+        alertDialog.setCustomTitle(convertView);
+        alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener()  {
+
+            @Override
+            public void onClick(DialogInterface dialog, int id)  {
+
+                goBackToMainActivityPatient();
+            }
+        });
+
+        // Set the line color
+        Dialog d = alertDialog.show();
+        int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+        View divider = d.findViewById(dividerId);
+        divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
     }
 
-    private void submitSurvey() {
+    private void submitSurvey()  {
+
         // Make sure that all questions are answered
         int answer1 = radioGroupAnswer1.getCheckedRadioButtonId();
         int answer2 = radioGroupAnswer2.getCheckedRadioButtonId();
@@ -169,11 +201,11 @@ public class DailySurvey extends Activity implements View.OnClickListener  {
         if (answer1 < 0 || answer2 < 0 || answer3 < 0 || answer4 < 0 || answer5 < 0 ||
                 answer6 < 0 || answer7 < 0 || answer8 < 0 || answer9 < 0 || answer10 < 0 ||
                 etBodyTemp.getText().toString().isEmpty() || etBloodPressureSystolic.getText().toString().isEmpty() ||
-                etBloodPressureDiastolic.getText().toString().isEmpty()) {
+                etBloodPressureDiastolic.getText().toString().isEmpty())  {
 
-            //todo lets use a popup here instead of a toast. Make the user manually dismiss the message
-            Toast.makeText(getApplicationContext(), "Please answer all questions", Toast.LENGTH_SHORT).show();
-        } else {
+            popUpAlerDialog();
+        }
+        else  {
 
             RadioButton radioButton1 = (RadioButton) findViewById(answer1);
             RadioButton radioButton2 = (RadioButton) findViewById(answer2);
@@ -200,10 +232,18 @@ public class DailySurvey extends Activity implements View.OnClickListener  {
 
             mBodyTemp = Double.parseDouble(etBodyTemp.getText().toString());
             mBodyTempType = bChangeTempUnit.getText().toString();
+
+            // Make the unit for the body temperature consistent - make it Celsius
+            if (mBodyTempType.equals("℉"))  { //
+
+                mBodyTemp -= 32;
+                mBodyTemp *= 5;
+                mBodyTemp /= 9;
+            }
+
             mSystolic = Double.parseDouble(etBloodPressureSystolic.getText().toString());
             mDiastolic = Double.parseDouble(etBloodPressureDiastolic.getText().toString());
 
-            //todo see if body temp needs to be a consistent unit
             try {
 
                 Seed api = SeedApi.getAuthenticatedApi(mAccountManager.getCredential());
@@ -226,8 +266,8 @@ public class DailySurvey extends Activity implements View.OnClickListener  {
                 mApiThread.enqueueRequest(request, new ApiThread.ApiResultAction() {
                     @Override
                     public void onApiResult(Object result) {
-                        //result doesn't matter here. Just navigate back
-                        //todo navigate back, or specifically to patient profile?
+
+                        goBackToMainActivityPatient();
                     }
 
                     @Override
@@ -273,6 +313,23 @@ public class DailySurvey extends Activity implements View.OnClickListener  {
         divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
     }
 
+    private void popUpAlerDialog()  {
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(DailySurvey.this);
+        View convertView = getLayoutInflater().inflate(R.layout.patient_survey_warning_title, null);
+        alertDialog.setCustomTitle(convertView);
+        alertDialog.setNegativeButton("Ok", new DialogInterface.OnClickListener()  {
+
+            @Override
+            public void onClick(DialogInterface dialog, int id)  {}
+        });
+
+        // Set the line color
+        Dialog d = alertDialog.show();
+        int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+        View divider = d.findViewById(dividerId);
+        divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
+    }
 
     private void goBackToMainActivityPatient()  {
 

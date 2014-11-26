@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,12 +33,11 @@ public class PatientAskWatsonFragment extends Fragment implements View.OnClickLi
     private EditText etAskWatsonQuestion;
     private Button bAskWatson;
     private TextView tvAnswer;
+    private ProgressBar mProgressBar;
 
     private ApiThread mApiThread;
     
-    public PatientAskWatsonFragment()  {
-
-    }
+    public PatientAskWatsonFragment()  {}
 
     //todo consider greying out the question button if there's no internet connection
     @Override
@@ -75,6 +75,8 @@ public class PatientAskWatsonFragment extends Fragment implements View.OnClickLi
         bAskWatson = (Button) view.findViewById(R.id.bAskWatson);
         bAskWatson.setOnClickListener(this);
         tvAnswer = (TextView) view.findViewById(R.id.tvAnswer);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBarAskWatson);
+        mProgressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -84,6 +86,7 @@ public class PatientAskWatsonFragment extends Fragment implements View.OnClickLi
 
             if (etAskWatsonQuestion.getText().toString().contentEquals("") == false)  {
 
+                mProgressBar.setVisibility(View.VISIBLE);
                 askWatson();
             }
             else  {
@@ -120,7 +123,9 @@ public class PatientAskWatsonFragment extends Fragment implements View.OnClickLi
             watsonManager.executeQuery(query, new WatsonManager.IResponseListener() {
 
                 @Override
-                public void onResponseReceived(String response, double confidence) {
+                public void onResponseReceived(String response, double confidence)  {
+
+                    mProgressBar.setVisibility(View.INVISIBLE);
 
                     if (response.length() > 500) {
 
@@ -130,7 +135,6 @@ public class PatientAskWatsonFragment extends Fragment implements View.OnClickLi
                     }
 
                     tvAnswer.setText(response);
-
 
                     try {
 
@@ -163,7 +167,9 @@ public class PatientAskWatsonFragment extends Fragment implements View.OnClickLi
                 }
 
                 @Override
-                public void onErrorReceived(int httpErrorCode) {
+                public void onErrorReceived(int httpErrorCode)  {
+
+                    mProgressBar.setVisibility(View.INVISIBLE);
                     Log.e(TAG, "Error on Watson Request: " + httpErrorCode);
                 }
             });

@@ -320,7 +320,7 @@ public class Utils {
 
     public static Calendar getNextDate(Calendar cal)  {
 
-        cal.add(Calendar.DATE, +1);
+        cal.add(Calendar.DATE, 1);
         return cal;
     }
 

@@ -77,12 +77,12 @@ public class AlertsDataWrapper implements Comparable<AlertsDataWrapper>{
         return new Comparator<AlertsDataWrapper>() {
 
             @Override
-            public int compare(AlertsDataWrapper w1, AlertsDataWrapper w2) {
+            public int compare(AlertsDataWrapper w1, AlertsDataWrapper w2)  {
 
-                int diff = (int)(w1.getTimeStamp().getValue() - w2.getTimeStamp().getValue());
+                int diff = (int)(w2.getTimeStamp().getValue() - w1.getTimeStamp().getValue());
                 if (diff == 0) {
 
-                    diff = w1.getMessage().compareTo(w2.getMessage());
+                    diff = w2.getMessage().compareTo(w1.getMessage());
                 }
 
                 return diff;

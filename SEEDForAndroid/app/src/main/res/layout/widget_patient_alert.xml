@@ -11,7 +11,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_toRightOf="@+id/imageViewAlertType"
+            android:layout_toRightOf="@+id/relativelayoutemergency"
             android:layout_below="@+id/tvAlertType"
             android:padding="2dp"
             android:layout_height="wrap_content">
@@ -38,12 +38,22 @@
 
         </RelativeLayout>
 
-        <ImageView
-            android:layout_width="90dp"
-            android:layout_height="90dp"
-            android:id="@+id/imageViewAlertType"
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:background="#d80000"
             android:layout_below="@+id/tvAlertType"
-            android:src="@drawable/emergency_alert_square_icon"/>
+            android:id="@+id/relativelayoutemergency"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:id="@+id/imageViewAlertType"
+                android:src="@drawable/emergency_alert_square_icon"/>
+
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/tvAlertType"

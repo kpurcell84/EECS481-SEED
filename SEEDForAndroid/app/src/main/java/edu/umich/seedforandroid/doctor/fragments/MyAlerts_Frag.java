@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +15,14 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.appspot.umichseed.seed.Seed;
+import com.appspot.umichseed.seed.SeedRequest;
 import com.appspot.umichseed.seed.model.MessagesAlertListResponse;
 import com.appspot.umichseed.seed.model.MessagesAlertResponse;
+import com.appspot.umichseed.seed.model.MessagesEmailRequest;
 import com.google.api.client.util.DateTime;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,6 +30,8 @@ import java.util.List;
 
 import edu.umich.seedforandroid.R;
 import edu.umich.seedforandroid.api.ApiThread;
+import edu.umich.seedforandroid.account.GoogleAccountManager;
+import edu.umich.seedforandroid.api.SeedApi;
 import edu.umich.seedforandroid.doctor.patientdata.DoctorViewPatientData;
 import edu.umich.seedforandroid.util.Utils;
 
@@ -70,16 +77,7 @@ public class MyAlerts_Frag extends Fragment  {
         ListView list = (ListView) view.findViewById(R.id.alertListView);
         list.setAdapter(adapter);
 
-        // Test
-        DateTime dtTmp = new DateTime(System.currentTimeMillis());
-        DoctorAlertsWrapper tmp = new DoctorAlertsWrapper("Andy", "Lee", "seedsystem00@gmail.com", dtTmp, "high");
-        myAlertsList.add(tmp);
-
-        DoctorAlertsWrapper tmp2 = new DoctorAlertsWrapper("Andy", "Lee", "seedsystem00@gmail.com", dtTmp, "low");
-        myAlertsList.add(tmp2);
-
-
-//        updateAlertsListFromServer();
+        updateAlertsListFromServer();
     }
 
     private void populateAlertsList(MessagesAlertListResponse alerts)  {
@@ -87,12 +85,12 @@ public class MyAlerts_Frag extends Fragment  {
         myAlertsList.clear();
         for (MessagesAlertResponse alert : alerts.getAlerts())  {
 
-            /*
-            DoctorAlertsWrapper tmp = new DoctorPatientWrapper(ge.getFirstName(),
-                    patient.getLastName(),
-                    patient.getPhone(), patient.getEmail());
-            myPatientList.add(tmp);
-            */
+            DoctorAlertsWrapper tmp = new DoctorAlertsWrapper(alert.getFirstName(),
+                                                                alert.getLastName(),
+                                                                alert.getPatientEmail(),
+                                                                alert.getTimeAlerted(),
+                                                                alert.getPriority());
+            myAlertsList.add(tmp);
         }
 
         adapter = new AlertsListAdapter();
@@ -112,7 +110,6 @@ public class MyAlerts_Frag extends Fragment  {
 
     private void updateAlertsListFromServer()  {
 
-        /*
         GoogleAccountManager accountManager = new GoogleAccountManager(getActivity());
         if (!accountManager.tryLogIn()) {
 
@@ -151,7 +148,6 @@ public class MyAlerts_Frag extends Fragment  {
                 notifyUiApiError();
             }
         }
-        */
     }
 
     private class AlertsListAdapter extends ArrayAdapter<DoctorAlertsWrapper>  {

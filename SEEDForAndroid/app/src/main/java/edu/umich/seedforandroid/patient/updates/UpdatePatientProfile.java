@@ -1,20 +1,19 @@
-package edu.umich.seedforandroid.patient.fragments;
+package edu.umich.seedforandroid.patient.updates;
 
-import android.app.ActionBar;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
 
 import com.appspot.umichseed.seed.Seed;
 import com.appspot.umichseed.seed.SeedRequest;
@@ -27,44 +26,35 @@ import edu.umich.seedforandroid.account.GoogleAccountManager;
 import edu.umich.seedforandroid.api.ApiThread;
 import edu.umich.seedforandroid.api.SeedApi;
 import edu.umich.seedforandroid.main.MainActivity;
-import edu.umich.seedforandroid.patient.updates.UpdatePatientProfile;
+import edu.umich.seedforandroid.patient.MainActivity_Patient;
 
-public class Patient_Profile_Frag extends Fragment implements View.OnClickListener  {
+public class UpdatePatientProfile extends Activity implements View.OnClickListener  {
 
-    private static final String TAG = Patient_Profile_Frag.class.getSimpleName();
+    private static final String TAG = UpdatePatientProfile.class.getSimpleName();
 
-    public static final String ARG_PATIENT_EMAIL = "forPatientEmail";
-
-    private Button bUpdateProfile;
-    private TextView tvPatientName, tvEmail, tvPhoneNumber;
+    private EditText etFirstName, etLastName, etEmail, etPhoneNumber;
     private String mFirstName, mLastName, mEmail, mPhoneNumber;
+    private Button bSave;
     private ApiThread mApiThread;
     private GoogleAccountManager mAccountManager;
     private String mPatientEmail = null;
 
-    public Patient_Profile_Frag()  {}
-
     @Override
-    public void onCreate(Bundle savedInstanceState)  {
+    protected void onCreate(Bundle savedInstanceState)  {
 
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(false);
+        setContentView(R.layout.activity_update_patient_profile);
         mApiThread = new ApiThread();
 
-        mAccountManager = new GoogleAccountManager(getActivity());
+        mAccountManager = new GoogleAccountManager(UpdatePatientProfile.this);
         if (!mAccountManager.tryLogIn())  {
 
             Log.e(TAG, "FATAL ERROR: Somehow, the user got here without being logged in.");
             notifyUiAuthenticationError();
         }
-    }
 
-    @Override
-    public void setArguments(Bundle args)  {
-
-        super.setArguments(args);
-
-        mPatientEmail = args.getString(ARG_PATIENT_EMAIL);
+        initialSetup();
+        loadProfileInformation();
     }
 
     @Override
@@ -75,45 +65,16 @@ public class Patient_Profile_Frag extends Fragment implements View.OnClickListen
         mApiThread.stop();
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)  {
+    private void initialSetup()  {
 
-        View view = inflater.inflate(R.layout.fragment_patient__profile_, container, false);
+        getActionBar().hide();
 
-        initialSetup(view);
-
-        return view;
-    }
-
-    private void initialSetup(View view)  {
-
-        ActionBar actionBar = getActivity().getActionBar();
-        actionBar.setTitle("Profile");
-        setHasOptionsMenu(false);
-
-        tvPatientName = (TextView) view.findViewById(R.id.tvPatientName);
-        tvEmail = (TextView) view.findViewById(R.id.tvEmailPatient);
-        tvPhoneNumber = (TextView) view.findViewById(R.id.tvPhoneNumberPatient);
-
-        bUpdateProfile = (Button) view.findViewById(R.id.bEditProfile);
-        bUpdateProfile.setOnClickListener(this);
-
-        loadProfileInformation();
-    }
-
-    @Override
-    public void onClick(View v)  {
-
-        if (v.getId() == R.id.bEditProfile)  {
-
-            updateProfile();
-        }
-    }
-
-    private void updateProfile()  {
-
-        Intent i = new Intent(getActivity(), UpdatePatientProfile.class);
-        startActivity(i);
+        etFirstName = (EditText) findViewById(R.id.etFirstNamePatient);
+        etLastName = (EditText) findViewById(R.id.etLastNamePatient);
+        etEmail = (EditText) findViewById(R.id.etEmailPatient);
+        etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumberPatient);
+        bSave = (Button) findViewById(R.id.bUpdateProfileSavePatient);
+        bSave.setOnClickListener(this);
     }
 
     private void displayProfileInformation(MessagesPatientPut patientProfile)  {
@@ -123,16 +84,23 @@ public class Patient_Profile_Frag extends Fragment implements View.OnClickListen
         mEmail = patientProfile.getEmail();
         mPhoneNumber = patientProfile.getPhone();
 
-        tvPatientName.setText(mFirstName.concat(" ").concat(mLastName));
-        tvEmail.setText(mEmail);
-        tvPhoneNumber.setText(mPhoneNumber);
+        String[] parts = mPhoneNumber.split("-");
+        mPhoneNumber = "";
+        for (int i = 0; i < parts.length; ++i)  {
+
+            mPhoneNumber += parts[i];
+        }
+
+        etFirstName.setText(mFirstName);
+        etLastName.setText(mLastName);
+        etEmail.setText(mEmail);
+        etPhoneNumber.setText(mPhoneNumber);
     }
 
     private void notifyUiAuthenticationError()  {
 
-        //todo somehow, the user isn't logged in. Alert them and redirect to MainActivity
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
-        View convertView = getActivity().getLayoutInflater().inflate(R.layout.loggedout_alert_title, null);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(UpdatePatientProfile.this);
+        View convertView = getLayoutInflater().inflate(R.layout.loggedout_alert_title, null);
         alertDialog.setCustomTitle(convertView);
 
         alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -153,8 +121,8 @@ public class Patient_Profile_Frag extends Fragment implements View.OnClickListen
 
     private void notifyUiApiError() {
 
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
-        View convertView = getActivity().getLayoutInflater().inflate(R.layout.api_error_alert_title, null);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(UpdatePatientProfile.this);
+        View convertView = getLayoutInflater().inflate(R.layout.api_error_alert_title, null);
         alertDialog.setCustomTitle(convertView);
 
         alertDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
@@ -172,7 +140,7 @@ public class Patient_Profile_Frag extends Fragment implements View.OnClickListen
         divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
     }
 
-    private void loadProfileInformation() {
+    private void loadProfileInformation()  {
 
         try {
 
@@ -210,9 +178,53 @@ public class Patient_Profile_Frag extends Fragment implements View.OnClickListen
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)  {
+
+        getMenuInflater().inflate(R.menu.menu_update_patient_profile, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)  {
+
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     private void gotoMainActivity()  {
 
-        Intent i = new Intent(getActivity(), MainActivity.class);
+        Intent i = new Intent(UpdatePatientProfile.this, MainActivity.class);
         startActivity(i);
+    }
+
+    @Override
+    public void onClick(View v)  {
+
+        if (v.getId() == R.id.bUpdateProfileSavePatient)  {
+
+            updatePatientInfo();
+        }
+    }
+
+    private void gotoMainActivityPatient()  {
+
+        Intent i = new Intent(UpdatePatientProfile.this, MainActivity_Patient.class);
+        startActivity(i);
+    }
+
+    private void updatePatientInfo()  {
+
+        // todo update the patient info and go back to MainActivity Patient
+        mFirstName = etFirstName.getText().toString();
+        mLastName = etLastName.getText().toString();
+        mEmail = etEmail.getText().toString();
+        mPhoneNumber = etPhoneNumber.getText().toString();
     }
 }

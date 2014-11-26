@@ -7,7 +7,6 @@
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_marginTop="@dimen/default_navigated_tab_fragment_margin_top"
         android:layout_height="wrap_content">
 
         <EditText
@@ -15,9 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|top"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:background="#FAFAFA"
             android:hint="Ask your question to Watson"
             android:padding="10dp"
@@ -29,7 +26,6 @@
             android:layout_height="55dp"
             android:layout_below="@+id/etAskWatsonQuestion"
             android:layout_centerHorizontal="true"
-            android:layout_margin="5dp"
             android:background="#ffffff"
             android:padding="3dp">
 
@@ -39,6 +35,9 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/blue_button"
                 android:text="Ask Watson"
+                android:drawableEnd="@drawable/ask_icon"
+                android:drawablePadding="-30dp"
+                android:padding="10dp"
                 android:textColor="#FFFFFF"
                 android:textSize="20dp"
                 android:textStyle="bold" />
@@ -64,6 +63,14 @@
                 android:text="" />
 
         </ScrollView>
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBarAskWatson"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
 
     </RelativeLayout>
 

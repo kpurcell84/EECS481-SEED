@@ -39,7 +39,7 @@ public class LockScreenWidgetServicer extends Service  {
     }
 
     private void drawWidget()  {
-        showSurveyNotification();
+        showAlert();
 
         /*
         if (mNotiState == false)  {
