@@ -23,13 +23,14 @@ import com.appspot.umichseed.seed.SeedRequest;
 import com.appspot.umichseed.seed.model.MessagesAlertListResponse;
 import com.appspot.umichseed.seed.model.MessagesAlertResponse;
 import com.appspot.umichseed.seed.model.MessagesAlertsRequest;
-import com.appspot.umichseed.seed.model.MessagesEmailRequest;
 import com.google.api.client.util.DateTime;
 
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import edu.umich.seedforandroid.R;
@@ -38,6 +39,7 @@ import edu.umich.seedforandroid.api.ApiThread;
 import edu.umich.seedforandroid.api.SeedApi;
 import edu.umich.seedforandroid.doctor.patientdata.DoctorViewPatientData;
 import edu.umich.seedforandroid.main.MainActivity;
+import edu.umich.seedforandroid.util.AlertsManager;
 import edu.umich.seedforandroid.util.Utils;
 
 public class MyAlerts_Frag extends Fragment  {
@@ -82,7 +84,12 @@ public class MyAlerts_Frag extends Fragment  {
         ListView list = (ListView) view.findViewById(R.id.alertListView);
         list.setAdapter(adapter);
 
-        updateAlertsListFromServer();
+        Calendar calStart = Calendar.getInstance();
+        calStart.set(1992, Calendar.APRIL, 18);
+
+        DateTime startTime = new DateTime(calStart.getTimeInMillis());
+        DateTime endTime = new DateTime(System.currentTimeMillis());
+        updateAlertsListFromServer(startTime, endTime);
     }
 
     private void populateAlertsList(MessagesAlertListResponse alerts)  {
@@ -97,6 +104,8 @@ public class MyAlerts_Frag extends Fragment  {
                                                                 alert.getPriority());
             myAlertsList.add(tmp);
         }
+
+        Collections.reverse(myAlertsList);
 
         adapter = new AlertsListAdapter();
         ListView list = (ListView) getView().findViewById(R.id.alertListView);
@@ -166,6 +175,7 @@ public class MyAlerts_Frag extends Fragment  {
 
                         if (result != null && result instanceof MessagesAlertListResponse)  {
 
+                            Log.i("ALERT RECEIVED", "@@@@@@@@@@@@@@@@@@");
                             populateAlertsList((MessagesAlertListResponse) result);
                         }
                     }
@@ -228,7 +238,7 @@ public class MyAlerts_Frag extends Fragment  {
 
             // Priority Type
             final TextView tvPriority = (TextView) itemView.findViewById(R.id.tvAlertType);
-            if (currentAlert.getPriority().equals("high"))  { // high, emergency detection
+            if (currentAlert.getPriority().equals(AlertsManager.PRIORITY_EMERGENCY))  { // high, emergency detection
 
                 tvPriority.setText(emergencyDetection);
                 tvPriority.setBackground(new ColorDrawable(Color.parseColor("#d80000")));

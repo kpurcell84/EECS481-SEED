@@ -11,6 +11,6 @@
         android:id="@+id/addNewPatient"
         android:showAsAction="always"
         android:title="@string/action_refresh"
-        android:icon="@drawable/add_patient_icon"></item>
+        android:icon="@drawable/add_icon"></item>
 
 </menu>

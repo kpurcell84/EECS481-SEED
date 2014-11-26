@@ -532,6 +532,13 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
                                     Log.e(TAG, "Error occurred while fetching patient data @@@@@@@@@@@@@");
                                 }
                             }
+
+                            // SORT
+                            for (int i = 0; i < heartRateData.getEpoch().size(); ++i)  {
+
+//                                heartRateData.getEpoch().get(i)
+                            }
+
                             populateDataIntoGraphs(heartRateData);
                             populateDataIntoGraphs(skinTempData);
                             populateDataIntoGraphs(gsrData);
@@ -949,5 +956,40 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
 
             getPrevDateData();
         }
+    }
+
+    public class ToSort implements Comparable{
+
+        private double data;
+        private DateTime time;
+
+        public ToSort(Double val, DateTime time)  {
+
+            this.data = val;
+            this.time = time;
+        }
+
+        @Override
+        public int compareTo(Object o) {
+
+            ToSort f = (ToSort)o;
+
+            if (time.getValue() > f.time.getValue()) {
+                return 1;
+            }
+            else if (time.getValue() <  f.time.getValue()) {
+                return -1;
+            }
+            else {
+                return 0;
+            }
+
+        }
+
+//
+//        @Override
+//        public String toString(){
+//            return this.id;
+//        }
     }
 }

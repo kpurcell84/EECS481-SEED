@@ -71,7 +71,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver  {
                     .setContentTitle(contentTitle)
                     .setContentText(contentBody)
                     .setContentIntent(pIntent)
-                    .setSmallIcon(R.drawable.evening_icon)
+                    .setSmallIcon(R.drawable.seed_system_letter_icon_small)
                     //.setLargeIcon()
                     .build();
 
@@ -83,13 +83,13 @@ public class GcmBroadcastReceiver extends BroadcastReceiver  {
 
             prefsUtil.setNotificationMessage(contentBody);
             prefsUtil.setNotificationEmail(email);
+            prefsUtil.setNotificationPriority(priority);
             prefsUtil.setNotificationState(SharedPrefsUtil.ACTIVE_NOTIFICATION);
             prefsUtil.setNotificationTimeAlerted(sdf.format(new Date()));
         }
         else {
 
             Log.e(TAG, "ERROR: Push Notification received, but a user wasn't logged in");
-
         }
 
         setResultCode(Activity.RESULT_OK);
