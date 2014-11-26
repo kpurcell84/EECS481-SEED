@@ -22,6 +22,7 @@ import com.appspot.umichseed.seed.Seed;
 import com.appspot.umichseed.seed.SeedRequest;
 import com.appspot.umichseed.seed.model.MessagesAlertListResponse;
 import com.appspot.umichseed.seed.model.MessagesAlertResponse;
+import com.appspot.umichseed.seed.model.MessagesAlertsRequest;
 import com.appspot.umichseed.seed.model.MessagesEmailRequest;
 import com.google.api.client.util.DateTime;
 
@@ -141,7 +142,7 @@ public class MyAlerts_Frag extends Fragment  {
         divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
     }
 
-    private void updateAlertsListFromServer()  {
+    private void updateAlertsListFromServer(DateTime from, DateTime to)  {
 
         GoogleAccountManager accountManager = new GoogleAccountManager(getActivity());
         if (!accountManager.tryLogIn()) {
@@ -153,8 +154,10 @@ public class MyAlerts_Frag extends Fragment  {
 
             try {
                 Seed api = SeedApi.getAuthenticatedApi(accountManager.getCredential());
-                SeedRequest request = api.doctorsPatients().get(
-                        new MessagesEmailRequest()
+                SeedRequest request = api.alerts().get(
+                        new MessagesAlertsRequest()
+                                .setStartTime(from)
+                                .setEndTime(to)
                                 .setEmail(accountManager.getAccountName())
                 );
                 mApiThread.enqueueRequest(request, new ApiThread.ApiResultAction()  {
