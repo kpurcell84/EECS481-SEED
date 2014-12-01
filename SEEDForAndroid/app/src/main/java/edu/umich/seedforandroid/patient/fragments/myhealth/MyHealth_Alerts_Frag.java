@@ -128,22 +128,27 @@ public class MyHealth_Alerts_Frag extends Fragment  {
 
     private void refreshUi(SortedSet<AlertsDataWrapper> sortedSet)  {
 
-        myAlertsList.clear();
+        //because of threading, UI objects could become garbage collected at any moment, while
+        //a background thread still references them. Assume anything not explicitly local to
+        //UI methods accessed from a background thread could be null at any moment
+        if (getView() != null && myAlertsList != null && adapter != null) {
 
-        if (sortedSet.isEmpty())  {
+            if (sortedSet.isEmpty()) {
 
-            Toast.makeText(getActivity(), "You do not have any alerts", Toast.LENGTH_SHORT).show();
-            return;
+                //todo shouldn't be a toast, should be a default view
+                Toast.makeText(getActivity(), "You do not have any alerts", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            for (AlertsDataWrapper alert : sortedSet) {
+
+                myAlertsList.add(alert);
+            }
+
+            adapter = new AlertsListAdapter();
+            ListView list = (ListView) getView().findViewById(R.id.alertListViewPatient);
+            list.setAdapter(adapter);
         }
-
-        for (AlertsDataWrapper alert : sortedSet)  {
-
-            myAlertsList.add(alert);
-        }
-
-        adapter = new AlertsListAdapter();
-        ListView list = (ListView) getView().findViewById(R.id.alertListViewPatient);
-        list.setAdapter(adapter);
     }
 
     private void notifyUiOfAlertsRefreshFailure()  {

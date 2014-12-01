@@ -95,7 +95,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
         setHasOptionsMenu(true);
         mApiThread = new ApiThread();
 
-//        mCurrentCalendar = Calendar.getInstance();
+        mCurrentCalendar = Calendar.getInstance();
         mTodayCalendar = Calendar.getInstance();
     }
 
