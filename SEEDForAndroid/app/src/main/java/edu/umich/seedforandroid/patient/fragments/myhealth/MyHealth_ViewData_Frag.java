@@ -94,7 +94,8 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         mApiThread = new ApiThread();
-        mCurrentCalendar = Calendar.getInstance();
+
+//        mCurrentCalendar = Calendar.getInstance();
         mTodayCalendar = Calendar.getInstance();
     }
 
@@ -533,10 +534,12 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
                                 }
                             }
 
+
                             // SORT
                             for (int i = 0; i < heartRateData.getEpoch().size(); ++i)  {
 
-//                                heartRateData.getEpoch().get(i)
+                             //   ToSort toSort = new ToSort(heartRateData.getHealthData().get(i).doubleValue(), heartRateData.getEpoch().get(i).byteValue());
+
                             }
 
                             populateDataIntoGraphs(heartRateData);

@@ -90,37 +90,39 @@ public class LockScreenWidgetServicer extends Service  {
 
     private void drawWidget()  {
 
-        if (mNotiState.contentEquals(SharedPrefsUtil.INACTIVE_NOTIFICATION))  {
+        showAlertPatient();
 
-            updateClock();
-        }
-        else if (mNotiState.contentEquals(SharedPrefsUtil.ACTIVE_NOTIFICATION)) {
-
-            // Check if patient or doctor
-            if (mUserAccountType.equals(SharedPrefsUtil.ACCOUNT_TYPE_DOCTOR))  { // doctor
-
-                if (mPriority.contentEquals(AlertsManager.PRIORITY_EARLY))  {
-
-                    showEarlyAlertDoctor();
-                }
-                else  {
-
-                    showEmergencyAlertDoctor();
-                }
-            }
-            else  { // patient
-
-                showAlertPatient();
-            }
-        }
-        else if (mNotiState.contentEquals(SharedPrefsUtil.SURVEY_NOTIFICATION))  {
-
-            // Check if patient
-            if (mUserAccountType.equals(SharedPrefsUtil.ACCOUNT_TYPE_PATIENT))  {
-
-                showSurveyNotification();
-            }
-        }
+//        if (mNotiState.contentEquals(SharedPrefsUtil.INACTIVE_NOTIFICATION))  {
+//
+//            updateClock();
+//        }
+//        else if (mNotiState.contentEquals(SharedPrefsUtil.ACTIVE_NOTIFICATION)) {
+//
+//            // Check if patient or doctor
+//            if (mUserAccountType.equals(SharedPrefsUtil.ACCOUNT_TYPE_DOCTOR))  { // doctor
+//
+//                if (mPriority.contentEquals(AlertsManager.PRIORITY_EARLY))  {
+//
+//                    showEarlyAlertDoctor();
+//                }
+//                else  {
+//
+//                    showEmergencyAlertDoctor();
+//                }
+//            }
+//            else  { // patient
+//
+//                showAlertPatient();
+//            }
+//        }
+//        else if (mNotiState.contentEquals(SharedPrefsUtil.SURVEY_NOTIFICATION))  {
+//
+//            // Check if patient
+//            if (mUserAccountType.equals(SharedPrefsUtil.ACCOUNT_TYPE_PATIENT))  {
+//
+//                showSurveyNotification();
+//            }
+//        }
     }
 
     private void showSurveyNotification()  {
