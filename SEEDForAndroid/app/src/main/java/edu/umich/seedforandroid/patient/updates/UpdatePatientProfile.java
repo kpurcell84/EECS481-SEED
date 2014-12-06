@@ -79,22 +79,24 @@ public class UpdatePatientProfile extends Activity implements View.OnClickListen
 
     private void displayProfileInformation(MessagesPatientPut patientProfile)  {
 
-        mFirstName = patientProfile.getFirstName();
-        mLastName = patientProfile.getLastName();
-        mEmail = patientProfile.getEmail();
-        mPhoneNumber = patientProfile.getPhone();
+        if (stillAlive()) {
+            mFirstName = patientProfile.getFirstName();
+            mLastName = patientProfile.getLastName();
+            mEmail = patientProfile.getEmail();
+            mPhoneNumber = patientProfile.getPhone();
 
-        String[] parts = mPhoneNumber.split("-");
-        mPhoneNumber = "";
-        for (int i = 0; i < parts.length; ++i)  {
+            String[] parts = mPhoneNumber.split("-");
+            mPhoneNumber = "";
+            for (int i = 0; i < parts.length; ++i) {
 
-            mPhoneNumber += parts[i];
+                mPhoneNumber += parts[i];
+            }
+
+            etFirstName.setText(mFirstName);
+            etLastName.setText(mLastName);
+            etEmail.setText(mEmail);
+            etPhoneNumber.setText(mPhoneNumber);
         }
-
-        etFirstName.setText(mFirstName);
-        etLastName.setText(mLastName);
-        etEmail.setText(mEmail);
-        etPhoneNumber.setText(mPhoneNumber);
     }
 
     private void notifyUiAuthenticationError()  {
@@ -121,23 +123,25 @@ public class UpdatePatientProfile extends Activity implements View.OnClickListen
 
     private void notifyUiApiError() {
 
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(UpdatePatientProfile.this);
-        View convertView = getLayoutInflater().inflate(R.layout.api_error_alert_title, null);
-        alertDialog.setCustomTitle(convertView);
+        if (stillAlive()) {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(UpdatePatientProfile.this);
+            View convertView = getLayoutInflater().inflate(R.layout.api_error_alert_title, null);
+            alertDialog.setCustomTitle(convertView);
 
-        alertDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+            alertDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
 
-            }
-        });
+                }
+            });
 
-        // Set the line color
-        Dialog d = alertDialog.show();
-        int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
-        View divider = d.findViewById(dividerId);
-        divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
+            // Set the line color
+            Dialog d = alertDialog.show();
+            int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+            View divider = d.findViewById(dividerId);
+            divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
+        }
     }
 
     private void loadProfileInformation()  {
@@ -226,5 +230,10 @@ public class UpdatePatientProfile extends Activity implements View.OnClickListen
         mLastName = etLastName.getText().toString();
         mEmail = etEmail.getText().toString();
         mPhoneNumber = etPhoneNumber.getText().toString();
+    }
+
+    private boolean stillAlive() {
+
+        return !isDestroyed() && !isFinishing();
     }
 }

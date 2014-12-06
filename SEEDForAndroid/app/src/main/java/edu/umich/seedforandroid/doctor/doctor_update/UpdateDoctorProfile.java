@@ -71,30 +71,35 @@ public class UpdateDoctorProfile extends Activity implements View.OnClickListene
 
     private void notifyUiApiError()  {
 
-        //todo there was an API error. Notify the user
+        if (stillAlive()) {
+            //todo there was an API error. Notify the user
+        }
     }
 
     private void displayProfileInformation(MessagesDoctorPut doctorProfile)  {
 
-        mFirstName = doctorProfile.getFirstName();
-        mLastName = doctorProfile.getLastName();
-        mHospital = doctorProfile.getHospital();
-        mPhoneNumber = doctorProfile.getPhone();
+        if (stillAlive()) {
 
-        // Parse the mPhoneNumber
-        String[] phoneNumParts = mPhoneNumber.split("-");
-        mPhoneNumber = "";
-        for (int i = 0; i < phoneNumParts.length; ++i)  {
+            mFirstName = doctorProfile.getFirstName();
+            mLastName = doctorProfile.getLastName();
+            mHospital = doctorProfile.getHospital();
+            mPhoneNumber = doctorProfile.getPhone();
 
-            mPhoneNumber += phoneNumParts[i];
+            // Parse the mPhoneNumber
+            String[] phoneNumParts = mPhoneNumber.split("-");
+            mPhoneNumber = "";
+            for (int i = 0; i < phoneNumParts.length; ++i) {
+
+                mPhoneNumber += phoneNumParts[i];
+            }
+            mEmail = doctorProfile.getEmail();
+
+            etFirstName.setText(mFirstName);
+            etLastName.setText(mLastName);
+            etHospital.setText(mHospital);
+            etPhoneNumber.setText(mPhoneNumber);
+            etEmail.setText(mEmail);
         }
-        mEmail = doctorProfile.getEmail();
-
-        etFirstName.setText(mFirstName);
-        etLastName.setText(mLastName);
-        etHospital.setText(mHospital);
-        etPhoneNumber.setText(mPhoneNumber);
-        etEmail.setText(mEmail);
     }
 
     //todo decide where to call this...probably in onStart?
@@ -177,5 +182,10 @@ public class UpdateDoctorProfile extends Activity implements View.OnClickListene
 
             saveUpdateProfile();
         }
+    }
+
+    private boolean stillAlive() {
+
+        return !isDestroyed() && !isFinishing();
     }
 }

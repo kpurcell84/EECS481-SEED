@@ -81,18 +81,20 @@ public class MyPatients_Frag extends Fragment  {
 
     private void populatePatientList(MessagesPatientListResponse patients) {
 
-        myPatientList.clear();
-        for (MessagesPatientPut patient : patients.getPatients())  {
+        if (stillAlive()) {
+            myPatientList.clear();
+            for (MessagesPatientPut patient : patients.getPatients()) {
 
-            DoctorPatientWrapper tmp = new DoctorPatientWrapper(patient.getFirstName(),
-                                                                patient.getLastName(),
-                                                                patient.getPhone(), patient.getEmail());
-            myPatientList.add(tmp);
+                DoctorPatientWrapper tmp = new DoctorPatientWrapper(patient.getFirstName(),
+                        patient.getLastName(),
+                        patient.getPhone(), patient.getEmail());
+                myPatientList.add(tmp);
+            }
+
+            adapter = new PatientListAdapter();
+            ListView list = (ListView) getView().findViewById(R.id.patientlistView);
+            list.setAdapter(adapter);
         }
-
-        adapter = new PatientListAdapter();
-        ListView list = (ListView) getView().findViewById(R.id.patientlistView);
-        list.setAdapter(adapter);
     }
 
     private void notifyUiUserNotLoggedIn() {
@@ -118,20 +120,24 @@ public class MyPatients_Frag extends Fragment  {
 
     private void notifyUiApiError()  {
 
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
-        View convertView = getActivity().getLayoutInflater().inflate(R.layout.api_error_alert_title, null);
-        alertDialog.setCustomTitle(convertView);
-        alertDialog.setNegativeButton("Ok", new DialogInterface.OnClickListener()  {
+        if (stillAlive()) {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+            View convertView = getActivity().getLayoutInflater().inflate(R.layout.api_error_alert_title, null);
+            alertDialog.setCustomTitle(convertView);
+            alertDialog.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int id)  {}
-        });
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                }
+            });
 
-        // Set the line color
-        Dialog d = alertDialog.show();
-        int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
-        View divider = d.findViewById(dividerId);
-        divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
+            // Set the line color
+            Dialog d = alertDialog.show();
+            int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+            View divider = d.findViewById(dividerId);
+            divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
+        }
+
     }
 
     private void updatePatientListFromServer() {
@@ -323,5 +329,10 @@ public class MyPatients_Frag extends Fragment  {
 
         Intent i = new Intent(getActivity(), MainActivity.class);
         startActivity(i);
+    }
+
+    private boolean stillAlive() {
+
+        return getView() != null;
     }
 }

@@ -127,40 +127,45 @@ public class DoctorPatientAlertsFrag extends Fragment  {
 
     private void refreshUi(SortedSet<AlertsDataWrapper> sortedSet)  {
 
-        myAlertsList.clear();
+        if (stillAlive()) {
+            myAlertsList.clear();
 
-        if (sortedSet.isEmpty())  {
+            if (sortedSet.isEmpty()) {
 
-            Toast.makeText(getActivity(), "You do not have any alerts", Toast.LENGTH_SHORT).show();
-            return;
+                Toast.makeText(getActivity(), "You do not have any alerts", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            for (AlertsDataWrapper alert : sortedSet) {
+
+                myAlertsList.add(alert);
+            }
+
+            adapter = new AlertsListAdapter();
+            ListView list = (ListView) getView().findViewById(R.id.alertListViewPatient);
+            list.setAdapter(adapter);
         }
-
-        for (AlertsDataWrapper alert : sortedSet)  {
-
-            myAlertsList.add(alert);
-        }
-
-        adapter = new AlertsListAdapter();
-        ListView list = (ListView) getView().findViewById(R.id.alertListViewPatient);
-        list.setAdapter(adapter);
     }
 
     private void notifyUiOfAlertsRefreshFailure()  {
 
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
-        View convertView = getActivity().getLayoutInflater().inflate(R.layout.api_error_alert_title, null);
-        alertDialog.setCustomTitle(convertView);
-        alertDialog.setNegativeButton("Ok", new DialogInterface.OnClickListener()  {
+        if (stillAlive()) {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+            View convertView = getActivity().getLayoutInflater().inflate(R.layout.api_error_alert_title, null);
+            alertDialog.setCustomTitle(convertView);
+            alertDialog.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int id)  {}
-        });
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                }
+            });
 
-        // Set the line color
-        Dialog d = alertDialog.show();
-        int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
-        View divider = d.findViewById(dividerId);
-        divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
+            // Set the line color
+            Dialog d = alertDialog.show();
+            int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+            View divider = d.findViewById(dividerId);
+            divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
+        }
     }
 
     private void initialSetup(View view)  {
@@ -219,5 +224,10 @@ public class DoctorPatientAlertsFrag extends Fragment  {
         String[] hour = Utils.convert24HourTo12Hour(String.valueOf(parts[3]));
         String output = parts[0] + " " + month + " " + parts[2] + ", " + hour[0] + ":" + parts[4] + hour[1];
         return output;
+    }
+
+    private boolean stillAlive() {
+
+        return getView() != null;
     }
 }

@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.12.2'
+        classpath 'com.android.tools.build:gradle:1.0.0-rc4'
     }
 }
 
@@ -11,7 +11,7 @@ apply plugin: 'android'
 apply plugin: 'com.android.application'
 
 android {
-/*    signingConfigs {
+    /*signingConfigs {
         debug {
             keyAlias 'test'
             keyPassword 'seedapp'
@@ -30,7 +30,7 @@ android {
     }
     buildTypes {
         release {
-            runProguard false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -70,8 +70,8 @@ dependencies {
     }
     // This is used by the Google HTTP client library.
     /*compile ('com.google.guava:guava:14.0.+') {
-                                                    exclude module: 'annotations'
-                                                }*/
+                                                        exclude module: 'annotations'
+                                                    }*/
     compile 'com.android.support:support-v13:20.0.0'
     compile 'com.androidplot:androidplot-core:0.6.1'
     compile project(':seed')

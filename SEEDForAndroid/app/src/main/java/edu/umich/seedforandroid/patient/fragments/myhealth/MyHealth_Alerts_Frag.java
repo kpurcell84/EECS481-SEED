@@ -128,10 +128,7 @@ public class MyHealth_Alerts_Frag extends Fragment  {
 
     private void refreshUi(SortedSet<AlertsDataWrapper> sortedSet)  {
 
-        //because of threading, UI objects could become garbage collected at any moment, while
-        //a background thread still references them. Assume anything not explicitly local to
-        //UI methods accessed from a background thread could be null at any moment
-        if (getView() != null && myAlertsList != null && adapter != null) {
+        if (stillAlive()) {
 
             if (sortedSet.isEmpty()) {
 
@@ -153,20 +150,23 @@ public class MyHealth_Alerts_Frag extends Fragment  {
 
     private void notifyUiOfAlertsRefreshFailure()  {
 
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
-        View convertView = getActivity().getLayoutInflater().inflate(R.layout.api_error_alert_title, null);
-        alertDialog.setCustomTitle(convertView);
-        alertDialog.setNegativeButton("Ok", new DialogInterface.OnClickListener()  {
+        if (stillAlive()) {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+            View convertView = getActivity().getLayoutInflater().inflate(R.layout.api_error_alert_title, null);
+            alertDialog.setCustomTitle(convertView);
+            alertDialog.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int id)  {}
-        });
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                }
+            });
 
-        // Set the line color
-        Dialog d = alertDialog.show();
-        int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
-        View divider = d.findViewById(dividerId);
-        divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
+            // Set the line color
+            Dialog d = alertDialog.show();
+            int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+            View divider = d.findViewById(dividerId);
+            divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
+        }
     }
 
     private void initialSetup(View view)  {
@@ -226,5 +226,10 @@ public class MyHealth_Alerts_Frag extends Fragment  {
         String[] hour = Utils.convert24HourTo12Hour(String.valueOf(parts[3]));
         String output = parts[0] + " " + month + " " + parts[2] + ", " + hour[0] + ":" + parts[4] + hour[1];
         return output;
+    }
+
+    private boolean stillAlive() {
+
+        return getView() != null;
     }
 }

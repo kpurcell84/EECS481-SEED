@@ -118,14 +118,16 @@ public class Patient_Profile_Frag extends Fragment implements View.OnClickListen
 
     private void displayProfileInformation(MessagesPatientPut patientProfile)  {
 
-        mFirstName = patientProfile.getFirstName();
-        mLastName = patientProfile.getLastName();
-        mEmail = patientProfile.getEmail();
-        mPhoneNumber = patientProfile.getPhone();
+        if (stillAlive()) {
+            mFirstName = patientProfile.getFirstName();
+            mLastName = patientProfile.getLastName();
+            mEmail = patientProfile.getEmail();
+            mPhoneNumber = patientProfile.getPhone();
 
-        tvPatientName.setText(mFirstName.concat(" ").concat(mLastName));
-        tvEmail.setText(mEmail);
-        tvPhoneNumber.setText(mPhoneNumber);
+            tvPatientName.setText(mFirstName.concat(" ").concat(mLastName));
+            tvEmail.setText(mEmail);
+            tvPhoneNumber.setText(mPhoneNumber);
+        }
     }
 
     private void notifyUiAuthenticationError()  {
@@ -153,23 +155,25 @@ public class Patient_Profile_Frag extends Fragment implements View.OnClickListen
 
     private void notifyUiApiError() {
 
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
-        View convertView = getActivity().getLayoutInflater().inflate(R.layout.api_error_alert_title, null);
-        alertDialog.setCustomTitle(convertView);
+        if (stillAlive()) {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+            View convertView = getActivity().getLayoutInflater().inflate(R.layout.api_error_alert_title, null);
+            alertDialog.setCustomTitle(convertView);
 
-        alertDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+            alertDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
 
-            }
-        });
+                }
+            });
 
-        // Set the line color
-        Dialog d = alertDialog.show();
-        int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
-        View divider = d.findViewById(dividerId);
-        divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
+            // Set the line color
+            Dialog d = alertDialog.show();
+            int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+            View divider = d.findViewById(dividerId);
+            divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
+        }
     }
 
     private void loadProfileInformation() {
@@ -214,5 +218,10 @@ public class Patient_Profile_Frag extends Fragment implements View.OnClickListen
 
         Intent i = new Intent(getActivity(), MainActivity.class);
         startActivity(i);
+    }
+
+    private boolean stillAlive() {
+
+        return getView() != null;
     }
 }

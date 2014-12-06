@@ -169,23 +169,25 @@ public class DailySurvey extends Activity implements View.OnClickListener  {
 
     private void notifyUiApiError()  {
 
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(DailySurvey.this);
-        View convertView = getLayoutInflater().inflate(R.layout.api_error_alert_title, null);
-        alertDialog.setCustomTitle(convertView);
-        alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener()  {
+        if (stillAlive()) {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(DailySurvey.this);
+            View convertView = getLayoutInflater().inflate(R.layout.api_error_alert_title, null);
+            alertDialog.setCustomTitle(convertView);
+            alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int id)  {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
 
-                goBackToMainActivityPatient();
-            }
-        });
+                    goBackToMainActivityPatient();
+                }
+            });
 
-        // Set the line color
-        Dialog d = alertDialog.show();
-        int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
-        View divider = d.findViewById(dividerId);
-        divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
+            // Set the line color
+            Dialog d = alertDialog.show();
+            int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+            View divider = d.findViewById(dividerId);
+            divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
+        }
     }
 
     private void submitSurvey()  {
@@ -337,7 +339,14 @@ public class DailySurvey extends Activity implements View.OnClickListener  {
 
     private void goBackToMainActivityPatient()  {
 
-        Intent intent = new Intent(DailySurvey.this, MainActivity_Patient.class);
-        startActivity(intent);
+        if (stillAlive()) {
+            Intent intent = new Intent(DailySurvey.this, MainActivity_Patient.class);
+            startActivity(intent);
+        }
+    }
+
+    private boolean stillAlive() {
+
+        return !isDestroyed() && !isFinishing();
     }
 }

@@ -289,4 +289,9 @@ public class MainActivity extends Activity implements View.OnClickListener  {
                 break;
         }
     }
+
+    private boolean stillAlive() {
+
+        return !isDestroyed() && !isFinishing();
+    }
 }

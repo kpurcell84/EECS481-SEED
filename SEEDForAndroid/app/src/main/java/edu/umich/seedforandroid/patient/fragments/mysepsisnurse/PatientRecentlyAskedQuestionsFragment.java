@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import edu.umich.seedforandroid.R;
+import edu.umich.seedforandroid.account.GoogleAccountManager;
 import edu.umich.seedforandroid.api.ApiThread;
 import edu.umich.seedforandroid.api.SeedApi;
 import edu.umich.seedforandroid.patient.fragments.mysepsisnurse.raq.RaqAdapter;
@@ -76,34 +77,52 @@ public class PatientRecentlyAskedQuestionsFragment extends Fragment  {
     // region show/hide loader
     private void showLoader() {
 
+        if (stillAlive()) {
+
+            //todo show loader
+        }
     }
 
     private void hideLoader() {
 
+        if (stillAlive()) {
+
+            //todo hide loader
+        }
     }
     // endregion
 
+    private void notifiUiUserNotLoggedIn() {
+
+        if (stillAlive()) {
+
+            //todo the user somehow isn't logged in. notify them and navigate to login screen
+        }
+    }
+
+    private void notifyUiApiError() {
+
+        if (stillAlive()) {
+
+            //todo notify ui of api error
+        }
+    }
     private void getQuestions() {
 
         try {
 
             showLoader();
+            GoogleAccountManager accountManager = new GoogleAccountManager(getActivity());
+            if (!accountManager.tryLogIn()) {
+
+                notifiUiUserNotLoggedIn();
+            }
             Seed api = SeedApi.getUnauthenticatedApi();
             final SeedRequest request =
                     api.watsonRecentQuestions()
                     .get(
                             new MessagesWatsonQuestionsRequest()
                             .setNumQuestions(NUM_QUESTIONS)
-                    );
-
-
-            final Seed.PQuantData.Get request2 =
-                    api.pQuantData().get(
-
-                        new MessagesPQuantDataRequest()
-                                .setEmail("jinseok@umich.edu")
-                                .setStartTime(new DateTime(System.currentTimeMillis() - 10000))
-                                .setEndTime(new DateTime(System.currentTimeMillis()))
                     );
 
             mApiThread.enqueueRequest(request, new ApiThread.ApiResultAction() {
@@ -121,17 +140,14 @@ public class PatientRecentlyAskedQuestionsFragment extends Fragment  {
 
                         updateListView((Map<String, List<String>>)result);
                     }
-
-                    /*
-
-                    SeedApiMessagesPQuantDataListResponse test = (SeedApiMessagesPQuantDataListResponse)result;
-                    test.getPdataList().get(0).
-
-                     */
+                    else notifyUiApiError();
                 }
 
                 @Override
-                public void onApiError(Throwable error) {/*ignore for now*/}
+                public void onApiError(Throwable error) {
+
+                    notifyUiApiError();
+                }
             });
         }
         catch (IOException ioe) { /*unexpected*/ hideLoader(); ioe.printStackTrace(); }
@@ -160,7 +176,15 @@ public class PatientRecentlyAskedQuestionsFragment extends Fragment  {
 
     private void updateListView(Map<String, List<String>> questionMap) {
 
-        mAdapter.replaceBackingData(questionMap);
-        hideLoader();
+        if (stillAlive()) {
+            mAdapter.replaceBackingData(questionMap);
+            mAdapter.notifyDataSetChanged();
+            hideLoader();
+        }
+    }
+
+    private boolean stillAlive() {
+
+        return getView() != null;
     }
 }

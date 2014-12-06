@@ -94,22 +94,24 @@ public class MyAlerts_Frag extends Fragment  {
 
     private void populateAlertsList(MessagesAlertListResponse alerts)  {
 
-        myAlertsList.clear();
-        for (MessagesAlertResponse alert : alerts.getAlerts())  {
+        if (stillAlive()) {
+            myAlertsList.clear();
+            for (MessagesAlertResponse alert : alerts.getAlerts()) {
 
-            DoctorAlertsWrapper tmp = new DoctorAlertsWrapper(alert.getFirstName(),
-                                                                alert.getLastName(),
-                                                                alert.getPatientEmail(),
-                                                                alert.getTimeAlerted(),
-                                                                alert.getPriority());
-            myAlertsList.add(tmp);
+                DoctorAlertsWrapper tmp = new DoctorAlertsWrapper(alert.getFirstName(),
+                        alert.getLastName(),
+                        alert.getPatientEmail(),
+                        alert.getTimeAlerted(),
+                        alert.getPriority());
+                myAlertsList.add(tmp);
+            }
+
+            Collections.reverse(myAlertsList);
+
+            adapter = new AlertsListAdapter();
+            ListView list = (ListView) getView().findViewById(R.id.alertListView);
+            list.setAdapter(adapter);
         }
-
-        Collections.reverse(myAlertsList);
-
-        adapter = new AlertsListAdapter();
-        ListView list = (ListView) getView().findViewById(R.id.alertListView);
-        list.setAdapter(adapter);
     }
 
     private void notifyUiUserNotLoggedIn() {
@@ -135,20 +137,23 @@ public class MyAlerts_Frag extends Fragment  {
 
     private void notifyUiApiError() {
 
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
-        View convertView = getActivity().getLayoutInflater().inflate(R.layout.api_error_alert_title, null);
-        alertDialog.setCustomTitle(convertView);
-        alertDialog.setNegativeButton("Ok", new DialogInterface.OnClickListener()  {
+        if (stillAlive()) {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+            View convertView = getActivity().getLayoutInflater().inflate(R.layout.api_error_alert_title, null);
+            alertDialog.setCustomTitle(convertView);
+            alertDialog.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int id)  {}
-        });
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                }
+            });
 
-        // Set the line color
-        Dialog d = alertDialog.show();
-        int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
-        View divider = d.findViewById(dividerId);
-        divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
+            // Set the line color
+            Dialog d = alertDialog.show();
+            int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+            View divider = d.findViewById(dividerId);
+            divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
+        }
     }
 
     private void updateAlertsListFromServer(DateTime from, DateTime to)  {
@@ -175,7 +180,7 @@ public class MyAlerts_Frag extends Fragment  {
 
                         if (result != null && result instanceof MessagesAlertListResponse)  {
 
-                            Log.i("ALERT RECEIVED", "@@@@@@@@@@@@@@@@@@");
+                            //Log.i("ALERT RECEIVED", "@@@@@@@@@@@@@@@@@@");
                             populateAlertsList((MessagesAlertListResponse) result);
                         }
                     }
@@ -288,5 +293,10 @@ public class MyAlerts_Frag extends Fragment  {
 
         Intent i = new Intent(getActivity(), MainActivity.class);
         startActivity(i);
+    }
+
+    private boolean stillAlive() {
+
+        return getView() != null;
     }
 }

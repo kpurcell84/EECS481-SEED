@@ -132,13 +132,15 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
 
     public void stopProgressBar()  {
 
-        if (mMenu != null) {
+        if (stillAlive()) {
+            if (mMenu != null) {
 
-            final MenuItem refreshItem = mMenu.findItem(R.id.action_refresh);
+                final MenuItem refreshItem = mMenu.findItem(R.id.action_refresh);
 
-            if (refreshItem != null) {
+                if (refreshItem != null) {
 
-                refreshItem.setActionView(null);
+                    refreshItem.setActionView(null);
+                }
             }
         }
     }
@@ -351,7 +353,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
             String[] parts = graphSelections.split("@");
             for (int i = 0; i < parts.length; ++i)  {
 
-                Log.i("ON CREATE VIEW Parts ".concat(String.valueOf(parts[i])), "@@@@@@@@@");
+                //Log.i("ON CREATE VIEW Parts ".concat(String.valueOf(parts[i])), "@@@@@@@@@");
                 if (parts[i].equals("0"))  {
 
                     mHeartRateLayout.setVisibility(View.VISIBLE);
@@ -377,6 +379,14 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
                     mBloodPressureLayout.setVisibility(View.VISIBLE);
                 }
             }
+        }
+    }
+
+    private void notifyUiApiError() {
+
+        if (stillAlive()) {
+
+            //todo notify the UI of an api failure
         }
     }
 
@@ -412,6 +422,23 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
 
                         MessagesPQuantDataListResponse castedResult =
                                 (MessagesPQuantDataListResponse) result;
+
+                        /*DateTime lastTime = null;
+                        if (castedResult.getPdataList() != null) {
+                            for (MessagesPQuantDataResponse d : castedResult.getPdataList()) {
+
+                                if (lastTime != null) {
+
+                                    if (lastTime.getValue() > d.getTimeTaken().getValue()) {
+
+                                        Log.e(TAG, "ERROR: Data returned from the API in unsorted order");
+                                        break;
+                                    }
+                                }
+
+                                lastTime = d.getTimeTaken();
+                            }
+                        }*/
 
                         ViewDataGraphWrapper heartRateData =
                                 new ViewDataGraphWrapper(ViewDataGraphWrapper.HEART_RATE);
@@ -452,8 +479,8 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
                                         heartRateData.getHealthData().add(data);
                                         heartRateData.getEpoch().add(epoch);
 
-                                        Log.i("EPOCH FROM SERVER", String.valueOf(epoch));
-                                        Log.i("HEART RATE FROM SERVER", String.valueOf(data));
+                                        //Log.i("EPOCH FROM SERVER", String.valueOf(epoch));
+                                        //Log.i("HEART RATE FROM SERVER", String.valueOf(data));
                                     }
                                     if (r.getSkinTemp() != null)  {
 
@@ -573,17 +600,17 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
                         if (success)  {
 
                             reDrawGraphs();
+                            return;
                         }
                     }
-                    //todo the data failed to load from the API, handle this in the UI here
+                    notifyUiApiError();
                 }
 
                 @Override
                 public void onApiError(Throwable error)  {
 
                     stopProgressBar();
-
-                    //todo the data failed to load from the API, handle this in the UI here
+                    notifyUiApiError();
                 }
             });
         }
@@ -596,11 +623,20 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
 
         if (data.getHealthData().isEmpty() || data.getEpoch().isEmpty())  {
 
-            Log.e(TAG, "DATA IS EMPTY #####################");
+            //Log.e(TAG, "DATA IS EMPTY #####################");
             return;
         }
 
-        Log.i("POPULATE DATA INTO GRAPH CALLED", "@@@@@@@@@@@@@@@@@@@@@");
+        long prev = -1;
+        for (long epoch : data.getEpoch()) {
+
+            if (prev != -1) {
+                if (epoch < prev) Log.e(TAG, "Formatted data is out of order for " + data.dataType);
+            }
+            prev = epoch;
+        }
+
+        //Log.i("POPULATE DATA INTO GRAPH CALLED", "@@@@@@@@@@@@@@@@@@@@@");
 
         LineAndPointFormatter stepFormatter = new LineAndPointFormatter();
         stepFormatter.getFillPaint().setColor(Color.TRANSPARENT);
@@ -752,14 +788,16 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
 
     private void reDrawGraphs()  {
 
-        synchronized (MyHealth_ViewData_Frag.this)  {
+        if (stillAlive()) {
+            synchronized (MyHealth_ViewData_Frag.this) {
 
-            mHeartRatePlot.redraw();
-            mSkinTempPlot.redraw();
-            mPerspirationPlot.redraw();
-            mBloodPressurePlot.redraw();
-            mBodyTempPlot.redraw();
-            mActivityTypePlot.redraw();
+                mHeartRatePlot.redraw();
+                mSkinTempPlot.redraw();
+                mPerspirationPlot.redraw();
+                mBloodPressurePlot.redraw();
+                mBodyTempPlot.redraw();
+                mActivityTypePlot.redraw();
+            }
         }
     }
 
@@ -994,5 +1032,10 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
 //        public String toString(){
 //            return this.id;
 //        }
+    }
+
+    private boolean stillAlive() {
+
+        return getView() != null;
     }
 }

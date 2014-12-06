@@ -122,13 +122,15 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
 
     public void stopProgressBar()  {
 
-        if (mMenu != null) {
+        if (stillAlive()) {
+            if (mMenu != null) {
 
-            final MenuItem refreshItem = mMenu.findItem(R.id.action_refresh);
+                final MenuItem refreshItem = mMenu.findItem(R.id.action_refresh);
 
-            if (refreshItem != null) {
+                if (refreshItem != null) {
 
-                refreshItem.setActionView(null);
+                    refreshItem.setActionView(null);
+                }
             }
         }
     }
@@ -391,6 +393,14 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
         }
     }
 
+    private void notifyUiApiFailure() {
+
+        if (stillAlive()) {
+
+            //todo failed to load data from the API, notify the user
+        }
+    }
+
     private void fetchDataFromServer(DateTime begin, DateTime end)  {
 
         GoogleAccountManager manager = new GoogleAccountManager(this.getActivity());
@@ -565,16 +575,17 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
                         if (success)  {
 
                             reDrawGraphs();
+                            return;
                         }
                     }
-                    //todo the data failed to load from the API, handle this in the UI here
+                    notifyUiApiFailure();
                 }
 
                 @Override
                 public void onApiError(Throwable error)  {
 
                     stopProgressBar();
-                    //todo the data failed to load from the API, handle this in the UI here
+                    notifyUiApiFailure();
                 }
             });
         }
@@ -740,14 +751,16 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
 
     private void reDrawGraphs()  {
 
-        synchronized (DoctorPatientViewDataFrag.this)  {
+        if (stillAlive()) {
+            synchronized (DoctorPatientViewDataFrag.this) {
 
-            mHeartRatePlot.redraw();
-            mSkinTempPlot.redraw();
-            mPerspirationPlot.redraw();
-            mBloodPressurePlot.redraw();
-            mBodyTempPlot.redraw();
-            mActivityTypePlot.redraw();
+                mHeartRatePlot.redraw();
+                mSkinTempPlot.redraw();
+                mPerspirationPlot.redraw();
+                mBloodPressurePlot.redraw();
+                mBodyTempPlot.redraw();
+                mActivityTypePlot.redraw();
+            }
         }
     }
 
@@ -940,5 +953,10 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
 
             getPrevDateData();
         }
+    }
+
+    private boolean stillAlive() {
+
+        return getView() != null;
     }
 }

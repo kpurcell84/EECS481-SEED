@@ -132,32 +132,33 @@ public class PatientAskWatsonFragment extends Fragment implements View.OnClickLi
                 @Override
                 public void onResponseReceived(String response, double confidence)  {
 
-                    mProgressBar.setVisibility(View.INVISIBLE);
+                    if (stillAlive()) {
+                        mProgressBar.setVisibility(View.INVISIBLE);
 
-                    if (response.length() > 500) {
+                        if (response.length() > 500) {
 
-                        response = response.substring(0, 499);
-                        int lastPeriod = response.lastIndexOf(".");
-                        response = response.substring(0, lastPeriod);
+                            response = response.substring(0, 499);
+                            int lastPeriod = response.lastIndexOf(".");
+                            response = response.substring(0, lastPeriod);
+                        }
+
+                        tvAnswer.setText(response);
+
+                        try {
+
+                            Seed api = SeedApi.getAuthenticatedApi(credential);
+                            SeedRequest request = api.watsonQuestion().put(
+                                    new MessagesWatsonQuestionPut()
+                                            .setQuestion(query)
+                                            .setAnswer(truncateAnswer(response))
+                            );
+
+                            mApiThread.enqueueRequest(request, null);
+                        } catch (IOException e) {
+
+                            e.printStackTrace();
+                        }
                     }
-
-                    tvAnswer.setText(response);
-
-                    try {
-
-                        Seed api = SeedApi.getAuthenticatedApi(credential);
-                        SeedRequest request = api.watsonQuestion().put(
-                                new MessagesWatsonQuestionPut()
-                                        .setQuestion(query)
-                                        .setAnswer(truncateAnswer(response))
-                        );
-
-                        mApiThread.enqueueRequest(request, null);
-                    } catch (IOException e) {
-
-                        e.printStackTrace();
-                    }
-
                 }
 
                 private String truncateAnswer(String response) {
@@ -181,5 +182,10 @@ public class PatientAskWatsonFragment extends Fragment implements View.OnClickLi
                 }
             });
         }
+    }
+
+    private boolean stillAlive() {
+
+        return getView() != null;
     }
 }

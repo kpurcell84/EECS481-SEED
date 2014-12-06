@@ -94,25 +94,31 @@ public class Doctor_Profile_Frag extends Fragment implements View.OnClickListene
 
     private void displayProfileInformation(MessagesDoctorPut doctorProfile)  {
 
-        mDoctorName = doctorProfile.getFirstName().concat(" ").concat(doctorProfile.getLastName());
-        mHospital = doctorProfile.getHospital();
-        mPhoneNumber = "Tel : ".concat(doctorProfile.getPhone());
-        mEmail = doctorProfile.getEmail();
+        if (stillAlive()) {
+            mDoctorName = doctorProfile.getFirstName().concat(" ").concat(doctorProfile.getLastName());
+            mHospital = doctorProfile.getHospital();
+            mPhoneNumber = "Tel : ".concat(doctorProfile.getPhone());
+            mEmail = doctorProfile.getEmail();
 
-        tvDoctorName.setText(mDoctorName);
-        tvHospital.setText(mHospital);
-        tvPhoneNumber.setText(mPhoneNumber);
-        tvEmail.setText(mEmail);
+            tvDoctorName.setText(mDoctorName);
+            tvHospital.setText(mHospital);
+            tvPhoneNumber.setText(mPhoneNumber);
+            tvEmail.setText(mEmail);
+        }
     }
 
     private void notifyUiAuthenticationError()  {
 
-        //todo somehow, the user isn't logged in. Alert them and redirect to MainActivity
+        if (stillAlive()) {
+            //todo somehow, the user isn't logged in. Alert them and redirect to MainActivity
+        }
     }
 
     private void notifyUiApiError()  {
 
-        //todo there was an API error. Notify the user
+        if (stillAlive()) {
+            //todo there was an API error. Notify the user
+        }
     }
 
     //todo decide where to call this...probably in onStart?
@@ -228,5 +234,10 @@ public class Doctor_Profile_Frag extends Fragment implements View.OnClickListene
 
             popUpLogoutDialog();
         }
+    }
+
+    private boolean stillAlive() {
+
+        return getView() != null;
     }
 }
