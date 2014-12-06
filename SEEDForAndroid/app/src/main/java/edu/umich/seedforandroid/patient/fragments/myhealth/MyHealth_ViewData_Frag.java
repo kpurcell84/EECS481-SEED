@@ -2,6 +2,7 @@ package edu.umich.seedforandroid.patient.fragments.myhealth;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
@@ -16,8 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.androidplot.ui.XLayoutStyle;
 import com.androidplot.ui.YLayoutStyle;
@@ -74,9 +75,8 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
             " Skin Temperature ", " Body Temperature ", " Blood Pressure"};
     private ArrayList<Integer> mSeletedGraphDialogItems;
     private String defValueGraphFilters = "0@1@2@3@4@5";
-    private Button bNextDate, bPrevDate;
-    private TextView tvDate;
-    private Calendar mCurrentCalendar, mTodayCalendar;
+    private Button bNextDate, bPrevDate, bDate;
+    private Calendar mCurrentCalendar, mTodayCalendar; // mTodayCalendar for checking nextdate (make sure not future)
 
     public MyHealth_ViewData_Frag()  {}
 
@@ -311,11 +311,12 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
 
         setupRelativeLayouts(view);
 
-        tvDate = (TextView) view.findViewById(R.id.tvDataTimeStamp);
+        bDate = (Button) view.findViewById(R.id.bDataTimeStamp);
         bNextDate = (Button) view.findViewById(R.id.bNextRight);
         bPrevDate = (Button) view.findViewById(R.id.bNextLeft);
         bNextDate.setOnClickListener(this);
         bPrevDate.setOnClickListener(this);
+        bDate.setOnClickListener(this);
 
         getTodayDate();
 
@@ -894,7 +895,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
 
         // Remove existing series in the graphs
         mHeartRatePlot.clear();
-        mSkinTempPlot.clear();;
+        mSkinTempPlot.clear();
         mPerspirationPlot.clear();
         mBloodPressurePlot.clear();
         mBodyTempPlot.clear();
@@ -913,15 +914,15 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
         mRunSeries = null;
         mBikeSeries = null;
 
-        if (mPatientEmail != null && mPatientEmail.split("@")[1] == "lotr.com") {
-
-            Calendar start = Calendar.getInstance();
-            start.set(2000, Calendar.JANUARY, 1);
-            Calendar end = Calendar.getInstance();
-            start.set(2000, Calendar.JANUARY, 2);
-            startDate = new DateTime(start.getTimeInMillis());
-            endDate = new DateTime(end.getTimeInMillis());
-        }
+//        if (mPatientEmail != null && mPatientEmail.split("@")[1] == "lotr.com") {
+//
+//            Calendar start = Calendar.getInstance();
+//            start.set(2000, Calendar.JANUARY, 1);
+//            Calendar end = Calendar.getInstance();
+//            start.set(2000, Calendar.JANUARY, 2);
+//            startDate = new DateTime(start.getTimeInMillis());
+//            endDate = new DateTime(end.getTimeInMillis());
+//        }
 
         fetchDataFromServer(startDate, endDate);
     }
@@ -938,7 +939,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
         month--;
         String monthStr = Utils.getMonth(month);
 
-        tvDate.setText(dayStr.concat(" ").concat(String.valueOf(parts[2])).concat(" ").concat(monthStr));
+        bDate.setText(dayStr.concat(" ").concat(String.valueOf(parts[2])).concat(" ").concat(monthStr).concat(" ").concat(parts[0]));
     }
 
     private void getNextDateData()  {
@@ -960,7 +961,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
             month--;
             String monthStr = Utils.getMonth(month);
 
-            tvDate.setText(dayStr.concat(" ").concat(String.valueOf(parts[2])).concat(" ").concat(monthStr));
+            bDate.setText(dayStr.concat(" ").concat(String.valueOf(parts[2])).concat(" ").concat(monthStr).concat(" ").concat(parts[0]));
 
             // Fetch Data
             getDataFromServerBasedOnThis(mCurrentCalendar);
@@ -980,10 +981,44 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
         month--;
         String monthStr = Utils.getMonth(month);
 
-        tvDate.setText(dayStr.concat(" ").concat(String.valueOf(parts[2])).concat(" ").concat(monthStr));
+        bDate.setText(dayStr.concat(" ").concat(String.valueOf(parts[2])).concat(" ").concat(monthStr).concat(" ").concat(parts[0]));
 
         // Fetch Data
         getDataFromServerBasedOnThis(mCurrentCalendar);
+    }
+
+    private void triggerCalendarDialog()  {
+
+        int currYear = mCurrentCalendar.get(Calendar.YEAR);
+        int currMonth = mCurrentCalendar.get(Calendar.MONTH);
+        int currDay = mCurrentCalendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog dpd = new DatePickerDialog(getActivity(),
+                new DatePickerDialog.OnDateSetListener()  {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)  {
+
+                        mCurrentCalendar.set(year, monthOfYear,dayOfMonth);
+                        DateFormat dateFormat = new SimpleDateFormat("yyyy:MM:dd:HH:mm:ss");
+                        String newDate = dateFormat.format(mCurrentCalendar.getTimeInMillis());
+                        String[] parts = newDate.split(":");
+
+                        int day = mCurrentCalendar.get(Calendar.DAY_OF_WEEK);
+                        String dayStr = Utils.getDayOfWeekFullString(day);
+                        int month = Integer.parseInt(parts[1]);
+                        month--;
+                        String monthStr = Utils.getMonth(month);
+
+                        bDate.setText(dayStr.concat(" ").concat(String.valueOf(parts[2])).concat(" ").concat(monthStr).concat(" ").concat(String.valueOf(year)));
+
+                        // Fetch Data
+                        getDataFromServerBasedOnThis(mCurrentCalendar);
+                    }
+                }, currYear, currMonth, currDay);
+        dpd.setCancelable(true);
+        dpd.setCanceledOnTouchOutside(true);
+        dpd.show();
     }
 
     @Override
@@ -996,6 +1031,10 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
         else if (v.getId() == R.id.bNextLeft)  {
 
             getPrevDateData();
+        }
+        else if (v.getId() == R.id.bDataTimeStamp)  {
+
+            triggerCalendarDialog();
         }
     }
 

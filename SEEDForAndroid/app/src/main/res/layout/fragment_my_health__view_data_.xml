@@ -44,13 +44,13 @@
             android:drawableStart="@drawable/next_right_icon"
             android:id="@+id/bNextRight" />
 
-        <TextView
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Monday 17 NOV"
             android:textSize="18sp"
             android:layout_centerInParent="true"
-            android:id="@+id/tvDataTimeStamp" />
+            android:id="@+id/bDataTimeStamp" />
 
     </RelativeLayout>
 

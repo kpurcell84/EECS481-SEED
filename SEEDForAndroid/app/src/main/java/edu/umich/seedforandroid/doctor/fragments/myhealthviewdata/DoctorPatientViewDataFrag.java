@@ -1,6 +1,7 @@
 package edu.umich.seedforandroid.doctor.fragments.myhealthviewdata;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -15,8 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.androidplot.ui.XLayoutStyle;
 import com.androidplot.ui.YLayoutStyle;
@@ -73,8 +74,7 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
             " Skin Temperature ", " Body Temperature ", " Blood Pressure"};
     private ArrayList<Integer> mSeletedGraphDialogItems;
     private String defValueGraphFilters = "0@1@2@3@4@5";
-    private Button bNextDate, bPrevDate;
-    private TextView tvDate;
+    private Button bNextDate, bPrevDate, bDate;
     private Calendar mCurrentCalendar, mTodayCalendar;
 
     public DoctorPatientViewDataFrag()  {}
@@ -302,9 +302,10 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
         setupRelativeLayouts(view);
         setupGraphs(view);
 
-        tvDate = (TextView) view.findViewById(R.id.tvDataTimeStamp);
+        bDate = (Button) view.findViewById(R.id.bDataTimeStamp);
         bNextDate = (Button) view.findViewById(R.id.bNextRight);
         bPrevDate = (Button) view.findViewById(R.id.bNextLeft);
+        bDate.setOnClickListener(this);
         bNextDate.setOnClickListener(this);
         bPrevDate.setOnClickListener(this);
 
@@ -895,7 +896,7 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
         month--;
         String monthStr = Utils.getMonth(month);
 
-        tvDate.setText(dayStr.concat(" ").concat(String.valueOf(parts[2])).concat(" ").concat(monthStr));
+        bDate.setText(dayStr.concat(" ").concat(String.valueOf(parts[2])).concat(" ").concat(monthStr).concat(" ").concat(parts[0]));
     }
 
     private void getNextDateData()  {
@@ -917,11 +918,45 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
             month--;
             String monthStr = Utils.getMonth(month);
 
-            tvDate.setText(dayStr.concat(" ").concat(String.valueOf(parts[2])).concat(" ").concat(monthStr));
+            bDate.setText(dayStr.concat(" ").concat(String.valueOf(parts[2])).concat(" ").concat(monthStr).concat(" ").concat(parts[0]));
 
             // Fetch Data
             getDataFromServerBasedOnThis(mCurrentCalendar);
         }
+    }
+
+    private void triggerCalendarDialog()  {
+
+        int currYear = mCurrentCalendar.get(Calendar.YEAR);
+        int currMonth = mCurrentCalendar.get(Calendar.MONTH);
+        int currDay = mCurrentCalendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog dpd = new DatePickerDialog(getActivity(),
+                new DatePickerDialog.OnDateSetListener()  {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)  {
+
+                        mCurrentCalendar.set(year, monthOfYear,dayOfMonth);
+                        DateFormat dateFormat = new SimpleDateFormat("yyyy:MM:dd:HH:mm:ss");
+                        String newDate = dateFormat.format(mCurrentCalendar.getTimeInMillis());
+                        String[] parts = newDate.split(":");
+
+                        int day = mCurrentCalendar.get(Calendar.DAY_OF_WEEK);
+                        String dayStr = Utils.getDayOfWeekFullString(day);
+                        int month = Integer.parseInt(parts[1]);
+                        month--;
+                        String monthStr = Utils.getMonth(month);
+
+                        bDate.setText(dayStr.concat(" ").concat(String.valueOf(parts[2])).concat(" ").concat(monthStr).concat(" ").concat(String.valueOf(year)));
+
+                        // Fetch Data
+                        getDataFromServerBasedOnThis(mCurrentCalendar);
+                    }
+                }, currYear, currMonth, currDay);
+        dpd.setCancelable(true);
+        dpd.setCanceledOnTouchOutside(true);
+        dpd.show();
     }
 
     private void getPrevDateData()  {
@@ -937,7 +972,7 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
         month--;
         String monthStr = Utils.getMonth(month);
 
-        tvDate.setText(dayStr.concat(" ").concat(String.valueOf(parts[2])).concat(" ").concat(monthStr));
+        bDate.setText(dayStr.concat(" ").concat(String.valueOf(parts[2])).concat(" ").concat(monthStr).concat(" ").concat(parts[0]));
 
         // Fetch Data
         getDataFromServerBasedOnThis(mCurrentCalendar);
@@ -952,6 +987,10 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
         else if (v.getId() == R.id.bNextLeft)  {
 
             getPrevDateData();
+        }
+        else if (v.getId() == R.id.bDataTimeStamp)  {
+
+            triggerCalendarDialog();
         }
     }
 
