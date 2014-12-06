@@ -21,7 +21,6 @@
 
     </RelativeLayout>
 
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_marginTop="10dp"
@@ -88,4 +87,13 @@
             android:textSize="20dp"
             android:textStyle="bold" />
     </RelativeLayout>
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_above="@+id/relativelayout3"
+        android:layout_marginBottom="15dp"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

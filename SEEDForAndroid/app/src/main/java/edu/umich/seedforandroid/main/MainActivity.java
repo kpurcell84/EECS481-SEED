@@ -2,7 +2,12 @@ package edu.umich.seedforandroid.main;
 
 import android.accounts.AccountManager;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -114,7 +119,28 @@ public class MainActivity extends Activity implements View.OnClickListener  {
         startActivityForResult(intent, PICK_ACCOUNT_RESULT);
     }
 
-    private void completeLogin() {
+    private void notifyUiApiError()  {
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+        View convertView = getLayoutInflater().inflate(R.layout.api_error_alert_title, null);
+        alertDialog.setCustomTitle(convertView);
+
+        alertDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+
+            }
+        });
+
+        // Set the line color
+        Dialog d = alertDialog.show();
+        int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+        View divider = d.findViewById(dividerId);
+        divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
+    }
+
+    private void completeLogin()  {
 
         try {
 
@@ -170,7 +196,7 @@ public class MainActivity extends Activity implements View.OnClickListener  {
                     else {
 
                         Log.e(TAG, "FATAL ERROR: Could not validate the user. An Unknown API error occurred");
-                        //todo: logic for handling login failure here
+                        notifyUiApiError();
                     }
                 }
 
@@ -180,14 +206,14 @@ public class MainActivity extends Activity implements View.OnClickListener  {
                     mProgressBar.setVisibility(View.INVISIBLE);
 
                     Log.e(TAG, "FATAL ERROR: Could not validate the user. An API Error occurred:\n" + error.getMessage());
-                    //todo: logic for handling login failure here
+                    notifyUiApiError();
                 }
             });
         }
         catch (IOException e) {
 
             Log.e(TAG, "FATAL ERROR: Could not validate the user. The API could not be initialized");
-            //todo: logic for handling login failure here
+            notifyUiApiError();
         }
     }
 

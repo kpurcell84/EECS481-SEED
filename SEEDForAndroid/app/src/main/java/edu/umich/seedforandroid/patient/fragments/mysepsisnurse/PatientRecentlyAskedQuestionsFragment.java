@@ -1,20 +1,25 @@
 package edu.umich.seedforandroid.patient.fragments.mysepsisnurse;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.ProgressBar;
 
 import com.appspot.umichseed.seed.Seed;
 import com.appspot.umichseed.seed.SeedRequest;
-import com.appspot.umichseed.seed.model.MessagesPQuantDataRequest;
 import com.appspot.umichseed.seed.model.MessagesWatsonQuestionPut;
 import com.appspot.umichseed.seed.model.MessagesWatsonQuestionsListResponse;
 import com.appspot.umichseed.seed.model.MessagesWatsonQuestionsRequest;
-import com.google.api.client.util.DateTime;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,6 +31,7 @@ import edu.umich.seedforandroid.R;
 import edu.umich.seedforandroid.account.GoogleAccountManager;
 import edu.umich.seedforandroid.api.ApiThread;
 import edu.umich.seedforandroid.api.SeedApi;
+import edu.umich.seedforandroid.main.MainActivity;
 import edu.umich.seedforandroid.patient.fragments.mysepsisnurse.raq.RaqAdapter;
 
 public class PatientRecentlyAskedQuestionsFragment extends Fragment  {
@@ -35,6 +41,7 @@ public class PatientRecentlyAskedQuestionsFragment extends Fragment  {
     private ExpandableListView mExpandableListView;
     private RaqAdapter mAdapter;
     private ApiThread mApiThread;
+    private ProgressBar mProgressBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState)  {
@@ -68,6 +75,8 @@ public class PatientRecentlyAskedQuestionsFragment extends Fragment  {
         mAdapter = new RaqAdapter(getActivity().getApplicationContext(),
                 new LinkedHashMap<String, List<String>>());
         mExpandableListView.setAdapter(mAdapter);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        mProgressBar.setVisibility(View.INVISIBLE);
 
         getQuestions();
 
@@ -79,15 +88,15 @@ public class PatientRecentlyAskedQuestionsFragment extends Fragment  {
 
         if (stillAlive()) {
 
-            //todo show loader
+            mProgressBar.setVisibility(View.VISIBLE);
         }
     }
 
     private void hideLoader() {
 
-        if (stillAlive()) {
+        if (stillAlive())  {
 
-            //todo hide loader
+            mProgressBar.setVisibility(View.INVISIBLE);
         }
     }
     // endregion
@@ -96,7 +105,26 @@ public class PatientRecentlyAskedQuestionsFragment extends Fragment  {
 
         if (stillAlive()) {
 
-            //todo the user somehow isn't logged in. notify them and navigate to login screen
+            mProgressBar.setVisibility(View.INVISIBLE);
+
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+            View convertView = getActivity().getLayoutInflater().inflate(R.layout.loggedout_alert_title, null);
+            alertDialog.setCustomTitle(convertView);
+
+            alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+
+                    gotoMainActivity();
+                }
+            });
+
+            // Set the line color
+            Dialog d = alertDialog.show();
+            int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+            View divider = d.findViewById(dividerId);
+            divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
         }
     }
 
@@ -104,7 +132,25 @@ public class PatientRecentlyAskedQuestionsFragment extends Fragment  {
 
         if (stillAlive()) {
 
-            //todo notify ui of api error
+            mProgressBar.setVisibility(View.INVISIBLE);
+
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+            View convertView = getActivity().getLayoutInflater().inflate(R.layout.api_error_alert_title, null);
+            alertDialog.setCustomTitle(convertView);
+
+            alertDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+
+                }
+            });
+
+            // Set the line color
+            Dialog d = alertDialog.show();
+            int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+            View divider = d.findViewById(dividerId);
+            divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
         }
     }
     private void getQuestions() {
@@ -153,9 +199,9 @@ public class PatientRecentlyAskedQuestionsFragment extends Fragment  {
         catch (IOException ioe) { /*unexpected*/ hideLoader(); ioe.printStackTrace(); }
     }
 
-    private Map<String, List<String>> processRequestResult(Object result) {
+    private Map<String, List<String>> processRequestResult(Object result)  {
 
-        if (result != null) {
+        if (result != null)  {
 
             MessagesWatsonQuestionsListResponse response
                     = (MessagesWatsonQuestionsListResponse) result;
@@ -174,7 +220,7 @@ public class PatientRecentlyAskedQuestionsFragment extends Fragment  {
         else return null;
     }
 
-    private void updateListView(Map<String, List<String>> questionMap) {
+    private void updateListView(Map<String, List<String>> questionMap)  {
 
         if (stillAlive()) {
             mAdapter.replaceBackingData(questionMap);
@@ -183,8 +229,16 @@ public class PatientRecentlyAskedQuestionsFragment extends Fragment  {
         }
     }
 
-    private boolean stillAlive() {
+    private boolean stillAlive()  {
 
         return getView() != null;
+    }
+
+    private void gotoMainActivity()  {
+
+        mProgressBar.setVisibility(View.INVISIBLE);
+
+        Intent i = new Intent(getActivity(), MainActivity.class);
+        startActivity(i);
     }
 }

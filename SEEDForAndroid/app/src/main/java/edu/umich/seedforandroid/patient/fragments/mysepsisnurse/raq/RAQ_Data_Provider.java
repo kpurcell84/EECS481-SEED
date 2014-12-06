@@ -3,10 +3,11 @@ package edu.umich.seedforandroid.patient.fragments.mysepsisnurse.raq;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RAQ_Data_Provider  {
 
-    public static HashMap<String, List<String>> getInfo()  {
+    public static Map<String, List<String>> getInfo()  {
 
         HashMap<String, List<String>> questionAnswers = new HashMap<String, List<String>>();
         List<String> question1 = new ArrayList<String>();

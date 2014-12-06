@@ -109,15 +109,50 @@ public class Doctor_Profile_Frag extends Fragment implements View.OnClickListene
 
     private void notifyUiAuthenticationError()  {
 
-        if (stillAlive()) {
-            //todo somehow, the user isn't logged in. Alert them and redirect to MainActivity
+        if (stillAlive())  {
+
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+            View convertView = getActivity().getLayoutInflater().inflate(R.layout.loggedout_alert_title, null);
+            alertDialog.setCustomTitle(convertView);
+
+            alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+
+                    gotoMainActivity();
+                }
+            });
+
+            // Set the line color
+            Dialog d = alertDialog.show();
+            int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+            View divider = d.findViewById(dividerId);
+            divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
         }
     }
 
     private void notifyUiApiError()  {
 
-        if (stillAlive()) {
-            //todo there was an API error. Notify the user
+        if (stillAlive())  {
+
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+            View convertView = getActivity().getLayoutInflater().inflate(R.layout.api_error_alert_title, null);
+            alertDialog.setCustomTitle(convertView);
+
+            alertDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+
+                }
+            });
+
+            // Set the line color
+            Dialog d = alertDialog.show();
+            int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+            View divider = d.findViewById(dividerId);
+            divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
         }
     }
 
@@ -166,11 +201,24 @@ public class Doctor_Profile_Frag extends Fragment implements View.OnClickListene
 
     private void notifyUiOfUnregisterPushNotificationError() {
 
-        // todo: notify the user that we couldn't unregister their push notifications
-        // tell them something like "an error occurred while logging you out. Unfortunately, you may
-        // still receive push notifications on this device. To fix this issue, please uninstall and reinstall
-        // the app. We apologize for this inconvenience". And then navigate home afterwards.
-        navigateHome();
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+        View convertView = getActivity().getLayoutInflater().inflate(R.layout.api_unregister_error_title, null);
+        alertDialog.setCustomTitle(convertView);
+
+        alertDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int id)  {
+
+                navigateHome();
+            }
+        });
+
+        // Set the line color
+        Dialog d = alertDialog.show();
+        int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+        View divider = d.findViewById(dividerId);
+        divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
     }
 
     private void logout()  {
@@ -239,5 +287,11 @@ public class Doctor_Profile_Frag extends Fragment implements View.OnClickListene
     private boolean stillAlive() {
 
         return getView() != null;
+    }
+
+    private void gotoMainActivity()  {
+
+        Intent i = new Intent(getActivity(), MainActivity.class);
+        startActivity(i);
     }
 }

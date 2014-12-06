@@ -6,34 +6,25 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
-import com.appspot.umichseed.seed.Seed;
-import com.appspot.umichseed.seed.SeedRequest;
-import com.appspot.umichseed.seed.model.MessagesGcmCredsPut;
-
-import java.io.IOException;
+import android.view.Window;
 
 import edu.umich.seedforandroid.R;
-import edu.umich.seedforandroid.account.GoogleAccountManager;
-import edu.umich.seedforandroid.api.ApiThread;
-import edu.umich.seedforandroid.api.SeedApi;
 import edu.umich.seedforandroid.main.MainActivity;
 import edu.umich.seedforandroid.patient.fragments.MyHealth_Frag;
 import edu.umich.seedforandroid.patient.fragments.MySepsisNurse_Frag;
 import edu.umich.seedforandroid.patient.fragments.Patient_Help_Frag;
 import edu.umich.seedforandroid.patient.fragments.Patient_Profile_Frag;
 import edu.umich.seedforandroid.patient.fragments.Patient_Settings_Frag;
-import edu.umich.seedforandroid.util.SharedPrefsUtil;
 import edu.umich.seedforandroid.util.Utils;
 
 public class MainActivity_Patient extends Activity implements NavigationDrawerFragment_Patient.NavigationDrawerCallbacks {
@@ -42,6 +33,7 @@ public class MainActivity_Patient extends Activity implements NavigationDrawerFr
 
     private NavigationDrawerFragment_Patient mNavigationDrawerFragment;
     private CharSequence mTitle;
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
@@ -125,6 +117,11 @@ public class MainActivity_Patient extends Activity implements NavigationDrawerFr
             @Override
             public void onClick(DialogInterface dialog, int id) {
 
+                mProgressDialog = new ProgressDialog(MainActivity_Patient.this);
+                mProgressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                mProgressDialog.setMessage("Logging Out...");
+                mProgressDialog.show();
+
                 logout();
             }
         });
@@ -137,12 +134,24 @@ public class MainActivity_Patient extends Activity implements NavigationDrawerFr
     }
 
     private void notifyUiOfUnregisterPushNotificationError() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity_Patient.this);
+        View convertView = getLayoutInflater().inflate(R.layout.api_unregister_error_title, null);
+        alertDialog.setCustomTitle(convertView);
 
-        // todo: notify the user that we couldn't unregister their push notifications
-        // tell them something like "an error occurred while logging you out. Unfortunately, you may
-        // still receive push notifications on this device. To fix this issue, please uninstall and reinstall
-        // the app. We apologize for this inconvenience". And then navigate home afterwards.
-        navigateHome();
+        alertDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int id)  {
+
+                navigateHome();
+            }
+        });
+
+        // Set the line color
+        Dialog d = alertDialog.show();
+        int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+        View divider = d.findViewById(dividerId);
+        divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
     }
 
     private void logout()  {

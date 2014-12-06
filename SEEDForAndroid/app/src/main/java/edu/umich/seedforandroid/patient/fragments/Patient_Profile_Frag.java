@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.appspot.umichseed.seed.Seed;
@@ -41,6 +42,7 @@ public class Patient_Profile_Frag extends Fragment implements View.OnClickListen
     private ApiThread mApiThread;
     private GoogleAccountManager mAccountManager;
     private String mPatientEmail = null;
+    private ProgressBar mProgressBar;
 
     public Patient_Profile_Frag()  {}
 
@@ -98,6 +100,9 @@ public class Patient_Profile_Frag extends Fragment implements View.OnClickListen
         bUpdateProfile = (Button) view.findViewById(R.id.bEditProfile);
         bUpdateProfile.setOnClickListener(this);
 
+        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        mProgressBar.setVisibility(View.INVISIBLE);
+
         loadProfileInformation();
     }
 
@@ -112,13 +117,18 @@ public class Patient_Profile_Frag extends Fragment implements View.OnClickListen
 
     private void updateProfile()  {
 
+        mProgressBar.setVisibility(View.INVISIBLE);
+
         Intent i = new Intent(getActivity(), UpdatePatientProfile.class);
         startActivity(i);
     }
 
     private void displayProfileInformation(MessagesPatientPut patientProfile)  {
 
-        if (stillAlive()) {
+        mProgressBar.setVisibility(View.INVISIBLE);
+
+        if (stillAlive())  {
+
             mFirstName = patientProfile.getFirstName();
             mLastName = patientProfile.getLastName();
             mEmail = patientProfile.getEmail();
@@ -132,7 +142,8 @@ public class Patient_Profile_Frag extends Fragment implements View.OnClickListen
 
     private void notifyUiAuthenticationError()  {
 
-        //todo somehow, the user isn't logged in. Alert them and redirect to MainActivity
+        mProgressBar.setVisibility(View.INVISIBLE);
+
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
         View convertView = getActivity().getLayoutInflater().inflate(R.layout.loggedout_alert_title, null);
         alertDialog.setCustomTitle(convertView);
@@ -153,9 +164,12 @@ public class Patient_Profile_Frag extends Fragment implements View.OnClickListen
         divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
     }
 
-    private void notifyUiApiError() {
+    private void notifyUiApiError()  {
 
-        if (stillAlive()) {
+        if (stillAlive())  {
+
+            mProgressBar.setVisibility(View.INVISIBLE);
+
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
             View convertView = getActivity().getLayoutInflater().inflate(R.layout.api_error_alert_title, null);
             alertDialog.setCustomTitle(convertView);
@@ -176,7 +190,9 @@ public class Patient_Profile_Frag extends Fragment implements View.OnClickListen
         }
     }
 
-    private void loadProfileInformation() {
+    private void loadProfileInformation()  {
+
+        mProgressBar.setVisibility(View.VISIBLE);
 
         try {
 
@@ -184,7 +200,8 @@ public class Patient_Profile_Frag extends Fragment implements View.OnClickListen
                     mPatientEmail : mAccountManager.getAccountName();
             Seed api = SeedApi.getAuthenticatedApi(mAccountManager.getCredential());
             SeedRequest request = api.patient().get(patientEmail);
-            mApiThread.enqueueRequest(request, new ApiThread.ApiResultAction() {
+            mApiThread.enqueueRequest(request, new ApiThread.ApiResultAction()  {
+
                 @Override
                 public void onApiResult(Object result) {
 
@@ -216,12 +233,22 @@ public class Patient_Profile_Frag extends Fragment implements View.OnClickListen
 
     private void gotoMainActivity()  {
 
+        mProgressBar.setVisibility(View.INVISIBLE);
+
         Intent i = new Intent(getActivity(), MainActivity.class);
         startActivity(i);
     }
 
-    private boolean stillAlive() {
+    private boolean stillAlive()  {
 
         return getView() != null;
+    }
+
+    @Override
+    public void onDestroyView()  {
+
+        mProgressBar.setVisibility(View.INVISIBLE);
+
+        super.onDestroyView();
     }
 }

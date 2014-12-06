@@ -1,6 +1,12 @@
 package edu.umich.seedforandroid.doctor.doctor_update;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -19,6 +25,7 @@ import edu.umich.seedforandroid.R;
 import edu.umich.seedforandroid.account.GoogleAccountManager;
 import edu.umich.seedforandroid.api.ApiThread;
 import edu.umich.seedforandroid.api.SeedApi;
+import edu.umich.seedforandroid.main.MainActivity;
 
 public class UpdateDoctorProfile extends Activity implements View.OnClickListener  {
 
@@ -66,13 +73,47 @@ public class UpdateDoctorProfile extends Activity implements View.OnClickListene
 
     private void notifyUiAuthenticationError()  {
 
-        //todo somehow, the user isn't logged in. Alert them and redirect to MainActivity
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(UpdateDoctorProfile.this);
+        View convertView = getLayoutInflater().inflate(R.layout.loggedout_alert_title, null);
+        alertDialog.setCustomTitle(convertView);
+
+        alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+
+                gotoMainActivity();
+            }
+        });
+
+        // Set the line color
+        Dialog d = alertDialog.show();
+        int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+        View divider = d.findViewById(dividerId);
+        divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
     }
 
     private void notifyUiApiError()  {
 
-        if (stillAlive()) {
-            //todo there was an API error. Notify the user
+        if (stillAlive())  {
+
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(UpdateDoctorProfile.this);
+            View convertView = getLayoutInflater().inflate(R.layout.api_error_alert_title, null);
+            alertDialog.setCustomTitle(convertView);
+
+            alertDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+
+                }
+            });
+
+            // Set the line color
+            Dialog d = alertDialog.show();
+            int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+            View divider = d.findViewById(dividerId);
+            divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
         }
     }
 
@@ -187,5 +228,11 @@ public class UpdateDoctorProfile extends Activity implements View.OnClickListene
     private boolean stillAlive() {
 
         return !isDestroyed() && !isFinishing();
+    }
+
+    private void gotoMainActivity()  {
+
+        Intent i = new Intent(UpdateDoctorProfile.this, MainActivity.class);
+        startActivity(i);
     }
 }

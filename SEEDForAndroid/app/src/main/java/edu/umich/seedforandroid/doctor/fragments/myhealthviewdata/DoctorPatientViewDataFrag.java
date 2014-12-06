@@ -398,7 +398,23 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
 
         if (stillAlive()) {
 
-            //todo failed to load data from the API, notify the user
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+            View convertView = getActivity().getLayoutInflater().inflate(R.layout.api_error_alert_title, null);
+            alertDialog.setCustomTitle(convertView);
+
+            alertDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+
+                }
+            });
+
+            // Set the line color
+            Dialog d = alertDialog.show();
+            int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+            View divider = d.findViewById(dividerId);
+            divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
         }
     }
 
