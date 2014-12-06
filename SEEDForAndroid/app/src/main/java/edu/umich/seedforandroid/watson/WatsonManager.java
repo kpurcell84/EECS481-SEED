@@ -10,10 +10,12 @@ import com.loopj.android.http.RequestParams;
 import org.apache.http.Header;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import edu.umich.seedforandroid.R;
 
@@ -66,7 +68,7 @@ public class WatsonManager {
             headers[1] = new BasicHeader(HEADER_SYNC_TIMEOUT, HEADER_VALUE_SYNC_TIMEOUT);
             headers[2] = new BasicHeader(HEADER_CACHE_CONTROL, HEADER_VALUE_CACHE_CONTROL);
 
-            String question = String.format(QUESTION_FORMAT, query);
+            String question = String.format(QUESTION_FORMAT, query.replace("\n", "\\n"));
             StringEntity content = new StringEntity(question);
 
             mHttpClient.post(mContext, mUrl, headers, content, HEADER_VALUE_APPLICATION_JSON, new JsonHttpResponseHandler() {
@@ -93,7 +95,33 @@ public class WatsonManager {
                 }
 
                 @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                    //response is of unknown format
+                    failure(-1);
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    //response is of unknown format
+                    failure(-1);
+                }
+
+                @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    failure(statusCode);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                    failure(statusCode);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    failure(statusCode);
+                }
+
+                private void failure(int statusCode) {
 
                     if (listener != null) {
 

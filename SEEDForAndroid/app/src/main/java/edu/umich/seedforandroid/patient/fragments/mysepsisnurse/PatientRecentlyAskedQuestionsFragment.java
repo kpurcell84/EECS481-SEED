@@ -36,7 +36,7 @@ import edu.umich.seedforandroid.patient.fragments.mysepsisnurse.raq.RaqAdapter;
 
 public class PatientRecentlyAskedQuestionsFragment extends Fragment  {
 
-    private static final long NUM_QUESTIONS = 10;
+    private static final long NUM_QUESTIONS = 50;
 
     private ExpandableListView mExpandableListView;
     private RaqAdapter mAdapter;
@@ -153,6 +153,7 @@ public class PatientRecentlyAskedQuestionsFragment extends Fragment  {
             divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
         }
     }
+
     private void getQuestions() {
 
         try {
