@@ -620,7 +620,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
                             return;
                         }
                     }
-                    notifyUiApiError();
+                    else notifyUiApiError();
                 }
 
                 @Override

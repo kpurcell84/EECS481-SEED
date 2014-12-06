@@ -14,13 +14,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.appspot.umichseed.seed.Seed;
+import com.appspot.umichseed.seed.model.MessagesPatientPut;
+
 import edu.umich.seedforandroid.R;
+import edu.umich.seedforandroid.account.GoogleAccountManager;
+import edu.umich.seedforandroid.api.ApiThread;
+import edu.umich.seedforandroid.api.SeedApi;
 
 public class AddNewPatient extends Activity implements View.OnClickListener  {
 
     private String mFirstName, mLastName, mEmail, mPhoneNumber;
     private EditText etFirstName, etLastName, etEmail, etPhoneNumber;
     private Button bSubmit;
+    private ApiThread mApiThread;
+    private GoogleAccountManager mAccountManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
@@ -40,6 +48,12 @@ public class AddNewPatient extends Activity implements View.OnClickListener  {
         etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumberPatient);
         bSubmit = (Button) findViewById(R.id.bAddNewPatient);
         bSubmit.setOnClickListener(this);
+
+        mApiThread = new ApiThread();
+        mAccountManager = new GoogleAccountManager(this);
+        if (!mAccountManager.tryLogIn()) {
+            //todo alert user that they aren't logged in, navigate to login screen
+        }
     }
 
     @Override
@@ -100,7 +114,7 @@ public class AddNewPatient extends Activity implements View.OnClickListener  {
                 Toast.makeText(AddNewPatient.this, "Please provide an appropriate gmail address", Toast.LENGTH_SHORT).show();
             }
             // todo add new patient to the server
-
+            Seed api = SeedApi.getAuthenticatedApi(mAccountManager.getCredential());
 
         }
     }
