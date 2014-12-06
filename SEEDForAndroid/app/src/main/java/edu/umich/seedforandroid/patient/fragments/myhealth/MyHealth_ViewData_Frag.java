@@ -6,6 +6,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -51,6 +52,7 @@ import edu.umich.seedforandroid.R;
 import edu.umich.seedforandroid.account.GoogleAccountManager;
 import edu.umich.seedforandroid.api.ApiThread;
 import edu.umich.seedforandroid.api.SeedApi;
+import edu.umich.seedforandroid.main.MainActivity;
 import edu.umich.seedforandroid.util.SharedPrefsUtil;
 import edu.umich.seedforandroid.util.Utils;
 
@@ -414,8 +416,25 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
         if (!manager.tryLogIn())  {
 
             Log.e(TAG, "FATAL ERROR: Somehow, user is on this page without being logged in");
-            //todo: handle the probably impossible case of the user reaching this page without being
-            //logged in (perhaps possible if they resume to here after clearing app cache)
+
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+            View convertView = getActivity().getLayoutInflater().inflate(R.layout.loggedout_alert_title, null);
+            alertDialog.setCustomTitle(convertView);
+
+            alertDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int id)  {
+
+                    goBackToLogInPage();
+                }
+            });
+
+            // Set the line color
+            Dialog d = alertDialog.show();
+            int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+            View divider = d.findViewById(dividerId);
+            divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
         }
 
         try  {
@@ -440,22 +459,22 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
                         MessagesPQuantDataListResponse castedResult =
                                 (MessagesPQuantDataListResponse) result;
 
-                        /*DateTime lastTime = null;
-                        if (castedResult.getPdataList() != null) {
-                            for (MessagesPQuantDataResponse d : castedResult.getPdataList()) {
-
-                                if (lastTime != null) {
-
-                                    if (lastTime.getValue() > d.getTimeTaken().getValue()) {
-
-                                        Log.e(TAG, "ERROR: Data returned from the API in unsorted order");
-                                        break;
-                                    }
-                                }
-
-                                lastTime = d.getTimeTaken();
-                            }
-                        }*/
+//                        DateTime lastTime = null;
+//                        if (castedResult.getPdataList() != null) {
+//                            for (MessagesPQuantDataResponse d : castedResult.getPdataList()) {
+//
+//                                if (lastTime != null) {
+//
+//                                    if (lastTime.getValue() > d.getTimeTaken().getValue()) {
+//
+//                                        Log.e(TAG, "ERROR: Data returned from the API in unsorted order");
+//                                        break;
+//                                    }
+//                                }
+//
+//                                lastTime = d.getTimeTaken();
+//                            }
+//                        }
 
                         ViewDataGraphWrapper heartRateData =
                                 new ViewDataGraphWrapper(ViewDataGraphWrapper.HEART_RATE);
@@ -660,7 +679,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
         stepFormatter.getLinePaint().setColor(Color.parseColor("#FE9A2E"));
         stepFormatter.getLinePaint().setStrokeWidth(10);
         stepFormatter.getVertexPaint().setColor(Color.BLACK);
-        stepFormatter.getVertexPaint().setStrokeWidth(20);
+        //stepFormatter.getVertexPaint().setStrokeWidth(20);
         stepFormatter.getLinePaint().setAntiAlias(false);
 
         double domainStep = findDomainStep(data);
@@ -1092,5 +1111,11 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
     private boolean stillAlive() {
 
         return getView() != null;
+    }
+
+    private void goBackToLogInPage()  {
+
+        Intent i = new Intent(getActivity(), MainActivity.class);
+        getActivity().startActivity(i);
     }
 }

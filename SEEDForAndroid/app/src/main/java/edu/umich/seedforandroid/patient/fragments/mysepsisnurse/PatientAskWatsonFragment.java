@@ -2,7 +2,13 @@ package edu.umich.seedforandroid.patient.fragments.mysepsisnurse;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +32,8 @@ import edu.umich.seedforandroid.R;
 import edu.umich.seedforandroid.account.GoogleAccountManager;
 import edu.umich.seedforandroid.api.ApiThread;
 import edu.umich.seedforandroid.api.SeedApi;
+import edu.umich.seedforandroid.main.MainActivity;
+import edu.umich.seedforandroid.util.Utils;
 import edu.umich.seedforandroid.watson.WatsonManager;
 
 public class PatientAskWatsonFragment extends Fragment implements View.OnClickListener  {
@@ -33,15 +41,15 @@ public class PatientAskWatsonFragment extends Fragment implements View.OnClickLi
     private static final String TAG = PatientAskWatsonFragment.class.getSimpleName();
 
     private EditText etAskWatsonQuestion;
-    private Button bAskWatson;
+    private Button bAskWatson, bOpenWifi;
     private TextView tvAnswer;
     private ProgressBar mProgressBar;
+    private Utils mUtils;
 
     private ApiThread mApiThread;
     
     public PatientAskWatsonFragment()  {}
 
-    //todo consider greying out the question button if there's no internet connection
     @Override
     public void onCreate(Bundle savedInstanceState)  {
 
@@ -61,11 +69,27 @@ public class PatientAskWatsonFragment extends Fragment implements View.OnClickLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)  {
 
-        View view = inflater.inflate(R.layout.fragment_my_sepsis_nurse__ask_watson, container, false);
+        mUtils = new Utils();
 
-        initialSetup(view);
+        View view = null;
+        if (mUtils.checkInternetConnection(getActivity().getApplicationContext()))  {
+
+            view = inflater.inflate(R.layout.fragment_my_sepsis_nurse__ask_watson, container, false);
+            initialSetup(view);
+        }
+        else  {
+
+            view = inflater.inflate(R.layout.fragment_patient_askwatson_no_internet, container, false);
+            noInternetViewSetup(view);
+        }
 
         return view;
+    }
+
+    private void noInternetViewSetup(View view)  {
+
+        bOpenWifi = (Button) view.findViewById(R.id.bOpenWifi);
+        bOpenWifi.setOnClickListener(this);
     }
 
     private void initialSetup(View view)  {
@@ -101,27 +125,66 @@ public class PatientAskWatsonFragment extends Fragment implements View.OnClickLi
                 Toast.makeText(getActivity().getApplicationContext(), "Please enter your question", Toast.LENGTH_SHORT).show();
             }
         }
+        else if (v.getId() == R.id.bOpenWifi)  {
+
+            getActivity().startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
+        }
     }
 
     private void notifyUiUserNotLoggedIn() {
 
-        //todo: user not logged in, notify and navigate back to main activity?
+        mProgressBar.setVisibility(View.INVISIBLE);
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+        View convertView = getActivity().getLayoutInflater().inflate(R.layout.loggedout_alert_title, null);
+        alertDialog.setCustomTitle(convertView);
+
+        alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+
+                gotoMainActivity();
+            }
+        });
+
+        // Set the line color
+        Dialog d = alertDialog.show();
+        int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+        View divider = d.findViewById(dividerId);
+        divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
     }
 
-    private void notifyUiWatsonQuestionError() {
+    private void notifyUiWatsonQuestionError()  {
 
-        //todo: couldn't contact watson, notify the user
+        mProgressBar.setVisibility(View.INVISIBLE);
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+        View convertView = getActivity().getLayoutInflater().inflate(R.layout.alert_couldnot_contact_watson_title, null);
+        alertDialog.setCustomTitle(convertView);
+
+        alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener()  {
+
+            @Override
+            public void onClick(DialogInterface dialog, int id)  {}
+        });
+
+        // Set the line color
+        Dialog d = alertDialog.show();
+        int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+        View divider = d.findViewById(dividerId);
+        divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
     }
 
     private void askWatson()  {
 
         GoogleAccountManager accountManager = new GoogleAccountManager(getActivity());
-        if (!accountManager.tryLogIn()) {
+        if (!accountManager.tryLogIn())  {
 
             Log.e(TAG, "FATAL ERROR: User somehow got here without being logged in");
             notifyUiUserNotLoggedIn();
         }
-        else {
+        else  {
 
             final GoogleAccountCredential credential = accountManager.getCredential();
             WatsonManager watsonManager = new WatsonManager(getActivity());
@@ -135,7 +198,7 @@ public class PatientAskWatsonFragment extends Fragment implements View.OnClickLi
                     if (stillAlive()) {
                         mProgressBar.setVisibility(View.INVISIBLE);
 
-                        if (response.length() > 500) {
+                        if (response.length() > 500)  {
 
                             response = response.substring(0, 499);
                             int lastPeriod = response.lastIndexOf(".");
@@ -144,7 +207,7 @@ public class PatientAskWatsonFragment extends Fragment implements View.OnClickLi
 
                         tvAnswer.setText(response);
 
-                        try {
+                        try  {
 
                             Seed api = SeedApi.getAuthenticatedApi(credential);
                             SeedRequest request = api.watsonQuestion().put(
@@ -154,18 +217,19 @@ public class PatientAskWatsonFragment extends Fragment implements View.OnClickLi
                             );
 
                             mApiThread.enqueueRequest(request, null);
-                        } catch (IOException e) {
+                        }
+                        catch (IOException e)  {
 
                             e.printStackTrace();
                         }
                     }
                 }
 
-                private String truncateAnswer(String response) {
+                private String truncateAnswer(String response)  {
 
-                    if (response.length() > 500) {
+                    if (response.length() > 500)  {
 
-                        while (response.length() > 500) {
+                        while (response.length() > 500)  {
 
                             int lastPeriod = response.lastIndexOf(".");
                             response = response.substring(0, lastPeriod);
@@ -184,8 +248,14 @@ public class PatientAskWatsonFragment extends Fragment implements View.OnClickLi
         }
     }
 
-    private boolean stillAlive() {
+    private boolean stillAlive()  {
 
         return getView() != null;
+    }
+
+    private void gotoMainActivity()  {
+
+        Intent i = new Intent(getActivity(), MainActivity.class);
+        getActivity().startActivity(i);
     }
 }

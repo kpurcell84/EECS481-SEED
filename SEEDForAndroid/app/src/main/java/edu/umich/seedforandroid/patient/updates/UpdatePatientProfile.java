@@ -205,6 +205,9 @@ public class UpdatePatientProfile extends Activity implements View.OnClickListen
     private void gotoMainActivity()  {
 
         Intent i = new Intent(UpdatePatientProfile.this, MainActivity.class);
+        Bundle extras = new Bundle();
+        extras.putInt("tabSelection", MainActivity_Patient.SETTINGS);
+        i.putExtras(extras);
         startActivity(i);
     }
 
@@ -220,6 +223,9 @@ public class UpdatePatientProfile extends Activity implements View.OnClickListen
     private void gotoMainActivityPatient()  {
 
         Intent i = new Intent(UpdatePatientProfile.this, MainActivity_Patient.class);
+        Bundle extras = new Bundle();
+        extras.putInt("tabSelection", MainActivity_Patient.PROFILE);
+        i.putExtras(extras);
         startActivity(i);
     }
 

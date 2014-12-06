@@ -128,6 +128,9 @@ public class UpdateSurveyTime extends Activity implements View.OnClickListener  
         Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(UpdateSurveyTime.this, MainActivity_Patient.class);
+        Bundle extras = new Bundle();
+        extras.putInt("tabSelection", MainActivity_Patient.SETTINGS);
+        intent.putExtras(extras);
         startActivity(intent);
     }
 

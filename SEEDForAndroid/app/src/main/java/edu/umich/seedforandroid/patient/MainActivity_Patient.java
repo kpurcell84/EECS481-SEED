@@ -31,12 +31,19 @@ public class MainActivity_Patient extends Activity implements NavigationDrawerFr
 
     private static final String TAG = MainActivity_Patient.class.getSimpleName();
 
+    public static final int PROFILE = 0;
+    public static final int MYHEALTH = 1;
+    public static final int MYSEPSISNURSE = 2;
+    public static final int SETTINGS = 3;
+    public static final int HELP = 4;
+
     private NavigationDrawerFragment_Patient mNavigationDrawerFragment;
     private CharSequence mTitle;
     private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_activity__patient);
 
@@ -49,6 +56,13 @@ public class MainActivity_Patient extends Activity implements NavigationDrawerFr
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        //  Figureo out which fragment to select
+        Intent in = getIntent();
+        Bundle extras = in.getExtras();
+        int tabSelection = extras.getInt("tabSelection");
+
+        onNavigationDrawerItemSelected(tabSelection);
     }
 
     @Override

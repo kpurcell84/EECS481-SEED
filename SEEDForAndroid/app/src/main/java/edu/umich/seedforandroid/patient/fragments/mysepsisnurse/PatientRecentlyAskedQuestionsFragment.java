@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ProgressBar;
 
@@ -33,8 +34,9 @@ import edu.umich.seedforandroid.api.ApiThread;
 import edu.umich.seedforandroid.api.SeedApi;
 import edu.umich.seedforandroid.main.MainActivity;
 import edu.umich.seedforandroid.patient.fragments.mysepsisnurse.raq.RaqAdapter;
+import edu.umich.seedforandroid.util.Utils;
 
-public class PatientRecentlyAskedQuestionsFragment extends Fragment  {
+public class PatientRecentlyAskedQuestionsFragment extends Fragment implements View.OnClickListener  {
 
     private static final long NUM_QUESTIONS = 30;
 
@@ -42,6 +44,8 @@ public class PatientRecentlyAskedQuestionsFragment extends Fragment  {
     private RaqAdapter mAdapter;
     private ApiThread mApiThread;
     private ProgressBar mProgressBar;
+    private Utils mUtils;
+    private Button bOpenWifi;
 
     @Override
     public void onCreate(Bundle savedInstanceState)  {
@@ -51,7 +55,8 @@ public class PatientRecentlyAskedQuestionsFragment extends Fragment  {
     }
 
     @Override
-    public void onDestroy() {
+    public void onDestroy()  {
+
         super.onDestroy();
 
         mApiThread.stop();
@@ -61,9 +66,27 @@ public class PatientRecentlyAskedQuestionsFragment extends Fragment  {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)  {
 
-        View view = inflater.inflate(R.layout.fragment_my_sepsis_nurse__raq_, container, false);
-        view = initialSetup(view);
+        mUtils = new Utils();
+
+        View view = null;
+        if (mUtils.checkInternetConnection(getActivity().getApplicationContext()))  {
+
+            view = inflater.inflate(R.layout.fragment_my_sepsis_nurse__raq_, container, false);
+            view = initialSetup(view);
+        }
+        else  {
+
+            view = inflater.inflate(R.layout.fragment_patient_askwatson_no_internet, container, false);
+            noInternetViewSetup(view);
+        }
+
         return view;
+    }
+
+    private void noInternetViewSetup(View view)  {
+
+        bOpenWifi = (Button) view.findViewById(R.id.bOpenWifi);
+        bOpenWifi.setOnClickListener(this);
     }
 
     private View initialSetup(View view)  {
@@ -241,5 +264,14 @@ public class PatientRecentlyAskedQuestionsFragment extends Fragment  {
 
         Intent i = new Intent(getActivity(), MainActivity.class);
         startActivity(i);
+    }
+
+    @Override
+    public void onClick(View v)  {
+
+        if (v.getId() == R.id.bOpenWifi)  {
+
+            getActivity().startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
+        }
     }
 }

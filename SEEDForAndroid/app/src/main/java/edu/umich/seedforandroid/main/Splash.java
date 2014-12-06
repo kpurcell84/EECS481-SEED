@@ -25,7 +25,7 @@ public class Splash extends Activity {
 
                 try   {
 
-                    sleep(1250);// how many miliseconds you want to sleep
+                    sleep(1000);// how many miliseconds you want to sleep
                 } catch (InterruptedException e)  {
 
                     e.printStackTrace();

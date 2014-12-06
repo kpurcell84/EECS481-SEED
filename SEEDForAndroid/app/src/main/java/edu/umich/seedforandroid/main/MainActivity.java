@@ -57,7 +57,7 @@ public class MainActivity extends Activity implements View.OnClickListener  {
 
         mApiThread = new ApiThread();
 
-        if (mAccountManager.tryLogIn()) {
+        if (mAccountManager.tryLogIn())  {
 
             // User already logged in, get account type and navigate to the appropriate start page
             // Save the user type
@@ -70,10 +70,13 @@ public class MainActivity extends Activity implements View.OnClickListener  {
                 intent.putExtras(extras);
                 startActivity(intent);
             }
-            else if (sharedPrefsUtilInst.getUserAccountType("").equals(SharedPrefsUtil.ACCOUNT_TYPE_PATIENT)) {
+            else if (sharedPrefsUtilInst.getUserAccountType("").equals(SharedPrefsUtil.ACCOUNT_TYPE_PATIENT))  {
 
                 registerGcm();
                 Intent intent = new Intent(MainActivity.this, MainActivity_Patient.class);
+                Bundle extras = new Bundle();
+                extras.putInt("tabSelection", MainActivity_Patient.PROFILE);
+                intent.putExtras(extras);
                 startActivity(intent);
             }
             else  {
@@ -185,6 +188,9 @@ public class MainActivity extends Activity implements View.OnClickListener  {
                             else  {
 
                                 Intent intent = new Intent(MainActivity.this, MainActivity_Patient.class);
+                                Bundle extras = new Bundle();
+                                extras.putInt("tabSelection", MainActivity_Patient.PROFILE);
+                                intent.putExtras(extras);
                                 startActivity(intent);
                             }
                         }
