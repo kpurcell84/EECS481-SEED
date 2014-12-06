@@ -95,6 +95,10 @@ public class AddNewPatient extends Activity implements View.OnClickListener  {
         }
         else  {
 
+            if (mEmail.contains("@gmail.com") == false)  {
+
+                Toast.makeText(AddNewPatient.this, "Please provide an appropriate gmail address", Toast.LENGTH_SHORT).show();
+            }
             // todo add new patient to the server
 
 

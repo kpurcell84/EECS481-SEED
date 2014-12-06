@@ -58,13 +58,13 @@ public class Patient_Help_Frag extends Fragment implements View.OnClickListener 
 
     private void emailSeedSystem()  {
 
-        String emailaddress[] = { "seedsystem00@gmail.com" };
+        String emailaddress[] = { "strahald@gmail.com" };
 
         Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
         emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, emailaddress);
         emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Concern/Question from Client");
         emailIntent.setType("plain/text");
-        emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Dear SEED System, ");
+        emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Dear Dr. Smeagol, ");
         startActivity(emailIntent);
     }
 

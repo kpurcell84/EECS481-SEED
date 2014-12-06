@@ -49,6 +49,7 @@
             android:background="#FAFAFA"
             android:hint="Ask your question to Watson"
             android:padding="10dp"
+            android:singleLine="true"
             android:paddingStart="10dp" />
 
         <RelativeLayout
