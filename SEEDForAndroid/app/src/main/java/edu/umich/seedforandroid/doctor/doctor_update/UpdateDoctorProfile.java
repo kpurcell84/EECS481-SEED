@@ -30,8 +30,6 @@ import edu.umich.seedforandroid.main.MainActivity;
 
 public class UpdateDoctorProfile extends Activity implements View.OnClickListener  {
 
-    //todo this class ensures that the doctors email can't be changed, but it may still have UI that makes them think it can. Remove that
-
     private static final String TAG = UpdateDoctorProfile.class.getSimpleName();
 
     public static final String EXTRA_FIRSTNAME = "eFirstname";
@@ -39,8 +37,8 @@ public class UpdateDoctorProfile extends Activity implements View.OnClickListene
     public static final String EXTRA_PHONE = "ePhone";
     public static final String EXTRA_HOSPITAL = "eHospital";
 
-    private EditText etFirstName, etLastName, etEmail, etPhoneNumber, etHospital;
-    private String mFirstName, mLastName, mHospital, mPhoneNumber, mEmail;
+    private EditText etFirstName, etLastName, etPhoneNumber, etHospital;
+    private String mFirstName, mLastName, mHospital, mPhoneNumber;
     private Button bSave;
     private ApiThread mApiThread;
     private GoogleAccountManager mAccountManager;
@@ -63,7 +61,6 @@ public class UpdateDoctorProfile extends Activity implements View.OnClickListene
         Bundle extras = getIntent().getExtras();
         mFirstName = extras.getString(EXTRA_FIRSTNAME);
         mLastName = extras.getString(EXTRA_LASTNAME);
-        mEmail = mAccountManager.getAccountName();
         mPhoneNumber = extras.getString(EXTRA_PHONE);
         mHospital = extras.getString(EXTRA_HOSPITAL);
         initialSetup();
@@ -75,7 +72,6 @@ public class UpdateDoctorProfile extends Activity implements View.OnClickListene
 
         etFirstName = (EditText) findViewById(R.id.etFirstNameDoctor);
         etLastName = (EditText) findViewById(R.id.etLastNameDoctor);
-        etEmail = (EditText) findViewById(R.id.etEmailDoctor);
         etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumberDoctor);
         etHospital = (EditText) findViewById(R.id.etHospitalDoctor);
 
@@ -147,7 +143,6 @@ public class UpdateDoctorProfile extends Activity implements View.OnClickListene
             etLastName.setText(mLastName);
             etHospital.setText(mHospital);
             etPhoneNumber.setText(mPhoneNumber);
-            etEmail.setText(mEmail);
         }
     }
 

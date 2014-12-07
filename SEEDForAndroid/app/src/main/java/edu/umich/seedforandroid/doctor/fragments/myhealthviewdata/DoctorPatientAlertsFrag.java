@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.api.client.util.DateTime;
 
@@ -44,6 +43,7 @@ public class DoctorPatientAlertsFrag extends Fragment  {
     private ApiThread mApiThread;
     private List<AlertsDataWrapper> myAlertsList = new ArrayList<AlertsDataWrapper>();
     private ArrayAdapter<AlertsDataWrapper> adapter;
+    private TextView tvNoAlert;
 
     public DoctorPatientAlertsFrag()  {}
 
@@ -110,6 +110,10 @@ public class DoctorPatientAlertsFrag extends Fragment  {
 
                                     refreshUi(alerts);
                                 }
+                                else  {
+
+                                    tvNoAlert.setVisibility(View.VISIBLE);
+                                }
                             }
 
                             @Override
@@ -128,8 +132,12 @@ public class DoctorPatientAlertsFrag extends Fragment  {
 
             if (sortedSet.isEmpty()) {
 
-                Toast.makeText(getActivity(), "You do not have any alerts", Toast.LENGTH_SHORT).show();
+                tvNoAlert.setVisibility(View.VISIBLE);
                 return;
+            }
+            else  {
+
+                tvNoAlert.setVisibility(View.GONE);
             }
 
             for (AlertsDataWrapper alert : sortedSet) {
@@ -170,6 +178,8 @@ public class DoctorPatientAlertsFrag extends Fragment  {
 
         myAlertsList.clear();
         adapter = new AlertsListAdapter();
+        tvNoAlert = (TextView) view.findViewById(R.id.tvNoAlertsDoctor);
+        tvNoAlert.setVisibility(View.GONE);
         ListView list = (ListView) view.findViewById(R.id.alertListViewPatient);
         list.setAdapter(adapter);
 

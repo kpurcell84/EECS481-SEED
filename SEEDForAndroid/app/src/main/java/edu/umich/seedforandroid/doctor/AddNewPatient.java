@@ -2,6 +2,9 @@ package edu.umich.seedforandroid.doctor;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -25,6 +28,7 @@ import edu.umich.seedforandroid.R;
 import edu.umich.seedforandroid.account.GoogleAccountManager;
 import edu.umich.seedforandroid.api.ApiThread;
 import edu.umich.seedforandroid.api.SeedApi;
+import edu.umich.seedforandroid.main.MainActivity;
 
 public class AddNewPatient extends Activity implements View.OnClickListener  {
 
@@ -57,9 +61,40 @@ public class AddNewPatient extends Activity implements View.OnClickListener  {
 
         mApiThread = new ApiThread();
         mAccountManager = new GoogleAccountManager(this);
-        if (!mAccountManager.tryLogIn()) {
-            //todo alert user that they aren't logged in, navigate to login screen
+
+
+        if (!mAccountManager.tryLogIn())  {
+
+            alertLogIn();
         }
+    }
+
+    private void alertLogIn()  {
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(AddNewPatient.this);
+        View convertView = getLayoutInflater().inflate(R.layout.loggedout_alert_title, null);
+        alertDialog.setCustomTitle(convertView);
+
+        alertDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int id)  {
+
+                navigateHome();
+            }
+        });
+
+        // Set the line color
+        Dialog d = alertDialog.show();
+        int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+        View divider = d.findViewById(dividerId);
+        divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
+    }
+
+    private void navigateHome()  {
+
+        Intent i = new Intent(AddNewPatient.this, MainActivity.class);
+        startActivity(i);
     }
 
     @Override
@@ -103,12 +138,32 @@ public class AddNewPatient extends Activity implements View.OnClickListener  {
 
     private void notifyUiApiError() {
 
-        //todo api error occurred
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(AddNewPatient.this);
+        View convertView = getLayoutInflater().inflate(R.layout.api_error_alert_title, null);
+        alertDialog.setCustomTitle(convertView);
+
+        alertDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+
+            }
+        });
+
+        // Set the line color
+        Dialog d = alertDialog.show();
+        int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+        View divider = d.findViewById(dividerId);
+        divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
     }
 
-    private void onPatientCreateSuccess() {
+    private void onPatientCreateSuccess()  {
 
-        //todo patient was created successfully. Do whatever is necessary
+        Intent i = new Intent(AddNewPatient.this, MainActivity_Doctor.class);
+        Bundle extras = new Bundle();
+        extras.putInt("tabSelection", MainActivity_Doctor.MYPATIENTS);
+        i.putExtras(extras);
+        startActivity(i);
     }
 
     private void addNewPatient()  {

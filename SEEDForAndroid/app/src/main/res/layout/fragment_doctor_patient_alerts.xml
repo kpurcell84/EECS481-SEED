@@ -12,4 +12,17 @@
         android:layout_centerHorizontal="true" >
     </ListView>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="This patient does not have any alerts"
+        android:id="@+id/tvNoAlertsDoctor"
+        android:textColor="#00274c"
+        android:textSize="25sp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

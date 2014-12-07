@@ -13,10 +13,10 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         debug {
-            keyAlias 'test'
-            keyPassword 'seedapp'
-            storeFile file('C:/Users/Dominic/.android/debug.keystore.jks')
-            storePassword 'seedapp'
+            keyAlias 'SEED_System'
+            keyPassword 'asdfgh'
+            storeFile file('/Users/andylee/Documents/Android_Studio_Working_Folder/SEED_System_Export/Key.jks')
+            storePassword 'asdfgh'
         }
     }
     compileSdkVersion 19

@@ -3,7 +3,6 @@ package edu.umich.seedforandroid.patient.updates;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DownloadManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -31,8 +30,6 @@ import edu.umich.seedforandroid.patient.MainActivity_Patient;
 
 public class UpdatePatientProfile extends Activity implements View.OnClickListener  {
 
-    //todo this class ensures that the patients email can't be changed, but it may still have UI that makes them think it can. Remove that
-
     private static final String TAG = UpdatePatientProfile.class.getSimpleName();
 
     public static final String EXTRA_FIRSTNAME = "eFirstname";
@@ -40,8 +37,8 @@ public class UpdatePatientProfile extends Activity implements View.OnClickListen
     public static final String EXTRA_PHONE = "ePhone";
     public static final String EXTRA_DOCTOR_EMAIL = "eDocEmail";
 
-    private EditText etFirstName, etLastName, etEmail, etPhoneNumber;
-    private String mFirstName, mLastName, mEmail, mPhoneNumber;
+    private EditText etFirstName, etLastName, etPhoneNumber;
+    private String mFirstName, mLastName, mPhoneNumber;
     private String mDoctorEmail;
     private Button bSave;
     private ApiThread mApiThread;
@@ -63,7 +60,6 @@ public class UpdatePatientProfile extends Activity implements View.OnClickListen
         }
 
         Bundle extras = getIntent().getExtras();
-        mEmail = mAccountManager.getAccountName();
         mFirstName = extras.getString(EXTRA_FIRSTNAME);
         mLastName = extras.getString(EXTRA_LASTNAME);
         mDoctorEmail = extras.getString(EXTRA_DOCTOR_EMAIL);
@@ -86,7 +82,6 @@ public class UpdatePatientProfile extends Activity implements View.OnClickListen
 
         etFirstName = (EditText) findViewById(R.id.etFirstNamePatient);
         etLastName = (EditText) findViewById(R.id.etLastNamePatient);
-        etEmail = (EditText) findViewById(R.id.etEmailPatient);
         etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumberPatient);
         bSave = (Button) findViewById(R.id.bUpdateProfileSavePatient);
         bSave.setOnClickListener(this);
@@ -107,7 +102,6 @@ public class UpdatePatientProfile extends Activity implements View.OnClickListen
 
             etFirstName.setText(mFirstName);
             etLastName.setText(mLastName);
-            etEmail.setText(mEmail);
             etPhoneNumber.setText(mPhoneNumber);
         }
     }
@@ -206,7 +200,6 @@ public class UpdatePatientProfile extends Activity implements View.OnClickListen
 
     private void updatePatientInfo()  {
 
-        // todo update the patient info and go back to MainActivity Patient
         String firstname = etFirstName.getText().toString();
         mFirstName = !firstname.isEmpty() ? firstname : mFirstName;
         String lastname = etLastName.getText().toString();

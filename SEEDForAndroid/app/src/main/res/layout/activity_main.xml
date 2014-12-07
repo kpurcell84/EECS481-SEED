@@ -53,7 +53,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Need Help?"
+        android:text=""
         android:onClick="helpClicked"
         android:layout_marginBottom="20dp"
         android:textSize="18sp"
@@ -64,7 +64,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Are you a doctor? Sign Up"
+        android:text=""
         android:id="@+id/tvSignup"
         android:layout_marginBottom="20dp"
         android:textSize="18sp"

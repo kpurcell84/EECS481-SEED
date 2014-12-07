@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.api.client.util.DateTime;
 
@@ -44,6 +43,7 @@ public class MyHealth_Alerts_Frag extends Fragment  {
     private ApiThread mApiThread;
     private List<AlertsDataWrapper> myAlertsList = new ArrayList<AlertsDataWrapper>();
     private ArrayAdapter<AlertsDataWrapper> adapter;
+    private TextView tvNoAlert;
 
     public MyHealth_Alerts_Frag()  {}
 
@@ -84,10 +84,6 @@ public class MyHealth_Alerts_Frag extends Fragment  {
     public void onStart()  {
 
         super.onStart();
-
-        //todo refresh alerts for the default time, this is where you first fetch alerts to display
-        // if necessary, load alerts from disk to display here as well, you can pass them in as
-        // any collection type you want, the method will handle sorting them
     }
 
     @Override
@@ -111,9 +107,16 @@ public class MyHealth_Alerts_Frag extends Fragment  {
             @Override
             public void onAlertsFetchComplete(SortedSet<AlertsDataWrapper> alerts)  {
 
+                Log.i("ALERT FETCH COMPLETE", "@@@@@@@@@@@@");
                 if (alerts != null)  {
 
+                    Log.i("REFRESH UI", "@@@@@@@@@@@@");
                     refreshUi(alerts);
+                }
+                else  {
+
+                    Log.i("ALERTS NULL", "@@@@@@@@@@@@");
+                    tvNoAlert.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -132,9 +135,12 @@ public class MyHealth_Alerts_Frag extends Fragment  {
 
             if (sortedSet.isEmpty()) {
 
-                //todo shouldn't be a toast, should be a default view
-                Toast.makeText(getActivity(), "You do not have any alerts", Toast.LENGTH_SHORT).show();
+                tvNoAlert.setVisibility(View.VISIBLE);
                 return;
+            }
+            else  {
+
+                tvNoAlert.setVisibility(View.GONE);
             }
 
             for (AlertsDataWrapper alert : sortedSet) {
@@ -176,6 +182,8 @@ public class MyHealth_Alerts_Frag extends Fragment  {
 
         myAlertsList.clear();
         adapter = new AlertsListAdapter();
+        tvNoAlert = (TextView) view.findViewById(R.id.tvNoAlerts);
+        tvNoAlert.setVisibility(View.GONE);
         ListView list = (ListView) view.findViewById(R.id.alertListViewPatient);
         list.setAdapter(adapter);
 
