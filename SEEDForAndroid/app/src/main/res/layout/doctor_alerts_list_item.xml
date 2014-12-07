@@ -12,7 +12,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_toRightOf="@+id/imageViewAlertType"
+            android:layout_toRightOf="@+id/imageViewLayout"
             android:layout_below="@+id/tvAlertType"
             android:padding="10dp"
             android:layout_height="wrap_content">
@@ -50,12 +50,20 @@
 
         </RelativeLayout>
 
-        <ImageView
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageViewAlertType"
+            android:background="#d80000"
             android:layout_below="@+id/tvAlertType"
-            android:src="@drawable/emergency_alert_square_icon"/>
+            android:id="@+id/imageViewLayout"
+            android:layout_height="135dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageViewAlertType"
+                android:src="@drawable/emergency_alert_square_icon"/>
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/tvAlertType"

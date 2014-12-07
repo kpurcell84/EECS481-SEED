@@ -107,10 +107,8 @@ public class MyHealth_Alerts_Frag extends Fragment  {
             @Override
             public void onAlertsFetchComplete(SortedSet<AlertsDataWrapper> alerts)  {
 
-                Log.i("ALERT FETCH COMPLETE", "@@@@@@@@@@@@");
                 if (alerts != null)  {
 
-                    Log.i("REFRESH UI", "@@@@@@@@@@@@");
                     refreshUi(alerts);
                 }
                 else  {

@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -24,7 +25,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 import java.util.SortedSet;
 
@@ -47,6 +47,7 @@ public class MyAlerts_Frag extends Fragment  {
     private ArrayAdapter<AlertsDataWrapper> adapter;
     private TextView tvNoAlerts;
     private ApiThread mApiThread;
+    private ProgressBar mProgressBar;
 
     public MyAlerts_Frag()  {}
 
@@ -83,6 +84,9 @@ public class MyAlerts_Frag extends Fragment  {
         tvNoAlerts = (TextView) view.findViewById(R.id.tvNoAlertsForDoctorAtAll);
         tvNoAlerts.setVisibility(View.GONE);
 
+        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        mProgressBar.setVisibility(View.INVISIBLE);
+
         Calendar calStart = Calendar.getInstance();
         calStart.set(1992, Calendar.APRIL, 18);
 
@@ -110,15 +114,13 @@ public class MyAlerts_Frag extends Fragment  {
                 myAlertsList.add(alert);
             }
 
-            Collections.reverse(myAlertsList);
-
             adapter = new AlertsListAdapter();
             ListView list = (ListView) getView().findViewById(R.id.alertListView);
             list.setAdapter(adapter);
         }
     }
 
-    private void notifyUiUserNotLoggedIn() {
+    private void notifyUiUserNotLoggedIn()  {
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
         View convertView = getActivity().getLayoutInflater().inflate(R.layout.loggedout_alert_title, null);
@@ -139,9 +141,10 @@ public class MyAlerts_Frag extends Fragment  {
         divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
     }
 
-    private void notifyUiApiError() {
+    private void notifyUiApiError()  {
 
-        if (stillAlive()) {
+        if (stillAlive())  {
+
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
             View convertView = getActivity().getLayoutInflater().inflate(R.layout.api_error_alert_title, null);
             alertDialog.setCustomTitle(convertView);
@@ -163,18 +166,22 @@ public class MyAlerts_Frag extends Fragment  {
     private void updateAlertsListFromServer(DateTime from, DateTime to)  {
 
         GoogleAccountManager accountManager = new GoogleAccountManager(getActivity());
-        if (!accountManager.tryLogIn()) {
+
+        if (!accountManager.tryLogIn())  {
 
             Log.e(TAG, "FATAL ERROR: The user got here without being logged in somehow");
             notifyUiUserNotLoggedIn();
         }
         else {
 
+            mProgressBar.setVisibility(View.VISIBLE);
+
             AlertsManager alertsManager = new AlertsManager(getActivity(), mApiThread);
             alertsManager.getRemoteOnly(accountManager.getAccountName(), from, to, new AlertsManager.IAlertsFetchCompleteListener() {
                 @Override
-                public void onAlertsFetchComplete(SortedSet<AlertsDataWrapper> alerts) {
+                public void onAlertsFetchComplete(SortedSet<AlertsDataWrapper> alerts)  {
 
+                    mProgressBar.setVisibility(View.INVISIBLE);
                     populateAlertsList(alerts);
                 }
 
@@ -182,6 +189,7 @@ public class MyAlerts_Frag extends Fragment  {
                 public void onAlertsFetchFailure(Throwable error) {
 
                     Log.e(TAG, "API error occurred with message: " + error.getMessage());
+                    mProgressBar.setVisibility(View.INVISIBLE);
                     notifyUiApiError();
                 }
             });
@@ -228,6 +236,8 @@ public class MyAlerts_Frag extends Fragment  {
             DateFormat formatter = new SimpleDateFormat("yyyy:MM:dd:HH:mm");
             tvTimeAlerted.setText(formatTimePretty(formatter.format(timeAlerted.getValue()).toString()));
 
+            RelativeLayout imageLayout = (RelativeLayout) itemView.findViewById(R.id.imageViewLayout);
+
             // Priority Type
             final TextView tvPriority = (TextView) itemView.findViewById(R.id.tvAlertType);
             if (currentAlert.getPriority().equals(AlertsManager.PRIORITY_EMERGENCY))  { // high, emergency detection
@@ -235,12 +245,14 @@ public class MyAlerts_Frag extends Fragment  {
                 tvPriority.setText(emergencyDetection);
                 tvPriority.setBackground(new ColorDrawable(Color.parseColor("#d80000")));
                 imageViewDetection.setImageResource(R.drawable.emergency_alert_square_icon);
+                imageLayout.setBackgroundColor(Color.parseColor("#d80000"));
             }
             else  { // low, early detection
 
                 tvPriority.setText(earlyDetection);
                 tvPriority.setBackground(new ColorDrawable(Color.parseColor("#FFA800")));
                 imageViewDetection.setImageResource(R.drawable.early_alert_square_icon);
+                imageLayout.setBackgroundColor(Color.parseColor("#FDA729"));
             }
 
             // RelativeLayout
