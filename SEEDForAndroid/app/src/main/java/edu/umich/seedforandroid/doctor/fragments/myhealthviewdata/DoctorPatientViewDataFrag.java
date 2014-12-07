@@ -44,7 +44,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
 import edu.umich.seedforandroid.R;
 import edu.umich.seedforandroid.account.GoogleAccountManager;
@@ -475,9 +478,18 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
                         ViewDataGraphWrapper bikeData =
                                 new ViewDataGraphWrapper(ViewDataGraphWrapper.BIKE);
 
-                        if (castedResult.getPdataList() != null)  {
+                        List<MessagesPQuantDataResponse> dataList = castedResult.getPdataList();
+                        if (dataList != null)  {
 
-                            for (MessagesPQuantDataResponse r : castedResult.getPdataList())  {
+                            Collections.sort(dataList, new Comparator<MessagesPQuantDataResponse>() {
+                                @Override
+                                public int compare(MessagesPQuantDataResponse messagesPQuantDataResponse, MessagesPQuantDataResponse messagesPQuantDataResponse2) {
+                                    return (int) (messagesPQuantDataResponse.getTimeTaken().getValue() -
+                                            messagesPQuantDataResponse2.getTimeTaken().getValue());
+                                }
+                            });
+
+                            for (MessagesPQuantDataResponse r : dataList)  {
 
                                 if (r != null && r.getTimeTaken() != null)  {
 
@@ -575,8 +587,8 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
                             populateDataIntoGraphs(walkData);
                             populateDataIntoGraphs(runData);
                             populateDataIntoGraphs(bikeData);
-                            return true;
                         }
+                        return true;
                     }
                     return false;
                 }

@@ -622,8 +622,9 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
                             populateDataIntoGraphs(runData);
                             populateDataIntoGraphs(bikeData);
 
-                            return true;
+
                         }
+                        return true;
                     }
                     return false;
                 }
@@ -643,7 +644,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
                             return;
                         }
                     }
-                    else notifyUiApiError();
+                    notifyUiApiError();
                 }
 
                 @Override
