@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.appspot.umichseed.seed.Seed;
 import com.appspot.umichseed.seed.SeedRequest;
@@ -207,34 +208,41 @@ public class UpdatePatientProfile extends Activity implements View.OnClickListen
         String phoneNumber = etPhoneNumber.getText().toString();
         mPhoneNumber = !phoneNumber.isEmpty() ? phoneNumber : mPhoneNumber;
 
-        try {
-            Seed api = SeedApi.getAuthenticatedApi(mAccountManager.getCredential());
-            SeedRequest request = api.patient().put(
-                    new MessagesPatientPut()
-                            .setEmail(mAccountManager.getAccountName())
-                            .setFirstName(mFirstName)
-                            .setLastName(mLastName)
-                            .setDoctorEmail(mDoctorEmail)
-                            .setPhone(mPhoneNumber)
-            );
-            mApiThread.enqueueRequest(request, new ApiThread.ApiResultAction() {
-                @Override
-                public void onApiResult(Object result) {
-                    //ignore result
-                    gotoMainActivityPatient();
-                }
+        if (mPhoneNumber.length() != 10)  {
 
-                @Override
-                public void onApiError(Throwable error) {
-                    Log.e(TAG, "ERROR: Api Returned error with message " + error.getMessage());
-                    notifyUiApiError();
-                }
-            });
+            Toast.makeText(UpdatePatientProfile.this, "Please provide an appropriate phone number (numbers only)", Toast.LENGTH_SHORT).show();
         }
-        catch (IOException e) {
+        else  {
 
-            Log.e(TAG, "FATAL ERROR: Could not create API request");
-            notifyUiApiError();
+            try {
+                Seed api = SeedApi.getAuthenticatedApi(mAccountManager.getCredential());
+                SeedRequest request = api.patient().put(
+                        new MessagesPatientPut()
+                                .setEmail(mAccountManager.getAccountName())
+                                .setFirstName(mFirstName)
+                                .setLastName(mLastName)
+                                .setDoctorEmail(mDoctorEmail)
+                                .setPhone(mPhoneNumber)
+                );
+                mApiThread.enqueueRequest(request, new ApiThread.ApiResultAction() {
+                    @Override
+                    public void onApiResult(Object result) {
+                        //ignore result
+                        gotoMainActivityPatient();
+                    }
+
+                    @Override
+                    public void onApiError(Throwable error) {
+                        Log.e(TAG, "ERROR: Api Returned error with message " + error.getMessage());
+                        notifyUiApiError();
+                    }
+                });
+            }
+            catch (IOException e) {
+
+                Log.e(TAG, "FATAL ERROR: Could not create API request");
+                notifyUiApiError();
+            }
         }
     }
 

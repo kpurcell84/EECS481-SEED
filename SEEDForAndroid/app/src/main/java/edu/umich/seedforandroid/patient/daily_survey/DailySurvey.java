@@ -241,12 +241,12 @@ public class DailySurvey extends Activity implements View.OnClickListener  {
             mBodyTemp = Double.parseDouble(etBodyTemp.getText().toString());
             mBodyTempType = bChangeTempUnit.getText().toString();
 
-            // Make the unit for the body temperature consistent - make it Celsius
-            if (mBodyTempType.equals("℉"))  { //
+            // Make the unit for the body temperature consistent - make it Fahrenheit
+            if (mBodyTempType.equals("℃"))  {
 
-                mBodyTemp -= 32;
-                mBodyTemp *= 5;
-                mBodyTemp /= 9;
+                mBodyTemp *= 9;
+                mBodyTemp /= 5;
+                mBodyTemp += 32;
             }
 
             mSystolic = Double.parseDouble(etBloodPressureSystolic.getText().toString());

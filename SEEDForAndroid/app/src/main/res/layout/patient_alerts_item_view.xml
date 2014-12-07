@@ -12,7 +12,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_toRightOf="@+id/imageViewAlertType"
+            android:layout_toRightOf="@+id/imageLayout"
             android:layout_below="@+id/tvAlertType"
             android:padding="15dp"
             android:layout_height="wrap_content">
@@ -20,7 +20,15 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tvPatientName"
+                android:layout_marginTop="5dp"
+                android:text=""
+                android:textSize="18sp"
+                android:id="@+id/tvAlertMessagePatient" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvAlertMessagePatient"
                 android:layout_marginTop="15dp"
                 android:text="Time Alerted :"
                 android:textSize="16sp"
@@ -36,12 +44,20 @@
 
         </RelativeLayout>
 
-        <ImageView
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageViewAlertType"
+            android:background="#d80000"
             android:layout_below="@+id/tvAlertType"
-            android:src="@drawable/emergency_alert_square_icon"/>
+            android:id="@+id/imageLayout"
+            android:layout_height="150dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageViewAlertType"
+                android:src="@drawable/emergency_alert_square_icon"/>
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/tvAlertType"

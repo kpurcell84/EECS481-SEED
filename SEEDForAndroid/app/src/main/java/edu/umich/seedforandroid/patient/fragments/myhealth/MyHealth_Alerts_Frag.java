@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.api.client.util.DateTime;
@@ -44,6 +45,7 @@ public class MyHealth_Alerts_Frag extends Fragment  {
     private List<AlertsDataWrapper> myAlertsList = new ArrayList<AlertsDataWrapper>();
     private ArrayAdapter<AlertsDataWrapper> adapter;
     private TextView tvNoAlert;
+    private ProgressBar mProgressBar;
 
     public MyHealth_Alerts_Frag()  {}
 
@@ -100,12 +102,16 @@ public class MyHealth_Alerts_Frag extends Fragment  {
     private void refreshAlerts(DateTime from, DateTime to,
                                Collection<AlertsDataWrapper> existingAlerts)  {
 
+        mProgressBar.setVisibility(View.VISIBLE);
+
         new AlertsManager(this.getActivity(), mApiThread)
                 .mergeLocalWithRemote(mPatientEmail, from, to, existingAlerts,
                                       new AlertsManager.IAlertsFetchCompleteListener()  {
 
             @Override
             public void onAlertsFetchComplete(SortedSet<AlertsDataWrapper> alerts)  {
+
+                mProgressBar.setVisibility(View.INVISIBLE);
 
                 if (alerts != null)  {
 
@@ -122,6 +128,7 @@ public class MyHealth_Alerts_Frag extends Fragment  {
             public void onAlertsFetchFailure(Throwable error)  {
 
                 Log.e(TAG, "Refreshing alerts failed with error: " + error.getMessage());
+                mProgressBar.setVisibility(View.INVISIBLE);
                 notifyUiOfAlertsRefreshFailure();
             }
         });
@@ -161,8 +168,7 @@ public class MyHealth_Alerts_Frag extends Fragment  {
             alertDialog.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
 
                 @Override
-                public void onClick(DialogInterface dialog, int id) {
-                }
+                public void onClick(DialogInterface dialog, int id) {}
             });
 
             // Set the line color
@@ -184,6 +190,9 @@ public class MyHealth_Alerts_Frag extends Fragment  {
         tvNoAlert.setVisibility(View.GONE);
         ListView list = (ListView) view.findViewById(R.id.alertListViewPatient);
         list.setAdapter(adapter);
+
+        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        mProgressBar.setVisibility(View.INVISIBLE);
 
         Calendar calStart = Calendar.getInstance();
         calStart.set(1992, Calendar.APRIL, 18);
@@ -213,6 +222,10 @@ public class MyHealth_Alerts_Frag extends Fragment  {
 
             // Find the item to work with.
             AlertsDataWrapper currentAlert = myAlertsList.get(position);
+
+            // Message
+            TextView tvMessage = (TextView) itemView.findViewById(R.id.tvAlertMessagePatient);
+            tvMessage.setText(currentAlert.getMessage());
 
             // Time Alerted
             TextView tvTimeAlerted = (TextView) itemView.findViewById(R.id.tvTimeAlerted);

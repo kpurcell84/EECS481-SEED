@@ -29,7 +29,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/progressBar"
-        android:layout_alignBottom="@+id/tvNoAlertsForDoctorAtAll"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerInParent="true"/>
 
 </RelativeLayout>

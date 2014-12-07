@@ -180,40 +180,51 @@ public class AddNewPatient extends Activity implements View.OnClickListener  {
         }
         else  {
 
+            boolean checkInput = true;
             if (mEmail.contains("@gmail.com") == false)  {
 
+                checkInput = false;
                 Toast.makeText(AddNewPatient.this, "Please provide an appropriate gmail address", Toast.LENGTH_SHORT).show();
             }
 
-            try {
-                Seed api = SeedApi.getAuthenticatedApi(mAccountManager.getCredential());
-                SeedRequest request = api.patient().put(
-                        new MessagesPatientPut()
-                                .setDoctorEmail(mAccountManager.getAccountName())
-                                .setEmail(mEmail)
-                                .setFirstName(mFirstName)
-                                .setLastName(mLastName)
-                                .setPhone(mPhoneNumber)
-                );
-                mApiThread.enqueueRequest(request, new ApiThread.ApiResultAction() {
-                    @Override
-                    public void onApiResult(Object result) {
-                        //who cares what the result is
-                        onPatientCreateSuccess();
-                    }
+            if (mPhoneNumber.length() != 10)  {
 
-                    @Override
-                    public void onApiError(Throwable error) {
-
-                        Log.e(TAG, "ERROR: API returned error with message: " + error.getMessage());
-                        notifyUiApiError();
-                    }
-                });
+                checkInput = false;
+                Toast.makeText(AddNewPatient.this, "Please provide an appropriate phone number (only numbers)", Toast.LENGTH_SHORT).show();
             }
-            catch (IOException e) {
 
-                Log.e(TAG, "ERROR: IOException occurred while creating request");
-                notifyUiApiError();
+            if (checkInput)  {
+
+                try {
+                    Seed api = SeedApi.getAuthenticatedApi(mAccountManager.getCredential());
+                    SeedRequest request = api.patient().put(
+                            new MessagesPatientPut()
+                                    .setDoctorEmail(mAccountManager.getAccountName())
+                                    .setEmail(mEmail)
+                                    .setFirstName(mFirstName)
+                                    .setLastName(mLastName)
+                                    .setPhone(mPhoneNumber)
+                    );
+                    mApiThread.enqueueRequest(request, new ApiThread.ApiResultAction()  {
+                        @Override
+                        public void onApiResult(Object result)  {
+                            //who cares what the result is
+                            onPatientCreateSuccess();
+                        }
+
+                        @Override
+                        public void onApiError(Throwable error)  {
+
+                            Log.e(TAG, "ERROR: API returned error with message: " + error.getMessage());
+                            notifyUiApiError();
+                        }
+                    });
+                }
+                catch (IOException e)  {
+
+                    Log.e(TAG, "ERROR: IOException occurred while creating request");
+                    notifyUiApiError();
+                }
             }
         }
     }

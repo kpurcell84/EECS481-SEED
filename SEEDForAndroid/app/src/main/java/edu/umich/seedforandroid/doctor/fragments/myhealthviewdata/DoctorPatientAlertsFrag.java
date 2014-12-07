@@ -14,7 +14,10 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.api.client.util.DateTime;
@@ -39,11 +42,15 @@ public class DoctorPatientAlertsFrag extends Fragment  {
 
     public static final String ARG_PATIENT_EMAIL = "forPatientEmail";
 
+    private String emergencyDetection = "Emergency Detection";
+    private String earlyDetection = "Early Detection";
+
     private String mPatientEmail;
     private ApiThread mApiThread;
     private List<AlertsDataWrapper> myAlertsList = new ArrayList<AlertsDataWrapper>();
     private ArrayAdapter<AlertsDataWrapper> adapter;
     private TextView tvNoAlert;
+    private ProgressBar mProgressBar;
 
     public DoctorPatientAlertsFrag()  {}
 
@@ -99,12 +106,16 @@ public class DoctorPatientAlertsFrag extends Fragment  {
     private void refreshAlerts(DateTime from, DateTime to,
                                Collection<AlertsDataWrapper> existingAlerts)  {
 
+        mProgressBar.setVisibility(View.VISIBLE);
+
         new AlertsManager(this.getActivity(), mApiThread)
                 .mergeLocalWithRemote(mPatientEmail, from, to, existingAlerts,
                         new AlertsManager.IAlertsFetchCompleteListener()  {
 
                             @Override
                             public void onAlertsFetchComplete(SortedSet<AlertsDataWrapper> alerts)  {
+
+                                mProgressBar.setVisibility(View.INVISIBLE);
 
                                 if (alerts != null)  {
 
@@ -120,6 +131,7 @@ public class DoctorPatientAlertsFrag extends Fragment  {
                             public void onAlertsFetchFailure(Throwable error)  {
 
                                 Log.e(TAG, "Refreshing alerts failed with error: " + error.getMessage());
+                                mProgressBar.setVisibility(View.INVISIBLE);
                                 notifyUiOfAlertsRefreshFailure();
                             }
                         });
@@ -183,6 +195,9 @@ public class DoctorPatientAlertsFrag extends Fragment  {
         ListView list = (ListView) view.findViewById(R.id.alertListViewPatient);
         list.setAdapter(adapter);
 
+        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        mProgressBar.setVisibility(View.INVISIBLE);
+
         Calendar calStart = Calendar.getInstance();
         calStart.set(1992, Calendar.APRIL, 18);
 
@@ -212,9 +227,35 @@ public class DoctorPatientAlertsFrag extends Fragment  {
             // Find the item to work with.
             AlertsDataWrapper currentAlert = myAlertsList.get(position);
 
+            RelativeLayout imageLayout = (RelativeLayout) itemView.findViewById(R.id.imageLayout);
+
+            // Message
+            TextView tvMessage = (TextView) itemView.findViewById(R.id.tvAlertMessagePatient);
+            tvMessage.setText(currentAlert.getMessage());
+
             // Time Alerted
             TextView tvTimeAlerted = (TextView) itemView.findViewById(R.id.tvTimeAlerted);
             DateTime timeAlerted = currentAlert.getTimeStamp();
+
+            // Image for Priority
+            ImageView imageViewDetection = (ImageView) itemView.findViewById(R.id.imageViewAlertType);
+
+            // Priority Type
+            final TextView tvPriority = (TextView) itemView.findViewById(R.id.tvAlertType);
+            if (currentAlert.getPriority().equals(AlertsManager.PRIORITY_EMERGENCY))  { // high, emergency detection
+
+                tvPriority.setText(emergencyDetection);
+                tvPriority.setBackground(new ColorDrawable(Color.parseColor("#d80000")));
+                imageViewDetection.setImageResource(R.drawable.emergency_alert_square_icon);
+                imageLayout.setBackgroundColor(Color.parseColor("#d80000"));
+            }
+            else  { // low, early detection
+
+                tvPriority.setText(earlyDetection);
+                tvPriority.setBackground(new ColorDrawable(Color.parseColor("#FFA800")));
+                imageViewDetection.setImageResource(R.drawable.early_alert_square_icon);
+                imageLayout.setBackgroundColor(Color.parseColor("#FDA729"));
+            }
 
             DateFormat formatter = new SimpleDateFormat("yyyy:MM:dd:HH:mm");
             tvTimeAlerted.setText(formatTimePretty(formatter.format(timeAlerted.getValue()).toString()));
