@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.androidplot.ui.XLayoutStyle;
 import com.androidplot.ui.YLayoutStyle;
@@ -50,6 +52,7 @@ import edu.umich.seedforandroid.R;
 import edu.umich.seedforandroid.account.GoogleAccountManager;
 import edu.umich.seedforandroid.api.ApiThread;
 import edu.umich.seedforandroid.api.SeedApi;
+import edu.umich.seedforandroid.main.MainActivity;
 import edu.umich.seedforandroid.patient.fragments.myhealth.ViewBloodPressureGraphWrapper;
 import edu.umich.seedforandroid.patient.fragments.myhealth.ViewDataGraphWrapper;
 import edu.umich.seedforandroid.util.SharedPrefsUtil;
@@ -67,7 +70,7 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
     private XYPlot mHeartRatePlot, mSkinTempPlot, mPerspirationPlot,
             mBloodPressurePlot, mBodyTempPlot, mActivityTypePlot;
     private XYSeries mHeartRateSeries, mSkinTempSeries, mPerspirationSeries,
-            mBloodPressureSeries, mBodyTempSeries, mREMSeries, mDeepSeries,
+            mBloodPressureSeriesUpper, mBloodPressureSeriesLower, mBodyTempSeries, mREMSeries, mDeepSeries,
             mLightSeries, mStillSeries, mWalkSeries, mRunSeries, mBikeSeries;
     private ApiThread mApiThread;
     private CharSequence[] mGraphDialogItems = {" Heart Rate ", " Activities Engaged ", " Perspiration ",
@@ -76,6 +79,7 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
     private String defValueGraphFilters = "0@1@2@3@4@5";
     private Button bNextDate, bPrevDate, bDate;
     private Calendar mCurrentCalendar, mTodayCalendar;
+    private TextView tvNoData;
 
     public DoctorPatientViewDataFrag()  {}
 
@@ -305,34 +309,17 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
         bDate = (Button) view.findViewById(R.id.bDataTimeStamp);
         bNextDate = (Button) view.findViewById(R.id.bNextRight);
         bPrevDate = (Button) view.findViewById(R.id.bNextLeft);
+        tvNoData = (TextView) view.findViewById(R.id.tvNoDataForThisPatientForDoctor);
+        tvNoData.setVisibility(View.GONE);
         bDate.setOnClickListener(this);
         bNextDate.setOnClickListener(this);
         bPrevDate.setOnClickListener(this);
 
         getTodayDate();
 
-        /*
-        ViewDataGraphWrapper temp = new ViewDataGraphWrapper(ViewDataGraphWrapper.ACTIVITY);
+        // For today's date, set the time to be 00:01 and the ending time to be 11:59 PM
+        getDataFromServerBasedOnThis(mCurrentCalendar);
 
-        Random rand = new Random(System.currentTimeMillis());
-        for (double d = 0; d < 10; ++d)  {
-
-            double t = (double) rand.nextInt(6) + 1;
-            temp.getHealthData().add(t);
-        }
-
-        long currTime = System.currentTimeMillis();
-        currTime = currTime / 1000;
-        currTime -= 60 * 60 * 10;
-
-        for (double d = 0; d < 10; ++d)  {
-
-            currTime += (long) d * 60 * 60;
-            temp.getEpoch().add(currTime);
-        }
-
-        populateDataIntoGraphs(temp);
-        */
         return view;
     }
 
@@ -344,6 +331,20 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
         mBloodPressureLayout.setVisibility(View.GONE);
         mActivityTypeLayout.setVisibility(View.GONE);
         mPerspirationLayout.setVisibility(View.GONE);
+    }
+
+    private void checkIfAllGraphRelativeLayoutsAreGone()  { // Displays "No Data" if all graphs are gone
+
+        if (mHeartRateLayout.getVisibility() == View.GONE && mSkinTempLayout.getVisibility() == View.GONE &&
+                mBodyTempLayout.getVisibility() == View.GONE && mBloodPressureLayout.getVisibility() == View.GONE &&
+                mActivityTypeLayout.getVisibility() == View.GONE && mPerspirationLayout.getVisibility() == View.GONE)  {
+
+            tvNoData.setVisibility(View.VISIBLE);
+        }
+        else  {
+
+            tvNoData.setVisibility(View.GONE);
+        }
     }
 
     private void setupRelativeLayouts(View view)  {
@@ -394,9 +395,9 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
         }
     }
 
-    private void notifyUiApiFailure() {
+    private void notifyUiApiFailure()  { // "Failed to connect with the server"
 
-        if (stillAlive()) {
+        if (stillAlive())  {
 
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
             View convertView = getActivity().getLayoutInflater().inflate(R.layout.api_error_alert_title, null);
@@ -418,6 +419,35 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
         }
     }
 
+    private void alertLogIn()  {
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+        View convertView = getActivity().getLayoutInflater().inflate(R.layout.loggedout_alert_title, null);
+        alertDialog.setCustomTitle(convertView);
+
+        alertDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int id)  {
+
+                navigateHome();
+            }
+        });
+
+        // Set the line color
+        Dialog d = alertDialog.show();
+        int dividerId = d.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+        View divider = d.findViewById(dividerId);
+        divider.setBackground(new ColorDrawable(Color.parseColor("#00274c")));
+    }
+
+
+    private void navigateHome()  {
+
+        Intent i = new Intent(getActivity(), MainActivity.class);
+        startActivity(i);
+    }
+
     private void fetchDataFromServer(DateTime begin, DateTime end)  {
 
         GoogleAccountManager manager = new GoogleAccountManager(this.getActivity());
@@ -425,8 +455,7 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
         if (!manager.tryLogIn())  {
 
             Log.e(TAG, "FATAL ERROR: Somehow, user is on this page without being logged in");
-            //todo: handle the probably impossible case of the user reaching this page without being
-            //logged in (perhaps possible if they resume to here after clearing app cache)
+            alertLogIn();
         }
 
         try  {
@@ -450,30 +479,18 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
                         MessagesPQuantDataListResponse castedResult =
                                 (MessagesPQuantDataListResponse) result;
 
-                        ViewDataGraphWrapper heartRateData =
-                                new ViewDataGraphWrapper(ViewDataGraphWrapper.HEART_RATE);
-                        ViewDataGraphWrapper skinTempData =
-                                new ViewDataGraphWrapper(ViewDataGraphWrapper.SKIN_TEMP);
-                        ViewDataGraphWrapper gsrData =
-                                new ViewDataGraphWrapper(ViewDataGraphWrapper.GSR);
-                        ViewBloodPressureGraphWrapper bloodPressureData =
-                                new ViewBloodPressureGraphWrapper(ViewDataGraphWrapper.BLOOD_PRESSURE);
-                        ViewDataGraphWrapper bodyTempData =
-                                new ViewDataGraphWrapper(ViewDataGraphWrapper.BODY_TEMP);
-                        ViewDataGraphWrapper remData =
-                                new ViewDataGraphWrapper(ViewDataGraphWrapper.REM);
-                        ViewDataGraphWrapper deepData =
-                                new ViewDataGraphWrapper(ViewDataGraphWrapper.DEEP);
-                        ViewDataGraphWrapper lightData =
-                                new ViewDataGraphWrapper(ViewDataGraphWrapper.LIGHT);
-                        ViewDataGraphWrapper stillData =
-                                new ViewDataGraphWrapper(ViewDataGraphWrapper.STILL);
-                        ViewDataGraphWrapper walkData =
-                                new ViewDataGraphWrapper(ViewDataGraphWrapper.WALK);
-                        ViewDataGraphWrapper runData =
-                                new ViewDataGraphWrapper(ViewDataGraphWrapper.RUN);
-                        ViewDataGraphWrapper bikeData =
-                                new ViewDataGraphWrapper(ViewDataGraphWrapper.BIKE);
+                        ViewDataGraphWrapper heartRateData = new ViewDataGraphWrapper(ViewDataGraphWrapper.HEART_RATE);
+                        ViewDataGraphWrapper skinTempData = new ViewDataGraphWrapper(ViewDataGraphWrapper.SKIN_TEMP);
+                        ViewDataGraphWrapper gsrData = new ViewDataGraphWrapper(ViewDataGraphWrapper.GSR);
+                        ViewBloodPressureGraphWrapper bloodPressureData = new ViewBloodPressureGraphWrapper(ViewDataGraphWrapper.BLOOD_PRESSURE);
+                        ViewDataGraphWrapper bodyTempData = new ViewDataGraphWrapper(ViewDataGraphWrapper.BODY_TEMP);
+                        ViewDataGraphWrapper remData = new ViewDataGraphWrapper(ViewDataGraphWrapper.REM);
+                        ViewDataGraphWrapper deepData = new ViewDataGraphWrapper(ViewDataGraphWrapper.DEEP);
+                        ViewDataGraphWrapper lightData = new ViewDataGraphWrapper(ViewDataGraphWrapper.LIGHT);
+                        ViewDataGraphWrapper stillData = new ViewDataGraphWrapper(ViewDataGraphWrapper.STILL);
+                        ViewDataGraphWrapper walkData = new ViewDataGraphWrapper(ViewDataGraphWrapper.WALK);
+                        ViewDataGraphWrapper runData = new ViewDataGraphWrapper(ViewDataGraphWrapper.RUN);
+                        ViewDataGraphWrapper bikeData = new ViewDataGraphWrapper(ViewDataGraphWrapper.BIKE);
 
                         if (castedResult.getPdataList() != null)  {
 
@@ -594,6 +611,11 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
                             reDrawGraphs();
                             return;
                         }
+                        else  {
+
+                            hideAllGraphs();
+                            checkIfAllGraphRelativeLayoutsAreGone();
+                        }
                     }
                     notifyUiApiFailure();
                 }
@@ -611,9 +633,49 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
         }
     }
 
+    private void populateDataIntoGraphs(ViewBloodPressureGraphWrapper data)  {
+
+        if (data.getHealthData().size() < 2 || data.getEpoch().size() < 2)  {
+
+            return;
+        }
+
+        LineAndPointFormatter stepFormatterUpper = new LineAndPointFormatter();
+        stepFormatterUpper.getFillPaint().setColor(Color.TRANSPARENT);
+        stepFormatterUpper.getLinePaint().setColor(Color.parseColor("#FE9A2E"));
+        stepFormatterUpper.getLinePaint().setStrokeWidth(7);
+        stepFormatterUpper.getVertexPaint().setColor(Color.BLACK);
+        stepFormatterUpper.getVertexPaint().setStrokeWidth(0);
+        stepFormatterUpper.getLinePaint().setAntiAlias(false);
+
+        LineAndPointFormatter stepFormatterLower = new LineAndPointFormatter();
+        stepFormatterLower.getFillPaint().setColor(Color.TRANSPARENT);
+        stepFormatterLower.getLinePaint().setColor(Color.parseColor("#FF00BF"));
+        stepFormatterLower.getLinePaint().setStrokeWidth(7);
+        stepFormatterLower.getVertexPaint().setColor(Color.BLACK);
+        stepFormatterLower.getVertexPaint().setStrokeWidth(0);
+        stepFormatterLower.getLinePaint().setAntiAlias(false);
+
+        double domainStep = findDomainStep(data);
+
+        if (data.getDataType() == ViewBloodPressureGraphWrapper.BLOOD_PRESSURE)  {
+
+            synchronized (DoctorPatientViewDataFrag.this)  {
+
+                mBloodPressureSeriesUpper = new SimpleXYSeries(data.getEpoch(), data.getUpperData(), "Systolic");
+                mBloodPressureSeriesLower = new SimpleXYSeries(data.getEpoch(), data.getLowerData(), "Diastolic");
+
+                mBloodPressurePlot.addSeries(mBloodPressureSeriesUpper, stepFormatterUpper);
+                mBloodPressurePlot.addSeries(mBloodPressureSeriesLower, stepFormatterLower);
+                mBloodPressurePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
+            }
+        }
+    }
+
+
     private void populateDataIntoGraphs(ViewDataGraphWrapper data)  {
 
-        if (data.getHealthData().isEmpty() || data.getEpoch().isEmpty())  {
+        if (data.getHealthData().size() < 2 || data.getEpoch().size() < 2)  {
 
             return;
         }
@@ -623,7 +685,7 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
         stepFormatter.getLinePaint().setColor(Color.parseColor("#FE9A2E"));
         stepFormatter.getLinePaint().setStrokeWidth(10);
         stepFormatter.getVertexPaint().setColor(Color.BLACK);
-        stepFormatter.getVertexPaint().setStrokeWidth(20);
+        stepFormatter.getVertexPaint().setStrokeWidth(0);
         stepFormatter.getLinePaint().setAntiAlias(false);
 
         double domainStep = findDomainStep(data);
@@ -649,20 +711,11 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
         else if (data.getDataType() == ViewDataGraphWrapper.GSR)  {
 
             synchronized (DoctorPatientViewDataFrag.this)  {
-                // todo this is GSR now
+
                 mPerspirationSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Galvanic Skin Response");
                 mPerspirationPlot.addSeries(mPerspirationSeries, stepFormatter);
                 mPerspirationPlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
                 mPerspirationPlot.setRangeValueFormat(new DecimalFormat("#.##"));
-            }
-        }
-        else if (data.getDataType() == ViewDataGraphWrapper.BLOOD_PRESSURE)  {
-
-            synchronized (DoctorPatientViewDataFrag.this)  {
-
-                mBloodPressureSeries = new SimpleXYSeries(data.getEpoch(), data.getHealthData(), "Blood Pressure");
-                mBloodPressurePlot.addSeries(mBloodPressureSeries, stepFormatter);
-                mBloodPressurePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
             }
         }
         else if (data.getDataType() == ViewDataGraphWrapper.BODY_TEMP)  {
@@ -682,6 +735,7 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
                 mActivityTypePlot.setRangeBoundaries(0, 8, BoundaryMode.FIXED);
                 stepFormatter.getLinePaint().setColor(Color.TRANSPARENT);
                 stepFormatter.getVertexPaint().setColor(Color.parseColor("#9A2EFE"));
+                stepFormatter.getVertexPaint().setStrokeWidth(20);
                 mActivityTypePlot.addSeries(mREMSeries, stepFormatter);
                 mActivityTypePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
                 mActivityTypePlot.getRangeLabelWidget().setVisible(false);
@@ -695,6 +749,7 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
                 mActivityTypePlot.setRangeBoundaries(0, 8, BoundaryMode.FIXED);
                 stepFormatter.getLinePaint().setColor(Color.TRANSPARENT);
                 stepFormatter.getVertexPaint().setColor(Color.parseColor("#FF00BF"));
+                stepFormatter.getVertexPaint().setStrokeWidth(20);
                 mActivityTypePlot.addSeries(mDeepSeries, stepFormatter);
                 mActivityTypePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
                 mActivityTypePlot.getRangeLabelWidget().setVisible(false);
@@ -708,6 +763,7 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
                 mActivityTypePlot.setRangeBoundaries(0, 8, BoundaryMode.FIXED);
                 stepFormatter.getLinePaint().setColor(Color.TRANSPARENT);
                 stepFormatter.getVertexPaint().setColor(Color.parseColor("#0B615E"));
+                stepFormatter.getVertexPaint().setStrokeWidth(20);
                 mActivityTypePlot.addSeries(mLightSeries, stepFormatter);
                 mActivityTypePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
             }
@@ -720,6 +776,7 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
                 mActivityTypePlot.setRangeBoundaries(0, 8, BoundaryMode.FIXED);
                 stepFormatter.getLinePaint().setColor(Color.TRANSPARENT);
                 stepFormatter.getVertexPaint().setColor(Color.parseColor("#FF0000"));
+                stepFormatter.getVertexPaint().setStrokeWidth(20);
                 mActivityTypePlot.addSeries(mStillSeries, stepFormatter);
                 mActivityTypePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
                 mActivityTypePlot.getGraphWidget().getRangeLabelPaint().setColor(Color.TRANSPARENT);
@@ -734,6 +791,7 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
                 mActivityTypePlot.setRangeBoundaries(0, 8, BoundaryMode.FIXED);
                 stepFormatter.getLinePaint().setColor(Color.TRANSPARENT);
                 stepFormatter.getVertexPaint().setColor(Color.parseColor("#21610B"));
+                stepFormatter.getVertexPaint().setStrokeWidth(20);
                 mActivityTypePlot.addSeries(mWalkSeries, stepFormatter);
                 mActivityTypePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
                 mActivityTypePlot.setRangeStep(XYStepMode.SUBDIVIDE, 10);
@@ -747,6 +805,7 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
                 mActivityTypePlot.setRangeBoundaries(0, 8, BoundaryMode.FIXED);
                 stepFormatter.getLinePaint().setColor(Color.TRANSPARENT);
                 stepFormatter.getVertexPaint().setColor(Color.parseColor("#FF8000"));
+                stepFormatter.getVertexPaint().setStrokeWidth(20);
                 mActivityTypePlot.addSeries(mRunSeries, stepFormatter);
                 mActivityTypePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
                 mActivityTypePlot.setRangeStep(XYStepMode.SUBDIVIDE, 0);
@@ -760,6 +819,7 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
                 mActivityTypePlot.setRangeBoundaries(0, 8, BoundaryMode.FIXED);
                 stepFormatter.getLinePaint().setColor(Color.TRANSPARENT);
                 stepFormatter.getVertexPaint().setColor(Color.parseColor("#2E2EFE"));
+                stepFormatter.getVertexPaint().setStrokeWidth(20);
                 mActivityTypePlot.addSeries(mBikeSeries, stepFormatter);
                 mActivityTypePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
             }
@@ -770,6 +830,45 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
 
         if (stillAlive()) {
             synchronized (DoctorPatientViewDataFrag.this) {
+
+                mHeartRateLayout.setVisibility(View.VISIBLE);
+                mSkinTempLayout.setVisibility(View.VISIBLE);
+                mBodyTempLayout.setVisibility(View.VISIBLE);
+                mBloodPressureLayout.setVisibility(View.VISIBLE);
+                mActivityTypeLayout.setVisibility(View.VISIBLE);
+                mPerspirationLayout.setVisibility(View.VISIBLE);
+
+                // check if any of the series is empty
+                if (mHeartRateSeries == null || mHeartRateSeries.size() == 0)  {
+
+                    mHeartRateLayout.setVisibility(View.GONE);
+                }
+                if (mSkinTempSeries == null || mSkinTempSeries.size() == 0)  {
+
+                    mSkinTempLayout.setVisibility(View.GONE);
+                }
+                if (mPerspirationSeries == null || mPerspirationSeries.size() == 0)  {
+
+                    mPerspirationLayout.setVisibility(View.GONE);
+                }
+                if (mBloodPressureSeriesUpper == null || mBloodPressureSeriesUpper.size() == 0) {
+
+                    mBloodPressureLayout.setVisibility(View.GONE);
+                }
+                if (mBodyTempSeries == null || mBodyTempSeries.size() == 0)  {
+
+                    mBodyTempLayout.setVisibility(View.GONE);
+                }
+
+                if ((mREMSeries == null || mREMSeries.size() == 0) && (mDeepSeries == null || mDeepSeries.size() == 0) &&
+                        (mLightSeries == null || mLightSeries.size() == 0) && (mStillSeries == null || mStillSeries.size() == 0) &&
+                        (mWalkSeries == null || mWalkSeries.size() == 0) && (mRunSeries == null || mRunSeries.size() == 0) &&
+                        (mBikeSeries == null || mBikeSeries.size() == 0))  {
+
+                    mActivityTypeLayout.setVisibility(View.GONE);
+                }
+
+                checkIfAllGraphRelativeLayoutsAreGone();
 
                 mHeartRatePlot.redraw();
                 mSkinTempPlot.redraw();
@@ -802,7 +901,7 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
         plot.getGraphWidget().getBackgroundPaint().setColor(Color.TRANSPARENT);
         plot.getGraphWidget().getGridBackgroundPaint().setColor(Color.WHITE);
 
-        plot.getGraphWidget().setDomainLabelOrientation(-45);
+        plot.getGraphWidget().setDomainLabelOrientation(-25);
         plot.getGraphWidget().setDomainLabelVerticalOffset(10); //does not offset further
 
         plot.getDomainLabelWidget().getLabelPaint().setColor(Color.BLACK);
@@ -855,10 +954,6 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
             setupGraphSettings(mBodyTempPlot);
             setupGraphSettings(mActivityTypePlot);
         }
-
-        // For today's date, set the time to be 00:01 and the ending time to be 11:59 PM
-        Calendar calStart = Calendar.getInstance();
-        getDataFromServerBasedOnThis(calStart);
     }
 
     private void getDataFromServerBasedOnThis(Calendar cal)  {
@@ -887,7 +982,8 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
         mHeartRateSeries = null;
         mSkinTempSeries = null;
         mPerspirationSeries = null;
-        mBloodPressureSeries = null;
+        mBloodPressureSeriesUpper = null;
+        mBloodPressureSeriesLower = null;
         mBodyTempSeries = null;
         mREMSeries = null;
         mDeepSeries = null;

@@ -50,6 +50,7 @@ public class MyAlerts_Frag extends Fragment  {
     private String earlyDetection = "Early Detection";
     private List<DoctorAlertsWrapper> myAlertsList = new ArrayList<DoctorAlertsWrapper>();
     private ArrayAdapter<DoctorAlertsWrapper> adapter;
+    private TextView tvNoAlerts;
     private ApiThread mApiThread;
 
     public MyAlerts_Frag()  {}
@@ -84,6 +85,9 @@ public class MyAlerts_Frag extends Fragment  {
         ListView list = (ListView) view.findViewById(R.id.alertListView);
         list.setAdapter(adapter);
 
+        tvNoAlerts = (TextView) view.findViewById(R.id.tvNoAlertsForDoctorAtAll);
+        tvNoAlerts.setVisibility(View.GONE);
+
         Calendar calStart = Calendar.getInstance();
         calStart.set(1992, Calendar.APRIL, 18);
 
@@ -96,6 +100,15 @@ public class MyAlerts_Frag extends Fragment  {
 
         if (stillAlive()) {
             myAlertsList.clear();
+            if (alerts.isEmpty())  {
+
+                tvNoAlerts.setVisibility(View.VISIBLE);
+            }
+            else  {
+
+                tvNoAlerts.setVisibility(View.GONE);
+            }
+
             for (MessagesAlertResponse alert : alerts.getAlerts()) {
 
                 DoctorAlertsWrapper tmp = new DoctorAlertsWrapper(alert.getFirstName(),
@@ -182,6 +195,10 @@ public class MyAlerts_Frag extends Fragment  {
 
                             //Log.i("ALERT RECEIVED", "@@@@@@@@@@@@@@@@@@");
                             populateAlertsList((MessagesAlertListResponse) result);
+                        }
+                        else  {
+
+                            tvNoAlerts.setVisibility(View.VISIBLE);
                         }
                     }
 
