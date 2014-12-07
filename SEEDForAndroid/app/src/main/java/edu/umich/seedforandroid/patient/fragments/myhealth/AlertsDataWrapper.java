@@ -92,13 +92,11 @@ public class AlertsDataWrapper implements Comparable<AlertsDataWrapper>{
             @Override
             public int compare(AlertsDataWrapper w1, AlertsDataWrapper w2)  {
 
-                int diff = (int)(w2.getTimeStamp().getValue() - w1.getTimeStamp().getValue());
-                if (diff == 0) {
-
-                    diff = w2.getMessage().compareTo(w1.getMessage());
-                }
-
-                return diff;
+                long diff = w2.getTimeStamp().getValue() -
+                        w1.getTimeStamp().getValue();
+                if (diff == 0) w1.getMessage().compareToIgnoreCase(w2.getMessage());
+                if (diff < 0) return -1;
+                return 1;
             }
         };
     }

@@ -11,7 +11,10 @@ import com.appspot.umichseed.seed.model.MessagesAlertsRequest;
 import com.google.api.client.util.DateTime;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -84,7 +87,9 @@ public class AlertsManager {
                         MessagesAlertListResponse castedResult = (MessagesAlertListResponse)result;
                         if (castedResult.getAlerts() != null) {
 
-                            SortedSet<AlertsDataWrapper> sortedAlerts = buildSortedAlertsSet(castedResult);
+                            List<AlertsDataWrapper> localAlertsList = null;
+                            if (localAlerts != null) localAlertsList = new ArrayList<AlertsDataWrapper>(localAlerts);
+                            List<AlertsDataWrapper> sortedAlerts = buildSortedAlertsList(castedResult, localAlertsList);
                             // put all local alerts, removing duplicates and retaining a sorted order
                             if (localAlerts != null) {
 
@@ -102,7 +107,7 @@ public class AlertsManager {
                 @Override
                 public void onApiResult(Object result) {
 
-                    listener.onAlertsFetchComplete((SortedSet<AlertsDataWrapper>)result);
+                    listener.onAlertsFetchComplete((List<AlertsDataWrapper>)result);
                 }
 
                 @Override
@@ -142,7 +147,7 @@ public class AlertsManager {
                         MessagesAlertListResponse castedResult = (MessagesAlertListResponse) result;
                         if (castedResult.getAlerts() != null) {
 
-                            return buildSortedAlertsSet(castedResult);
+                            return buildSortedAlertsList(castedResult, null);
                         }
                     }
                     return null;
@@ -151,7 +156,7 @@ public class AlertsManager {
                 @Override
                 public void onApiResult(Object result) {
 
-                    listener.onAlertsFetchComplete((SortedSet<AlertsDataWrapper>)result);
+                    listener.onAlertsFetchComplete((List<AlertsDataWrapper>)result);
                 }
 
                 @Override
@@ -170,11 +175,10 @@ public class AlertsManager {
         }
     }
 
-    private SortedSet<AlertsDataWrapper> buildSortedAlertsSet(MessagesAlertListResponse result) {
+    private List<AlertsDataWrapper> buildSortedAlertsList(MessagesAlertListResponse result, List<AlertsDataWrapper> externalAlerts) {
 
         // remote alerts will be built in sorted order
-        SortedSet<AlertsDataWrapper> remoteAlerts =
-                new TreeSet<AlertsDataWrapper>(AlertsDataWrapper.getComparator());
+        if (externalAlerts == null) externalAlerts = new ArrayList<AlertsDataWrapper>();
         SharedPrefsUtil prefsUtil = new SharedPrefsUtil(mContext);
         String accountType = prefsUtil.getUserAccountType("");
         for (MessagesAlertResponse a : result.getAlerts()) {
@@ -199,7 +203,7 @@ public class AlertsManager {
                 }
             }
 
-            remoteAlerts.add(
+            externalAlerts.add(
                     new AlertsDataWrapper()
                             .setMessage(message)
                             .setTimeStamp(a.getTimeAlerted())
@@ -207,7 +211,8 @@ public class AlertsManager {
                             .setForEmail(a.getPatientEmail())
             );
         }
-        return remoteAlerts;
+        Collections.sort(externalAlerts, AlertsDataWrapper.getComparator());
+        return externalAlerts;
     }
 
     public static String buildEarlyAlertString(Context context, String patientName) {
@@ -230,7 +235,7 @@ public class AlertsManager {
     }
 
     public interface IAlertsFetchCompleteListener {
-        public void onAlertsFetchComplete(SortedSet<AlertsDataWrapper> alerts);
+        public void onAlertsFetchComplete(List<AlertsDataWrapper> alerts);
         public void onAlertsFetchFailure(Throwable error);
     }
 }

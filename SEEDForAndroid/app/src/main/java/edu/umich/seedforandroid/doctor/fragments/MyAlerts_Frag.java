@@ -95,7 +95,7 @@ public class MyAlerts_Frag extends Fragment  {
         updateAlertsListFromServer(startTime, endTime);
     }
 
-    private void populateAlertsList(SortedSet<AlertsDataWrapper> alerts)  {
+    private void populateAlertsList(List<AlertsDataWrapper> alerts)  {
 
         if (stillAlive())  {
 
@@ -109,10 +109,7 @@ public class MyAlerts_Frag extends Fragment  {
                 tvNoAlerts.setVisibility(View.GONE);
             }
 
-            for (AlertsDataWrapper alert : alerts) {
-
-                myAlertsList.add(alert);
-            }
+            myAlertsList = alerts;
 
             adapter = new AlertsListAdapter();
             ListView list = (ListView) getView().findViewById(R.id.alertListView);
@@ -179,7 +176,7 @@ public class MyAlerts_Frag extends Fragment  {
             AlertsManager alertsManager = new AlertsManager(getActivity(), mApiThread);
             alertsManager.getRemoteOnly(accountManager.getAccountName(), from, to, new AlertsManager.IAlertsFetchCompleteListener() {
                 @Override
-                public void onAlertsFetchComplete(SortedSet<AlertsDataWrapper> alerts)  {
+                public void onAlertsFetchComplete(List<AlertsDataWrapper> alerts)  {
 
                     mProgressBar.setVisibility(View.INVISIBLE);
                     populateAlertsList(alerts);

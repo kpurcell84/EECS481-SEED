@@ -483,8 +483,11 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
                             Collections.sort(dataList, new Comparator<MessagesPQuantDataResponse>()  {
                                 @Override
                                 public int compare(MessagesPQuantDataResponse messagesPQuantDataResponse, MessagesPQuantDataResponse messagesPQuantDataResponse2) {
-                                    return (int)(messagesPQuantDataResponse.getTimeTaken().getValue() -
-                                            messagesPQuantDataResponse2.getTimeTaken().getValue());
+                                    long diff = messagesPQuantDataResponse.getTimeTaken().getValue() -
+                                            messagesPQuantDataResponse2.getTimeTaken().getValue();
+                                    if (diff == 0) return 0;
+                                    if (diff < 0) return -1;
+                                    return 1;
                                 }
                             });
 

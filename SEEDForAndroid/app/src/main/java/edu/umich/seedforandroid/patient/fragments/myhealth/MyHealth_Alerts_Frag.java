@@ -109,7 +109,7 @@ public class MyHealth_Alerts_Frag extends Fragment  {
                                       new AlertsManager.IAlertsFetchCompleteListener()  {
 
             @Override
-            public void onAlertsFetchComplete(SortedSet<AlertsDataWrapper> alerts)  {
+            public void onAlertsFetchComplete(List<AlertsDataWrapper> alerts)  {
 
                 mProgressBar.setVisibility(View.INVISIBLE);
 
@@ -134,11 +134,11 @@ public class MyHealth_Alerts_Frag extends Fragment  {
         });
     }
 
-    private void refreshUi(SortedSet<AlertsDataWrapper> sortedSet)  {
+    private void refreshUi(List<AlertsDataWrapper> alerts)  {
 
         if (stillAlive()) {
 
-            if (sortedSet.isEmpty()) {
+            if (alerts.isEmpty()) {
 
                 tvNoAlert.setVisibility(View.VISIBLE);
                 return;
@@ -148,10 +148,7 @@ public class MyHealth_Alerts_Frag extends Fragment  {
                 tvNoAlert.setVisibility(View.GONE);
             }
 
-            for (AlertsDataWrapper alert : sortedSet) {
-
-                myAlertsList.add(alert);
-            }
+            myAlertsList = alerts;
 
             adapter = new AlertsListAdapter();
             ListView list = (ListView) getView().findViewById(R.id.alertListViewPatient);
