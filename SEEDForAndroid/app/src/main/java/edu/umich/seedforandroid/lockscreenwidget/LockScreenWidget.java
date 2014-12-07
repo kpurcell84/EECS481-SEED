@@ -1,11 +1,8 @@
 package edu.umich.seedforandroid.lockscreenwidget;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
-import android.content.Intent;
 
 public class LockScreenWidget extends AppWidgetProvider  {
 
@@ -14,11 +11,11 @@ public class LockScreenWidget extends AppWidgetProvider  {
 
         super.onEnabled(context);
 
-        // Lock Screen Widget Servicer + Receiver
-        AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, LockScreenWidgetReceiver.class);
-        PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
-        am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 100, 1000, pi); //1000
+//        // Lock Screen Widget Servicer + Receiver
+//        AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+//        Intent intent = new Intent(context, LockScreenWidgetReceiver.class);
+//        PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
+//        am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 100, 1000, pi); //1000
     }
 
     @Override

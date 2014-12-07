@@ -29,7 +29,7 @@ public class LockScreenWidgetServicer extends Service  {
     private NotificationManager mgr;
     private Notification.Builder builder;
     private static final int SURVEY_NOTIFY_ID = 3;
-    private int mHour, mMinute, mDay, mSecond;
+    private int mHour, mHour24, mMinute, mDay, mSecond;
     private int[] mMorningTimeSlot, mEveningTimeSlot;
     private String mMonth, mDayOfWeek, mAmPm, mCurrentTime, mUserAccountType,
                    mPriority, mTimeAlerted, mNotificationMessage, mNotiState;
@@ -49,8 +49,10 @@ public class LockScreenWidgetServicer extends Service  {
 
     private void checkIfSurveyTime()  {
 
-        if ((mHour == mMorningTimeSlot[0] && mMinute == mMorningTimeSlot[1] && mSecond == 5) ||
-                (mHour == mEveningTimeSlot[0] && mMinute == mEveningTimeSlot[1] && mSecond == 5))  {
+        Log.i("Time: ", String.valueOf(mHour24) + ":" + String.valueOf(mMinute));
+
+        if ((mHour24 == mMorningTimeSlot[0] && mMinute == mMorningTimeSlot[1] && mSecond == 5) ||
+                (mHour24 == mEveningTimeSlot[0] && mMinute == mEveningTimeSlot[1] && mSecond == 5))  {
 
             mSharedPrefsUtilInst.setNotificationState(SharedPrefsUtil.SURVEY_NOTIFICATION);
             createNotificationForSurvey();
@@ -91,7 +93,6 @@ public class LockScreenWidgetServicer extends Service  {
 
     private void drawWidget()  {
 
-        Log.i("LOCK SCREEN WIDGET", "@@@@@@@@@@@@");
         if (mNotiState.contentEquals(SharedPrefsUtil.INACTIVE_NOTIFICATION))  {
 
             updateClock();
@@ -205,6 +206,7 @@ public class LockScreenWidgetServicer extends Service  {
         int month = Integer.parseInt(timeParts[1]);
         String[] twelveHourTime = Utils.convert24HourTo12Hour(timeParts[3]);
         mHour = Integer.parseInt(twelveHourTime[0]);
+        mHour24 = Integer.parseInt(timeParts[3]);
         mMinute = Integer.parseInt(timeParts[4]);
         mSecond = Integer.parseInt(timeParts[5]);
         mDay = Integer.parseInt(timeParts[2]);

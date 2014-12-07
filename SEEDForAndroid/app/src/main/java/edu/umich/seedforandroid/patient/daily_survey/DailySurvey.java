@@ -3,6 +3,8 @@ package edu.umich.seedforandroid.patient.daily_survey;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -339,8 +341,15 @@ public class DailySurvey extends Activity implements View.OnClickListener  {
 
     private void goBackToMainActivityPatient()  {
 
-        if (stillAlive()) {
+        if (stillAlive())  {
+
+            NotificationManager notifManager= (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notifManager.cancelAll();
+
             Intent intent = new Intent(DailySurvey.this, MainActivity_Patient.class);
+            Bundle extras = new Bundle();
+            extras.putInt("tabSelection", MainActivity_Patient.PROFILE);
+            intent.putExtras(extras);
             startActivity(intent);
         }
     }

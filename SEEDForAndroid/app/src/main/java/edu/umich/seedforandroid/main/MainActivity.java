@@ -2,8 +2,11 @@ package edu.umich.seedforandroid.main;
 
 import android.accounts.AccountManager;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -29,6 +32,7 @@ import edu.umich.seedforandroid.api.ApiThread;
 import edu.umich.seedforandroid.api.SeedApi;
 import edu.umich.seedforandroid.doctor.MainActivity_Doctor;
 import edu.umich.seedforandroid.gcm.GcmManager;
+import edu.umich.seedforandroid.lockscreenwidget.LockScreenWidgetReceiver;
 import edu.umich.seedforandroid.patient.MainActivity_Patient;
 import edu.umich.seedforandroid.util.SharedPrefsUtil;
 
@@ -49,6 +53,7 @@ public class MainActivity extends Activity implements View.OnClickListener  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setUpLockScreenWidget();
         initialSetup();
 
         loadAccountManager();
@@ -84,6 +89,15 @@ public class MainActivity extends Activity implements View.OnClickListener  {
                 Toast.makeText(MainActivity.this, "Please log in", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void setUpLockScreenWidget()  {
+
+        // Lock Screen Widget Servicer + Receiver
+        AlarmManager am = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getApplicationContext(), LockScreenWidgetReceiver.class);
+        PendingIntent pi = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, 0);
+        am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 100, 1000, pi); //1000
     }
 
     private void initialSetup()  {
