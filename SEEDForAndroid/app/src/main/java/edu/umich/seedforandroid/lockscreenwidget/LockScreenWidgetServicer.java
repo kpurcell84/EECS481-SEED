@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import java.util.Calendar;
@@ -90,6 +91,7 @@ public class LockScreenWidgetServicer extends Service  {
 
     private void drawWidget()  {
 
+        Log.i("LOCK SCREEN WIDGET", "@@@@@@@@@@@@");
         if (mNotiState.contentEquals(SharedPrefsUtil.INACTIVE_NOTIFICATION))  {
 
             updateClock();
