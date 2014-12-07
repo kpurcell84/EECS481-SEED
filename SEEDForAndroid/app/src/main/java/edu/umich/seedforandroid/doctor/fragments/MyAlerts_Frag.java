@@ -18,27 +18,22 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.appspot.umichseed.seed.Seed;
-import com.appspot.umichseed.seed.SeedRequest;
-import com.appspot.umichseed.seed.model.MessagesAlertListResponse;
-import com.appspot.umichseed.seed.model.MessagesAlertResponse;
-import com.appspot.umichseed.seed.model.MessagesAlertsRequest;
 import com.google.api.client.util.DateTime;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.SortedSet;
 
 import edu.umich.seedforandroid.R;
 import edu.umich.seedforandroid.account.GoogleAccountManager;
 import edu.umich.seedforandroid.api.ApiThread;
-import edu.umich.seedforandroid.api.SeedApi;
 import edu.umich.seedforandroid.doctor.patientdata.DoctorViewPatientData;
 import edu.umich.seedforandroid.main.MainActivity;
+import edu.umich.seedforandroid.patient.fragments.myhealth.AlertsDataWrapper;
 import edu.umich.seedforandroid.util.AlertsManager;
 import edu.umich.seedforandroid.util.Utils;
 
@@ -48,8 +43,8 @@ public class MyAlerts_Frag extends Fragment  {
 
     private String emergencyDetection = "Emergency Detection";
     private String earlyDetection = "Early Detection";
-    private List<DoctorAlertsWrapper> myAlertsList = new ArrayList<DoctorAlertsWrapper>();
-    private ArrayAdapter<DoctorAlertsWrapper> adapter;
+    private List<AlertsDataWrapper> myAlertsList = new ArrayList<AlertsDataWrapper>();
+    private ArrayAdapter<AlertsDataWrapper> adapter;
     private TextView tvNoAlerts;
     private ApiThread mApiThread;
 
@@ -96,9 +91,10 @@ public class MyAlerts_Frag extends Fragment  {
         updateAlertsListFromServer(startTime, endTime);
     }
 
-    private void populateAlertsList(MessagesAlertListResponse alerts)  {
+    private void populateAlertsList(SortedSet<AlertsDataWrapper> alerts)  {
 
-        if (stillAlive()) {
+        if (stillAlive())  {
+
             myAlertsList.clear();
             if (alerts.isEmpty())  {
 
@@ -109,14 +105,9 @@ public class MyAlerts_Frag extends Fragment  {
                 tvNoAlerts.setVisibility(View.GONE);
             }
 
-            for (MessagesAlertResponse alert : alerts.getAlerts()) {
+            for (AlertsDataWrapper alert : alerts) {
 
-                DoctorAlertsWrapper tmp = new DoctorAlertsWrapper(alert.getFirstName(),
-                        alert.getLastName(),
-                        alert.getPatientEmail(),
-                        alert.getTimeAlerted(),
-                        alert.getPriority());
-                myAlertsList.add(tmp);
+                myAlertsList.add(alert);
             }
 
             Collections.reverse(myAlertsList);
@@ -179,46 +170,25 @@ public class MyAlerts_Frag extends Fragment  {
         }
         else {
 
-            try {
-                Seed api = SeedApi.getAuthenticatedApi(accountManager.getCredential());
-                SeedRequest request = api.alerts().get(
-                        new MessagesAlertsRequest()
-                                .setStartTime(from)
-                                .setEndTime(to)
-                                .setEmail(accountManager.getAccountName())
-                );
-                mApiThread.enqueueRequest(request, new ApiThread.ApiResultAction()  {
-                    @Override
-                    public void onApiResult(Object result)  {
+            AlertsManager alertsManager = new AlertsManager(getActivity(), mApiThread);
+            alertsManager.getRemoteOnly(accountManager.getAccountName(), from, to, new AlertsManager.IAlertsFetchCompleteListener() {
+                @Override
+                public void onAlertsFetchComplete(SortedSet<AlertsDataWrapper> alerts) {
 
-                        if (result != null && result instanceof MessagesAlertListResponse)  {
+                    populateAlertsList(alerts);
+                }
 
-                            //Log.i("ALERT RECEIVED", "@@@@@@@@@@@@@@@@@@");
-                            populateAlertsList((MessagesAlertListResponse) result);
-                        }
-                        else  {
+                @Override
+                public void onAlertsFetchFailure(Throwable error) {
 
-                            tvNoAlerts.setVisibility(View.VISIBLE);
-                        }
-                    }
-
-                    @Override
-                    public void onApiError(Throwable error) {
-
-                        Log.e(TAG, "API error occurred with message: " + error.getMessage());
-                        notifyUiApiError();
-                    }
-                });
-            }
-            catch (IOException e) {
-
-                Log.e(TAG, "An unknown API error occurred - API could not build the request");
-                notifyUiApiError();
-            }
+                    Log.e(TAG, "API error occurred with message: " + error.getMessage());
+                    notifyUiApiError();
+                }
+            });
         }
     }
 
-    private class AlertsListAdapter extends ArrayAdapter<DoctorAlertsWrapper>  {
+    private class AlertsListAdapter extends ArrayAdapter<AlertsDataWrapper>  {
 
         public AlertsListAdapter()  {
 
@@ -237,15 +207,15 @@ public class MyAlerts_Frag extends Fragment  {
             }
 
             // Find the item to work with.
-            DoctorAlertsWrapper currentAlert = myAlertsList.get(position);
+            AlertsDataWrapper currentAlert = myAlertsList.get(position);
 
             // Email
             final TextView tvEmail = (TextView) itemView.findViewById(R.id.tvPatientEmail);
-            tvEmail.setText(currentAlert.getPatientEmail());
+            tvEmail.setText(currentAlert.getForEmail());
 
             // Name
-            TextView tvName = (TextView) itemView.findViewById(R.id.tvPatientName);
-            final String patientNameTmp = currentAlert.getPatientFirstName().concat(" ").concat(currentAlert.getPatientLastName());
+            TextView tvName = (TextView) itemView.findViewById(R.id.tvMyAlertMessage);
+            final String patientNameTmp = currentAlert.getMessage();
             tvName.setText(patientNameTmp);
 
             // Detection Image View
@@ -253,7 +223,7 @@ public class MyAlerts_Frag extends Fragment  {
 
             // Time Alerted
             TextView tvTimeAlerted = (TextView) itemView.findViewById(R.id.tvTimeAlerted);
-            DateTime timeAlerted = currentAlert.getTimeAlerted();
+            DateTime timeAlerted = currentAlert.getTimeStamp();
 
             DateFormat formatter = new SimpleDateFormat("yyyy:MM:dd:HH:mm");
             tvTimeAlerted.setText(formatTimePretty(formatter.format(timeAlerted.getValue()).toString()));

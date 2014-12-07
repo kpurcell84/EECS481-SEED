@@ -22,8 +22,7 @@
                 android:layout_height="wrap_content"
                 android:text="Patient Name"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                android:id="@+id/tvPatientName" />
+                android:id="@+id/tvMyAlertMessage" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -35,7 +34,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tvPatientName"
+                android:layout_below="@+id/tvMyAlertMessage"
                 android:layout_marginTop="15dp"
                 android:text="Time Alerted :"
                 android:textSize="15sp"

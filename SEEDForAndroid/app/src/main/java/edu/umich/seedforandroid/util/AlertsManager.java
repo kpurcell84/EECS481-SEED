@@ -204,6 +204,7 @@ public class AlertsManager {
                             .setMessage(message)
                             .setTimeStamp(a.getTimeAlerted())
                             .setPriority(priority)
+                            .setForEmail(a.getPatientEmail())
             );
         }
         return remoteAlerts;

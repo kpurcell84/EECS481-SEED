@@ -49,6 +49,19 @@ public class AlertsDataWrapper implements Comparable<AlertsDataWrapper>{
         return this;
     }
 
+    @Expose
+    @SerializedName("forEmail")
+    private String forEmail;
+    public String getForEmail() {
+
+        return forEmail;
+    }
+    public AlertsDataWrapper setForEmail(String forEmail) {
+
+        this.forEmail = forEmail;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
 
