@@ -25,11 +25,19 @@ import edu.umich.seedforandroid.R;
 import edu.umich.seedforandroid.account.GoogleAccountManager;
 import edu.umich.seedforandroid.api.ApiThread;
 import edu.umich.seedforandroid.api.SeedApi;
+import edu.umich.seedforandroid.doctor.MainActivity_Doctor;
 import edu.umich.seedforandroid.main.MainActivity;
 
 public class UpdateDoctorProfile extends Activity implements View.OnClickListener  {
 
+    //todo this class ensures that the doctors email can't be changed, but it may still have UI that makes them think it can. Remove that
+
     private static final String TAG = UpdateDoctorProfile.class.getSimpleName();
+
+    public static final String EXTRA_FIRSTNAME = "eFirstname";
+    public static final String EXTRA_LASTNAME = "eLastname";
+    public static final String EXTRA_PHONE = "ePhone";
+    public static final String EXTRA_HOSPITAL = "eHospital";
 
     private EditText etFirstName, etLastName, etEmail, etPhoneNumber, etHospital;
     private String mFirstName, mLastName, mHospital, mPhoneNumber, mEmail;
@@ -52,6 +60,12 @@ public class UpdateDoctorProfile extends Activity implements View.OnClickListene
 
         setContentView(R.layout.activity_update_doctor_profile);
 
+        Bundle extras = getIntent().getExtras();
+        mFirstName = extras.getString(EXTRA_FIRSTNAME);
+        mLastName = extras.getString(EXTRA_LASTNAME);
+        mEmail = mAccountManager.getAccountName();
+        mPhoneNumber = extras.getString(EXTRA_PHONE);
+        mHospital = extras.getString(EXTRA_HOSPITAL);
         initialSetup();
     }
 
@@ -68,7 +82,7 @@ public class UpdateDoctorProfile extends Activity implements View.OnClickListene
         bSave = (Button) findViewById(R.id.bUpdateProfileSaveDoctor);
         bSave.setOnClickListener(this);
 
-        loadProfileInformation();
+        displayProfileInformation();
     }
 
     private void notifyUiAuthenticationError()  {
@@ -117,14 +131,9 @@ public class UpdateDoctorProfile extends Activity implements View.OnClickListene
         }
     }
 
-    private void displayProfileInformation(MessagesDoctorPut doctorProfile)  {
+    private void displayProfileInformation()  {
 
         if (stillAlive()) {
-
-            mFirstName = doctorProfile.getFirstName();
-            mLastName = doctorProfile.getLastName();
-            mHospital = doctorProfile.getHospital();
-            mPhoneNumber = doctorProfile.getPhone();
 
             // Parse the mPhoneNumber
             String[] phoneNumParts = mPhoneNumber.split("-");
@@ -133,50 +142,12 @@ public class UpdateDoctorProfile extends Activity implements View.OnClickListene
 
                 mPhoneNumber += phoneNumParts[i];
             }
-            mEmail = doctorProfile.getEmail();
 
             etFirstName.setText(mFirstName);
             etLastName.setText(mLastName);
             etHospital.setText(mHospital);
             etPhoneNumber.setText(mPhoneNumber);
             etEmail.setText(mEmail);
-        }
-    }
-
-    //todo decide where to call this...probably in onStart?
-    private void loadProfileInformation()  {
-
-        try {
-
-            Seed api = SeedApi.getAuthenticatedApi(mAccountManager.getCredential());
-            SeedRequest request = api.doctor().get(mAccountManager.getAccountName());
-            mApiThread.enqueueRequest(request, new ApiThread.ApiResultAction() {
-                @Override
-                public void onApiResult(Object result) {
-
-                    if (result != null && result instanceof MessagesDoctorPut) {
-
-                        displayProfileInformation((MessagesDoctorPut)result);
-                    }
-                    else {
-
-                        Log.e(TAG, "API Error: API returned successfully, but with an invalid datatype (or null)");
-                        notifyUiApiError();
-                    }
-                }
-
-                @Override
-                public void onApiError(Throwable error) {
-
-                    Log.e(TAG, "API Error: API returned failure with messsge " + error.getMessage());
-                    notifyUiApiError();
-                }
-            });
-        }
-        catch (IOException e) {
-
-            Log.e(TAG, "An API Error Occurred: The API couldn't instantiate the request");
-            notifyUiApiError();
         }
     }
 
@@ -207,13 +178,44 @@ public class UpdateDoctorProfile extends Activity implements View.OnClickListene
 
     private void saveUpdateProfile()  {
 
-        mFirstName = etFirstName.getText().toString();
-        mLastName = etLastName.getText().toString();
-        mHospital = etHospital.getText().toString();
-        mEmail = etEmail.getText().toString();
-        mPhoneNumber = etPhoneNumber.getText().toString();
+        String firstname = etFirstName.getText().toString();
+        mFirstName = !firstname.isEmpty() ? firstname : mFirstName;
+        String lastname = etLastName.getText().toString();
+        mLastName = !lastname.isEmpty() ? lastname : mLastName;
+        String hospital = etHospital.getText().toString();
+        mHospital = !hospital.isEmpty() ? hospital : mHospital;
+        String phone = etPhoneNumber.getText().toString();
+        mPhoneNumber = !phone.isEmpty() ? phone : mPhoneNumber;
 
-        // todo save the new information
+        try {
+            Seed api = SeedApi.getAuthenticatedApi(mAccountManager.getCredential());
+            SeedRequest request = api.doctor().put(
+                    new MessagesDoctorPut()
+                            .setFirstName(mFirstName)
+                            .setLastName(mLastName)
+                            .setEmail(mAccountManager.getAccountName())
+                            .setPhone(mPhoneNumber)
+                            .setHospital(mHospital)
+            );
+            mApiThread.enqueueRequest(request, new ApiThread.ApiResultAction() {
+                @Override
+                public void onApiResult(Object result) {
+                    //ignore result
+                    gotoMainActivityDoctor();
+                }
+
+                @Override
+                public void onApiError(Throwable error) {
+
+                    Log.e(TAG, "FATAL ERROR: Api Returned error with message " + error.getMessage());
+                }
+            });
+        }
+        catch (IOException e) {
+
+            Log.e(TAG, "FATAL ERROR: Couldn't create API request");
+            notifyUiApiError();
+        }
     }
 
     @Override
@@ -233,6 +235,15 @@ public class UpdateDoctorProfile extends Activity implements View.OnClickListene
     private void gotoMainActivity()  {
 
         Intent i = new Intent(UpdateDoctorProfile.this, MainActivity.class);
+        startActivity(i);
+    }
+
+    private void gotoMainActivityDoctor()  {
+
+        Intent i = new Intent(UpdateDoctorProfile.this, MainActivity_Doctor.class);
+        Bundle extras = new Bundle();
+        extras.putInt("tabSelection", MainActivity_Doctor.PROFILE);
+        i.putExtras(extras);
         startActivity(i);
     }
 }

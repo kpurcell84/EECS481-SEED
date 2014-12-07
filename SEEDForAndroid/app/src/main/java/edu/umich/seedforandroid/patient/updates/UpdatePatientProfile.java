@@ -3,6 +3,7 @@ package edu.umich.seedforandroid.patient.updates;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DownloadManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -30,10 +31,18 @@ import edu.umich.seedforandroid.patient.MainActivity_Patient;
 
 public class UpdatePatientProfile extends Activity implements View.OnClickListener  {
 
+    //todo this class ensures that the patients email can't be changed, but it may still have UI that makes them think it can. Remove that
+
     private static final String TAG = UpdatePatientProfile.class.getSimpleName();
+
+    public static final String EXTRA_FIRSTNAME = "eFirstname";
+    public static final String EXTRA_LASTNAME = "eLastname";
+    public static final String EXTRA_PHONE = "ePhone";
+    public static final String EXTRA_DOCTOR_EMAIL = "eDocEmail";
 
     private EditText etFirstName, etLastName, etEmail, etPhoneNumber;
     private String mFirstName, mLastName, mEmail, mPhoneNumber;
+    private String mDoctorEmail;
     private Button bSave;
     private ApiThread mApiThread;
     private GoogleAccountManager mAccountManager;
@@ -53,8 +62,14 @@ public class UpdatePatientProfile extends Activity implements View.OnClickListen
             notifyUiAuthenticationError();
         }
 
+        Bundle extras = getIntent().getExtras();
+        mEmail = mAccountManager.getAccountName();
+        mFirstName = extras.getString(EXTRA_FIRSTNAME);
+        mLastName = extras.getString(EXTRA_LASTNAME);
+        mDoctorEmail = extras.getString(EXTRA_DOCTOR_EMAIL);
+        mPhoneNumber = extras.getString(EXTRA_PHONE);
+
         initialSetup();
-        loadProfileInformation();
     }
 
     @Override
@@ -75,15 +90,13 @@ public class UpdatePatientProfile extends Activity implements View.OnClickListen
         etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumberPatient);
         bSave = (Button) findViewById(R.id.bUpdateProfileSavePatient);
         bSave.setOnClickListener(this);
+
+        displayProfileInformation();
     }
 
-    private void displayProfileInformation(MessagesPatientPut patientProfile)  {
+    private void displayProfileInformation()  {
 
         if (stillAlive()) {
-            mFirstName = patientProfile.getFirstName();
-            mLastName = patientProfile.getLastName();
-            mEmail = patientProfile.getEmail();
-            mPhoneNumber = patientProfile.getPhone();
 
             String[] parts = mPhoneNumber.split("-");
             mPhoneNumber = "";
@@ -144,44 +157,6 @@ public class UpdatePatientProfile extends Activity implements View.OnClickListen
         }
     }
 
-    private void loadProfileInformation()  {
-
-        try {
-
-            String patientEmail = mPatientEmail != null ?
-                    mPatientEmail : mAccountManager.getAccountName();
-            Seed api = SeedApi.getAuthenticatedApi(mAccountManager.getCredential());
-            SeedRequest request = api.patient().get(patientEmail);
-            mApiThread.enqueueRequest(request, new ApiThread.ApiResultAction() {
-                @Override
-                public void onApiResult(Object result) {
-
-                    if (result != null && result instanceof MessagesPatientPut) {
-
-                        displayProfileInformation((MessagesPatientPut)result);
-                    }
-                    else {
-
-                        Log.e(TAG, "API Error: API returned successfully, but with an invalid datatype (or null)");
-                        notifyUiApiError();
-                    }
-                }
-
-                @Override
-                public void onApiError(Throwable error) {
-
-                    Log.e(TAG, "API Error: API returned failure with messsge " + error.getMessage());
-                    notifyUiApiError();
-                }
-            });
-        }
-        catch (IOException e) {
-
-            Log.e(TAG, "An API Error Occurred: The API couldn't instantiate the request");
-            notifyUiApiError();
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu)  {
 
@@ -232,10 +207,42 @@ public class UpdatePatientProfile extends Activity implements View.OnClickListen
     private void updatePatientInfo()  {
 
         // todo update the patient info and go back to MainActivity Patient
-        mFirstName = etFirstName.getText().toString();
-        mLastName = etLastName.getText().toString();
-        mEmail = etEmail.getText().toString();
-        mPhoneNumber = etPhoneNumber.getText().toString();
+        String firstname = etFirstName.getText().toString();
+        mFirstName = !firstname.isEmpty() ? firstname : mFirstName;
+        String lastname = etLastName.getText().toString();
+        mLastName = !lastname.isEmpty() ? lastname : mLastName;
+        String phoneNumber = etPhoneNumber.getText().toString();
+        mPhoneNumber = !phoneNumber.isEmpty() ? phoneNumber : mPhoneNumber;
+
+        try {
+            Seed api = SeedApi.getAuthenticatedApi(mAccountManager.getCredential());
+            SeedRequest request = api.patient().put(
+                    new MessagesPatientPut()
+                            .setEmail(mAccountManager.getAccountName())
+                            .setFirstName(mFirstName)
+                            .setLastName(mLastName)
+                            .setDoctorEmail(mDoctorEmail)
+                            .setPhone(mPhoneNumber)
+            );
+            mApiThread.enqueueRequest(request, new ApiThread.ApiResultAction() {
+                @Override
+                public void onApiResult(Object result) {
+                    //ignore result
+                    gotoMainActivityPatient();
+                }
+
+                @Override
+                public void onApiError(Throwable error) {
+                    Log.e(TAG, "ERROR: Api Returned error with message " + error.getMessage());
+                    notifyUiApiError();
+                }
+            });
+        }
+        catch (IOException e) {
+
+            Log.e(TAG, "FATAL ERROR: Could not create API request");
+            notifyUiApiError();
+        }
     }
 
     private boolean stillAlive() {

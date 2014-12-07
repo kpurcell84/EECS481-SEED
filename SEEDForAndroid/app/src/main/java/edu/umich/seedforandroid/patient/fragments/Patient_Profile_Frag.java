@@ -39,6 +39,7 @@ public class Patient_Profile_Frag extends Fragment implements View.OnClickListen
     private Button bUpdateProfile;
     private TextView tvPatientName, tvEmail, tvPhoneNumber;
     private String mFirstName, mLastName, mEmail, mPhoneNumber;
+    private String mDoctorEmail;
     private ApiThread mApiThread;
     private GoogleAccountManager mAccountManager;
     private String mPatientEmail = null;
@@ -120,6 +121,13 @@ public class Patient_Profile_Frag extends Fragment implements View.OnClickListen
         mProgressBar.setVisibility(View.INVISIBLE);
 
         Intent i = new Intent(getActivity(), UpdatePatientProfile.class);
+        Bundle extras = new Bundle();
+        extras.putString(UpdatePatientProfile.EXTRA_FIRSTNAME, mFirstName);
+        extras.putString(UpdatePatientProfile.EXTRA_LASTNAME, mLastName);
+        extras.putString(UpdatePatientProfile.EXTRA_DOCTOR_EMAIL, mDoctorEmail);
+        extras.putString(UpdatePatientProfile.EXTRA_PHONE, mPhoneNumber);
+        i.putExtras(extras);
+
         startActivity(i);
     }
 
@@ -133,6 +141,7 @@ public class Patient_Profile_Frag extends Fragment implements View.OnClickListen
             mLastName = patientProfile.getLastName();
             mEmail = patientProfile.getEmail();
             mPhoneNumber = patientProfile.getPhone();
+            mDoctorEmail = patientProfile.getDoctorEmail();
 
             tvPatientName.setText(mFirstName.concat(" ").concat(mLastName));
             tvEmail.setText(mEmail);

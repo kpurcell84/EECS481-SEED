@@ -37,7 +37,7 @@ public class Doctor_Profile_Frag extends Fragment implements View.OnClickListene
 
     private TextView tvDoctorName, tvHospital, tvPhoneNumber, tvEmail;
     private Button bLogout, bUpdateProfile;
-    private String mDoctorName, mHospital, mPhoneNumber, mEmail;
+    private String mFirstName, mLastName, mHospital, mPhoneNumber, mEmail;
     private ApiThread mApiThread;
     private ProgressDialog mProgressDialog;
     private GoogleAccountManager mAccountManager;
@@ -95,12 +95,13 @@ public class Doctor_Profile_Frag extends Fragment implements View.OnClickListene
     private void displayProfileInformation(MessagesDoctorPut doctorProfile)  {
 
         if (stillAlive()) {
-            mDoctorName = doctorProfile.getFirstName().concat(" ").concat(doctorProfile.getLastName());
+            mFirstName = doctorProfile.getFirstName();
+            mLastName = doctorProfile.getLastName();
             mHospital = doctorProfile.getHospital();
             mPhoneNumber = "Tel : ".concat(doctorProfile.getPhone());
             mEmail = doctorProfile.getEmail();
 
-            tvDoctorName.setText(mDoctorName);
+            tvDoctorName.setText(mFirstName.concat(" ").concat(mLastName));
             tvHospital.setText(mHospital);
             tvPhoneNumber.setText(mPhoneNumber);
             tvEmail.setText(mEmail);
@@ -156,7 +157,6 @@ public class Doctor_Profile_Frag extends Fragment implements View.OnClickListene
         }
     }
 
-    //todo decide where to call this...probably in onStart?
     private void loadProfileInformation()  {
 
         try {
@@ -268,6 +268,11 @@ public class Doctor_Profile_Frag extends Fragment implements View.OnClickListene
     private void gotoUpdateProfile()  {
 
         Intent i = new Intent(getActivity(), UpdateDoctorProfile.class);
+        Bundle extras = new Bundle();
+        extras.putString(UpdateDoctorProfile.EXTRA_HOSPITAL, mHospital);
+        extras.putString(UpdateDoctorProfile.EXTRA_PHONE, mPhoneNumber);
+        extras.putString(UpdateDoctorProfile.EXTRA_FIRSTNAME, mFirstName);
+        extras.putString(UpdateDoctorProfile.EXTRA_LASTNAME, mLastName);
         startActivity(i);
     }
 

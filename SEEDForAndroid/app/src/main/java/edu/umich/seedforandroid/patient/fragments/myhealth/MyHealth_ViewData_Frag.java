@@ -46,7 +46,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
 import edu.umich.seedforandroid.R;
 import edu.umich.seedforandroid.account.GoogleAccountManager;
@@ -501,9 +504,18 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
                         ViewDataGraphWrapper bikeData =
                                 new ViewDataGraphWrapper(ViewDataGraphWrapper.BIKE);
 
-                        if (castedResult.getPdataList() != null)  {
+                        List<MessagesPQuantDataResponse> dataList = castedResult.getPdataList();
+                        if (dataList != null)  {
 
-                            for (MessagesPQuantDataResponse r : castedResult.getPdataList())  {
+                            Collections.sort(dataList, new Comparator<MessagesPQuantDataResponse>() {
+                                @Override
+                                public int compare(MessagesPQuantDataResponse messagesPQuantDataResponse, MessagesPQuantDataResponse messagesPQuantDataResponse2) {
+                                    return (int)(messagesPQuantDataResponse.getTimeTaken().getValue() -
+                                            messagesPQuantDataResponse2.getTimeTaken().getValue());
+                                }
+                            });
+
+                            for (MessagesPQuantDataResponse r : dataList)  {
 
                                 if (r != null && r.getTimeTaken() != null)  {
 
@@ -597,14 +609,6 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
                                 }
                             }
 
-
-                            // SORT
-                            for (int i = 0; i < heartRateData.getEpoch().size(); ++i)  {
-
-                             //   ToSort toSort = new ToSort(heartRateData.getHealthData().get(i).doubleValue(), heartRateData.getEpoch().get(i).byteValue());
-
-                            }
-
                             populateDataIntoGraphs(heartRateData);
                             populateDataIntoGraphs(skinTempData);
                             populateDataIntoGraphs(gsrData);
@@ -662,7 +666,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
             //Log.e(TAG, "DATA IS EMPTY #####################");
             return;
         }
-
+/*
         long prev = -1;
         for (long epoch : data.getEpoch()) {
 
@@ -670,7 +674,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
                 if (epoch < prev) Log.e(TAG, "Formatted data is out of order for " + data.dataType);
             }
             prev = epoch;
-        }
+        }*/
 
         //Log.i("POPULATE DATA INTO GRAPH CALLED", "@@@@@@@@@@@@@@@@@@@@@");
 

@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,7 +16,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.appspot.umichseed.seed.Seed;
+import com.appspot.umichseed.seed.SeedRequest;
 import com.appspot.umichseed.seed.model.MessagesPatientPut;
+
+import java.io.IOException;
 
 import edu.umich.seedforandroid.R;
 import edu.umich.seedforandroid.account.GoogleAccountManager;
@@ -23,6 +27,8 @@ import edu.umich.seedforandroid.api.ApiThread;
 import edu.umich.seedforandroid.api.SeedApi;
 
 public class AddNewPatient extends Activity implements View.OnClickListener  {
+
+    private static final String TAG = AddNewPatient.class.getSimpleName();
 
     private String mFirstName, mLastName, mEmail, mPhoneNumber;
     private EditText etFirstName, etLastName, etEmail, etPhoneNumber;
@@ -95,6 +101,16 @@ public class AddNewPatient extends Activity implements View.OnClickListener  {
         }
     }
 
+    private void notifyUiApiError() {
+
+        //todo api error occurred
+    }
+
+    private void onPatientCreateSuccess() {
+
+        //todo patient was created successfully. Do whatever is necessary
+    }
+
     private void addNewPatient()  {
 
         mFirstName = etFirstName.getText().toString();
@@ -113,9 +129,37 @@ public class AddNewPatient extends Activity implements View.OnClickListener  {
 
                 Toast.makeText(AddNewPatient.this, "Please provide an appropriate gmail address", Toast.LENGTH_SHORT).show();
             }
-            // todo add new patient to the server
-            Seed api = SeedApi.getAuthenticatedApi(mAccountManager.getCredential());
 
+            try {
+                Seed api = SeedApi.getAuthenticatedApi(mAccountManager.getCredential());
+                SeedRequest request = api.patient().put(
+                        new MessagesPatientPut()
+                                .setDoctorEmail(mAccountManager.getAccountName())
+                                .setEmail(mEmail)
+                                .setFirstName(mFirstName)
+                                .setLastName(mLastName)
+                                .setPhone(mPhoneNumber)
+                );
+                mApiThread.enqueueRequest(request, new ApiThread.ApiResultAction() {
+                    @Override
+                    public void onApiResult(Object result) {
+                        //who cares what the result is
+                        onPatientCreateSuccess();
+                    }
+
+                    @Override
+                    public void onApiError(Throwable error) {
+
+                        Log.e(TAG, "ERROR: API returned error with message: " + error.getMessage());
+                        notifyUiApiError();
+                    }
+                });
+            }
+            catch (IOException e) {
+
+                Log.e(TAG, "ERROR: IOException occurred while creating request");
+                notifyUiApiError();
+            }
         }
     }
 }
