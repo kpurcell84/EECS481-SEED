@@ -136,5 +136,4 @@
             android:label="@string/title_activity_add_new_patient" >
         </activity>
     </application>
-
 </manifest>
