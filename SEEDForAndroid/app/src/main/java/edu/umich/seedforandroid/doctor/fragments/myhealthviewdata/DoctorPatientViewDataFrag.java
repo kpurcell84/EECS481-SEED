@@ -624,7 +624,7 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
                         if (success)  {
 
                             Log.i(TAG, "Got Graphs");
-                            //reDrawGraphs();
+                            reDrawGraphs();
                             return;
                         }
                         else  {
@@ -754,7 +754,7 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
                 stepFormatter.getVertexPaint().setStrokeWidth(20);
                 mActivityTypePlot.addSeries(mREMSeries, stepFormatter);
                 mActivityTypePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
-                mActivityTypePlot.getRangeLabelWidget().setVisible(false);
+                mActivityTypePlot.getGraphWidget().getRangeLabelPaint().setColor(Color.TRANSPARENT);
             }
         }
         else if (data.getDataType() == ViewDataGraphWrapper.DEEP)  {
@@ -768,7 +768,7 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
                 stepFormatter.getVertexPaint().setStrokeWidth(20);
                 mActivityTypePlot.addSeries(mDeepSeries, stepFormatter);
                 mActivityTypePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
-                mActivityTypePlot.getRangeLabelWidget().setVisible(false);
+                mActivityTypePlot.getGraphWidget().getRangeLabelPaint().setColor(Color.TRANSPARENT);
             }
         }
         else if (data.getDataType() == ViewDataGraphWrapper.LIGHT)  {
@@ -782,6 +782,7 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
                 stepFormatter.getVertexPaint().setStrokeWidth(20);
                 mActivityTypePlot.addSeries(mLightSeries, stepFormatter);
                 mActivityTypePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
+                mActivityTypePlot.getGraphWidget().getRangeLabelPaint().setColor(Color.TRANSPARENT);
             }
         }
         else if (data.getDataType() == ViewDataGraphWrapper.STILL)  {
@@ -810,7 +811,7 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
                 stepFormatter.getVertexPaint().setStrokeWidth(20);
                 mActivityTypePlot.addSeries(mWalkSeries, stepFormatter);
                 mActivityTypePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
-                mActivityTypePlot.setRangeStep(XYStepMode.SUBDIVIDE, 10);
+                mActivityTypePlot.getGraphWidget().getRangeLabelPaint().setColor(Color.TRANSPARENT);
             }
         }
         else if (data.getDataType() == ViewDataGraphWrapper.RUN)  {
@@ -824,7 +825,7 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
                 stepFormatter.getVertexPaint().setStrokeWidth(20);
                 mActivityTypePlot.addSeries(mRunSeries, stepFormatter);
                 mActivityTypePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
-                mActivityTypePlot.setRangeStep(XYStepMode.SUBDIVIDE, 0);
+                mActivityTypePlot.getGraphWidget().getRangeLabelPaint().setColor(Color.TRANSPARENT);
             }
         }
         else if (data.getDataType() == ViewDataGraphWrapper.BIKE)  {
@@ -838,6 +839,7 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
                 stepFormatter.getVertexPaint().setStrokeWidth(20);
                 mActivityTypePlot.addSeries(mBikeSeries, stepFormatter);
                 mActivityTypePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
+                mActivityTypePlot.getGraphWidget().getRangeLabelPaint().setColor(Color.TRANSPARENT);
             }
         }
     }

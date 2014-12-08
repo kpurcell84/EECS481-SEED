@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.util.Log;
 import android.widget.RemoteViews;
 
 import java.util.Calendar;
@@ -49,7 +48,7 @@ public class LockScreenWidgetServicer extends Service  {
 
     private void checkIfSurveyTime()  {
 
-        Log.i("Time: ", String.valueOf(mHour24) + ":" + String.valueOf(mMinute));
+        //Log.i("Time: ", String.valueOf(mHour24) + ":" + String.valueOf(mMinute));
 
         if ((mHour24 == mMorningTimeSlot[0] && mMinute == mMorningTimeSlot[1] && mSecond == 5) ||
                 (mHour24 == mEveningTimeSlot[0] && mMinute == mEveningTimeSlot[1] && mSecond == 5))  {

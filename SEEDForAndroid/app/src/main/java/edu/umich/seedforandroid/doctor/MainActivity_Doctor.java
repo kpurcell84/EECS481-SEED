@@ -238,4 +238,7 @@ public class MainActivity_Doctor extends FragmentActivity implements ActionBar.T
             return 4;
         }
     }
+
+    @Override
+    public void onBackPressed()  {}
 }

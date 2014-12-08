@@ -234,7 +234,9 @@ public class MainActivity_Patient extends Activity implements NavigationDrawerFr
     public boolean onOptionsItemSelected(MenuItem item)  {
 
         //return super.onOptionsItemSelected(item);
-
         return false;
     }
+
+    @Override
+    public void onBackPressed()  {}
 }

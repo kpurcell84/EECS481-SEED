@@ -596,8 +596,6 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
                             populateDataIntoGraphs(walkData);
                             populateDataIntoGraphs(runData);
                             populateDataIntoGraphs(bikeData);
-
-
                         }
                         return true;
                     }

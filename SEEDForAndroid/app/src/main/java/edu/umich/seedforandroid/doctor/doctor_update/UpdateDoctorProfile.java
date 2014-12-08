@@ -111,12 +111,10 @@ public class UpdateDoctorProfile extends Activity implements View.OnClickListene
             View convertView = getLayoutInflater().inflate(R.layout.api_error_alert_title, null);
             alertDialog.setCustomTitle(convertView);
 
-            alertDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+            alertDialog.setNegativeButton("OK", new DialogInterface.OnClickListener()  {
 
                 @Override
-                public void onClick(DialogInterface dialog, int id) {
-
-                }
+                public void onClick(DialogInterface dialog, int id)  {}
             });
 
             // Set the line color

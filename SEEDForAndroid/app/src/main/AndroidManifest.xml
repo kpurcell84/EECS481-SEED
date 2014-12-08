@@ -92,6 +92,7 @@
         </activity>
         <activity
             android:name="edu.umich.seedforandroid.doctor.patientdata.DoctorViewPatientData"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_doctor_view_patient_data" >
         </activity>
 
