@@ -623,7 +623,8 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
 
                         if (success)  {
 
-                            reDrawGraphs();
+                            Log.i(TAG, "Got Graphs");
+                            //reDrawGraphs();
                             return;
                         }
                         else  {
