@@ -125,7 +125,8 @@ public class UpdateSurveyTime extends Activity implements View.OnClickListener  
 
         mSharedPrefsUtilInst.setMorningSurveyNotificationTime(mMorningTimeSlot[0], mMorningTimeSlot[1]);
         mSharedPrefsUtilInst.setEveningSurveyNotificationTime(mEveningTimeSlot[0], mEveningTimeSlot[1]);
-        Toast.makeText(getApplicationContext(), "Saved" + String.valueOf(mEveningTimeSlot[0]) + " " + String.valueOf(mEveningTimeSlot[1]), Toast.LENGTH_SHORT).show();
+
+        Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(UpdateSurveyTime.this, MainActivity_Patient.class);
         Bundle extras = new Bundle();

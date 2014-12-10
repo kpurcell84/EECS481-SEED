@@ -273,6 +273,7 @@ public class Doctor_Profile_Frag extends Fragment implements View.OnClickListene
         extras.putString(UpdateDoctorProfile.EXTRA_PHONE, mPhoneNumber);
         extras.putString(UpdateDoctorProfile.EXTRA_FIRSTNAME, mFirstName);
         extras.putString(UpdateDoctorProfile.EXTRA_LASTNAME, mLastName);
+        i.putExtras(extras);
         startActivity(i);
     }
 

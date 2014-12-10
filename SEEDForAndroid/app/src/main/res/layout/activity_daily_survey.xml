@@ -34,28 +34,19 @@
                     android:id="@+id/tvBodyTempQuestion" />
 
                 <EditText
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal"
                     android:ems="10"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
                     android:padding="10dp"
+                    android:gravity="center"
                     android:textSize="18sp"
-                    android:hint="body temperature"
+                    android:hint="body temperature in Fahrenheit"
                     android:id="@+id/etBodyTemp"
                     android:layout_below="@+id/tvBodyTempQuestion" />
 
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="\u2109"
-                    android:layout_alignBottom="@+id/etBodyTemp"
-                    android:layout_alignParentRight="true"
-                    android:gravity="center"
-                    android:textSize="25sp"
-                    android:textStyle="bold"
-                    android:id="@+id/bCelsius" />
             </RelativeLayout>
 
             <RelativeLayout

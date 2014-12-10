@@ -38,9 +38,8 @@ public class DailySurvey extends Activity implements View.OnClickListener  {
     private RadioGroup radioGroupAnswer1, radioGroupAnswer2, radioGroupAnswer3, radioGroupAnswer4,
                        radioGroupAnswer5, radioGroupAnswer6, radioGroupAnswer7, radioGroupAnswer8,
                        radioGroupAnswer9, radioGroupAnswer10;
-    private Button bSubmit, bChangeTempUnit;
+    private Button bSubmit;
     private String[] mSurveyQuestionAnswers; // 10
-    private String mBodyTempType; // Cel or Fahrenheit
     private Double mBodyTemp, mSystolic, mDiastolic;
     private SharedPrefsUtil mSharedPrefs;
 
@@ -82,9 +81,6 @@ public class DailySurvey extends Activity implements View.OnClickListener  {
         bSubmit = (Button) findViewById(R.id.bSubmitSurvey);
         bSubmit.setOnClickListener(this);
 
-        bChangeTempUnit = (Button) findViewById(R.id.bCelsius);
-        bChangeTempUnit.setOnClickListener(this);
-
         // EditText
         etBodyTemp = (EditText) findViewById(R.id.etBodyTemp);
         etBloodPressureSystolic = (EditText) findViewById(R.id.etBloodPressureSystolic);
@@ -109,42 +105,6 @@ public class DailySurvey extends Activity implements View.OnClickListener  {
         if (v.getId() == R.id.bSubmitSurvey)  {
 
             submitSurvey();
-        }
-        else if (v.getId() == R.id.bCelsius)  {
-
-            changeTempUnit();
-        }
-    }
-
-    private void changeTempUnit()  {
-
-        if (bChangeTempUnit.getText().toString().equals("\u2109"))  { // F to C
-
-            // See if the user has input anything
-            if (etBodyTemp.getText().toString().equals("") == false)  {
-
-                double temp = Double.parseDouble(etBodyTemp.getText().toString());
-                temp -= 32;
-                temp *= 5;
-                temp /= 9;
-                etBodyTemp.setText(String.valueOf(temp));
-            }
-
-            bChangeTempUnit.setText("\u2103");
-        }
-        else  { // C to F
-
-            // See if the user has input anything
-            if (etBodyTemp.getText().toString().equals("") == false)  {
-
-                double temp = Double.parseDouble(etBodyTemp.getText().toString());
-                temp *= 9;
-                temp /= 5;
-                temp += 32;
-                etBodyTemp.setText(String.valueOf(temp));
-            }
-
-            bChangeTempUnit.setText("\u2109");
         }
     }
 
@@ -239,16 +199,6 @@ public class DailySurvey extends Activity implements View.OnClickListener  {
             mSurveyQuestionAnswers[9] = radioButton10.getText().toString();
 
             mBodyTemp = Double.parseDouble(etBodyTemp.getText().toString());
-            mBodyTempType = bChangeTempUnit.getText().toString();
-
-            // Make the unit for the body temperature consistent - make it Fahrenheit
-            if (mBodyTempType.equals("℃"))  {
-
-                mBodyTemp *= 9;
-                mBodyTemp /= 5;
-                mBodyTemp += 32;
-            }
-
             mSystolic = Double.parseDouble(etBloodPressureSystolic.getText().toString());
             mDiastolic = Double.parseDouble(etBloodPressureDiastolic.getText().toString());
 

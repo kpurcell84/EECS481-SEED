@@ -119,7 +119,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
 
     private void startProgressBar()  {
 
-        if (mMenu != null) {
+        if (mMenu != null)  {
 
             final MenuItem refreshItem = mMenu.findItem(R.id.action_refresh);
             if (refreshItem != null)  {
@@ -220,27 +220,35 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
 
             graphArr[index] = true;
 
-            if (index == 0)  {
+            if (index == 0 && mHeartRateSeries != null && mHeartRateSeries.size() != 0)  {
 
                 mHeartRateLayout.setVisibility(View.VISIBLE);
             }
             else if (index == 1)  {
 
-                mActivityTypeLayout.setVisibility(View.VISIBLE);
+                if ((mREMSeries == null || mREMSeries.size() == 0) && (mLightSeries == null || mLightSeries.size() == 0) &&
+                    (mDeepSeries == null || mDeepSeries.size() == 0) && (mStillSeries == null || mStillSeries.size() == 0) &&
+                    (mWalkSeries == null || mWalkSeries.size() == 0) && (mRunSeries == null || mRunSeries.size() == 0) &&
+                    (mBikeSeries == null || mBikeSeries.size() == 0))  {}
+                else  {
+
+                    mActivityTypeLayout.setVisibility(View.VISIBLE);
+                }
             }
-            else if (index == 2)  {
+            else if (index == 2 && mPerspirationSeries != null && mPerspirationSeries.size() != 0)  {
 
                 mPerspirationLayout.setVisibility(View.VISIBLE);
             }
-            else if (index == 3)  {
+            else if (index == 3 && mSkinTempSeries != null && mSkinTempSeries.size() != 0)  {
 
                 mSkinTempLayout.setVisibility(View.VISIBLE);
             }
-            else if (index == 4)  {
+            else if (index == 4 && mBodyTempSeries != null && mBodyTempSeries.size() != 0)  {
 
                 mBodyTempLayout.setVisibility(View.VISIBLE);
             }
-            else if (index == 5)  {
+            else if (index == 5 && mBloodPressureSeriesUpper != null && mBloodPressureSeriesUpper.size() != 0 &&
+                    mBloodPressureSeriesLower != null && mBloodPressureSeriesLower.size() != 0)  {
 
                 mBloodPressureLayout.setVisibility(View.VISIBLE);
             }
@@ -444,6 +452,8 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
         }
 
         try  {
+
+            startProgressBar();
 
             String patientEmail = mPatientEmail == null ? manager.getAccountName() : mPatientEmail;
             Seed api = SeedApi.getAuthenticatedApi(manager.getCredential());
@@ -758,8 +768,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
                 stepFormatter.getVertexPaint().setStrokeWidth(20);
                 mActivityTypePlot.addSeries(mREMSeries, stepFormatter);
                 mActivityTypePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
-
-                mActivityTypePlot.getRangeLabelWidget().setVisible(false);
+                mActivityTypePlot.getGraphWidget().getRangeLabelPaint().setColor(Color.TRANSPARENT);
             }
         }
         else if (data.getDataType() == ViewDataGraphWrapper.DEEP)  {
@@ -773,7 +782,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
                 stepFormatter.getVertexPaint().setStrokeWidth(20);
                 mActivityTypePlot.addSeries(mDeepSeries, stepFormatter);
                 mActivityTypePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
-                mActivityTypePlot.getRangeLabelWidget().setVisible(false);
+                mActivityTypePlot.getGraphWidget().getRangeLabelPaint().setColor(Color.TRANSPARENT);
             }
         }
         else if (data.getDataType() == ViewDataGraphWrapper.LIGHT)  {
@@ -787,6 +796,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
                 stepFormatter.getVertexPaint().setStrokeWidth(20);
                 mActivityTypePlot.addSeries(mLightSeries, stepFormatter);
                 mActivityTypePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
+                mActivityTypePlot.getGraphWidget().getRangeLabelPaint().setColor(Color.TRANSPARENT);
             }
         }
         else if (data.getDataType() == ViewDataGraphWrapper.STILL)  {
@@ -814,7 +824,7 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
                 stepFormatter.getVertexPaint().setStrokeWidth(20);
                 mActivityTypePlot.addSeries(mWalkSeries, stepFormatter);
                 mActivityTypePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
-                mActivityTypePlot.setRangeStep(XYStepMode.SUBDIVIDE, 10);
+                mActivityTypePlot.getGraphWidget().getRangeLabelPaint().setColor(Color.TRANSPARENT);
             }
         }
         else if (data.getDataType() == ViewDataGraphWrapper.RUN)  {
@@ -828,7 +838,8 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
                 stepFormatter.getVertexPaint().setStrokeWidth(20);
                 mActivityTypePlot.addSeries(mRunSeries, stepFormatter);
                 mActivityTypePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
-                mActivityTypePlot.setRangeStep(XYStepMode.SUBDIVIDE, 0);
+                mActivityTypePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
+                mActivityTypePlot.getGraphWidget().getRangeLabelPaint().setColor(Color.TRANSPARENT);
             }
         }
         else if (data.getDataType() == ViewDataGraphWrapper.BIKE)  {
@@ -842,13 +853,12 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
                 stepFormatter.getVertexPaint().setStrokeWidth(20);
                 mActivityTypePlot.addSeries(mBikeSeries, stepFormatter);
                 mActivityTypePlot.setDomainStep(XYStepMode.SUBDIVIDE, domainStep);
+                mActivityTypePlot.getGraphWidget().getRangeLabelPaint().setColor(Color.TRANSPARENT);
             }
         }
     }
 
     private void reDrawGraphs()  {
-
-        Log.i("##########", "REDRAW GRAPHS CALLED");
 
         if (stillAlive())  {
             synchronized (MyHealth_ViewData_Frag.this)  {
@@ -859,6 +869,69 @@ public class MyHealth_ViewData_Frag extends Fragment implements View.OnClickList
                 mBloodPressureLayout.setVisibility(View.VISIBLE);
                 mActivityTypeLayout.setVisibility(View.VISIBLE);
                 mPerspirationLayout.setVisibility(View.VISIBLE);
+
+                // Get graph filters preferences
+                String graphFilters = sharedPrefsUtilInst.getPatientGraphFilter("");
+                if (graphFilters.equals("") == false)  {
+
+                    boolean[] arrBool = new boolean[6];
+                    Arrays.fill(arrBool, false);
+                    String[] filterParts = graphFilters.split("@");
+                    for (int j = 0; j < filterParts.length; ++j)  {
+
+                        int graphInt = Integer.parseInt(filterParts[j]);
+                        arrBool[graphInt] = true;
+                    }
+
+                    if (arrBool[0])  {
+
+                        mHeartRateLayout.setVisibility(View.VISIBLE);
+                    }
+                    else  {
+
+                        mHeartRateLayout.setVisibility(View.GONE);
+                    }
+                    if (arrBool[1]) {
+
+                        mActivityTypeLayout.setVisibility(View.VISIBLE);
+                    }
+                    else {
+
+                        mActivityTypeLayout.setVisibility(View.GONE);
+                    }
+                    if (arrBool[2]) {
+
+                        mPerspirationLayout.setVisibility(View.VISIBLE);
+                    }
+                    else  {
+
+                        mPerspirationLayout.setVisibility(View.GONE);
+                    }
+                    if (arrBool[3]) {
+
+                        mSkinTempLayout.setVisibility(View.VISIBLE);
+                    }
+                    else {
+
+                        mSkinTempLayout.setVisibility(View.GONE);
+                    }
+                    if (arrBool[4]) {
+
+                        mBodyTempLayout.setVisibility(View.VISIBLE);
+                    }
+                    else {
+
+                        mBodyTempLayout.setVisibility(View.GONE);
+                    }
+                    if (arrBool[5]) {
+
+                        mBloodPressureLayout.setVisibility(View.VISIBLE);
+                    }
+                    else {
+
+                        mBloodPressureLayout.setVisibility(View.GONE);
+                    }
+                }
 
                 // check if any of the series is empty
                 if (mHeartRateSeries == null || mHeartRateSeries.size() == 0)  {

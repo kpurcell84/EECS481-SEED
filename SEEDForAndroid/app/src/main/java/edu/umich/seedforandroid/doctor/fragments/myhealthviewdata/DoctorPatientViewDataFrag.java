@@ -219,27 +219,35 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
 
             graphArr[index] = true;
 
-            if (index == 0)  {
+            if (index == 0 && mHeartRateSeries != null && mHeartRateSeries.size() != 0)  {
 
                 mHeartRateLayout.setVisibility(View.VISIBLE);
             }
             else if (index == 1)  {
 
-                mActivityTypeLayout.setVisibility(View.VISIBLE);
+                if ((mREMSeries == null || mREMSeries.size() == 0) && (mLightSeries == null || mLightSeries.size() == 0) &&
+                        (mDeepSeries == null || mDeepSeries.size() == 0) && (mStillSeries == null || mStillSeries.size() == 0) &&
+                        (mWalkSeries == null || mWalkSeries.size() == 0) && (mRunSeries == null || mRunSeries.size() == 0) &&
+                        (mBikeSeries == null || mBikeSeries.size() == 0))  {}
+                else  {
+
+                    mActivityTypeLayout.setVisibility(View.VISIBLE);
+                }
             }
-            else if (index == 2)  {
+            else if (index == 2 && mPerspirationSeries != null && mPerspirationSeries.size() != 0)  {
 
                 mPerspirationLayout.setVisibility(View.VISIBLE);
             }
-            else if (index == 3)  {
+            else if (index == 3 && mSkinTempSeries != null && mSkinTempSeries.size() != 0)  {
 
                 mSkinTempLayout.setVisibility(View.VISIBLE);
             }
-            else if (index == 4)  {
+            else if (index == 4 && mBodyTempSeries != null && mBodyTempSeries.size() != 0)  {
 
                 mBodyTempLayout.setVisibility(View.VISIBLE);
             }
-            else if (index == 5)  {
+            else if (index == 5 && mBloodPressureSeriesUpper != null && mBloodPressureSeriesUpper.size() != 0 &&
+                    mBloodPressureSeriesLower != null && mBloodPressureSeriesLower.size() != 0)  {
 
                 mBloodPressureLayout.setVisibility(View.VISIBLE);
             }
@@ -462,6 +470,8 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
         }
 
         try  {
+
+            startProgressBar();
 
             Seed api = SeedApi.getAuthenticatedApi(manager.getCredential());
             SeedRequest getDataRequest = api.pQuantData().get(
@@ -846,8 +856,9 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
 
     private void reDrawGraphs()  {
 
-        if (stillAlive()) {
-            synchronized (DoctorPatientViewDataFrag.this) {
+        if (stillAlive())  {
+
+            synchronized (DoctorPatientViewDataFrag.this)  {
 
                 mHeartRateLayout.setVisibility(View.VISIBLE);
                 mSkinTempLayout.setVisibility(View.VISIBLE);
@@ -855,6 +866,69 @@ public class DoctorPatientViewDataFrag extends Fragment implements View.OnClickL
                 mBloodPressureLayout.setVisibility(View.VISIBLE);
                 mActivityTypeLayout.setVisibility(View.VISIBLE);
                 mPerspirationLayout.setVisibility(View.VISIBLE);
+
+                // Get graph filters preferences
+                String graphFilters = sharedPrefsUtilInst.getDoctorGraphFilter("");
+                if (graphFilters.equals("") == false)  {
+
+                    boolean[] arrBool = new boolean[6];
+                    Arrays.fill(arrBool, false);
+                    String[] filterParts = graphFilters.split("@");
+                    for (int j = 0; j < filterParts.length; ++j)  {
+
+                        int graphInt = Integer.parseInt(filterParts[j]);
+                        arrBool[graphInt] = true;
+                    }
+
+                    if (arrBool[0])  {
+
+                        mHeartRateLayout.setVisibility(View.VISIBLE);
+                    }
+                    else  {
+
+                        mHeartRateLayout.setVisibility(View.GONE);
+                    }
+                    if (arrBool[1]) {
+
+                        mActivityTypeLayout.setVisibility(View.VISIBLE);
+                    }
+                    else {
+
+                        mActivityTypeLayout.setVisibility(View.GONE);
+                    }
+                    if (arrBool[2]) {
+
+                        mPerspirationLayout.setVisibility(View.VISIBLE);
+                    }
+                    else  {
+
+                        mPerspirationLayout.setVisibility(View.GONE);
+                    }
+                    if (arrBool[3]) {
+
+                        mSkinTempLayout.setVisibility(View.VISIBLE);
+                    }
+                    else {
+
+                        mSkinTempLayout.setVisibility(View.GONE);
+                    }
+                    if (arrBool[4]) {
+
+                        mBodyTempLayout.setVisibility(View.VISIBLE);
+                    }
+                    else {
+
+                        mBodyTempLayout.setVisibility(View.GONE);
+                    }
+                    if (arrBool[5]) {
+
+                        mBloodPressureLayout.setVisibility(View.VISIBLE);
+                    }
+                    else {
+
+                        mBloodPressureLayout.setVisibility(View.GONE);
+                    }
+                }
 
                 // check if any of the series is empty
                 if (mHeartRateSeries == null || mHeartRateSeries.size() == 0)  {

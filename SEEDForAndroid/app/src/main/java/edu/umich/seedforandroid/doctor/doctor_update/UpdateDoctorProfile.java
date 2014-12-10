@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.appspot.umichseed.seed.Seed;
 import com.appspot.umichseed.seed.SeedRequest;
@@ -134,7 +135,17 @@ public class UpdateDoctorProfile extends Activity implements View.OnClickListene
             mPhoneNumber = "";
             for (int i = 0; i < phoneNumParts.length; ++i) {
 
-                mPhoneNumber += phoneNumParts[i];
+
+                if (i == 0)  {
+
+                    // Take out the "Tel : "
+                    String[] firstParts = phoneNumParts[i].split(" ");
+                    mPhoneNumber += firstParts[2];
+                }
+                else  {
+
+                    mPhoneNumber += phoneNumParts[i];
+                }
             }
 
             etFirstName.setText(mFirstName);
@@ -180,34 +191,41 @@ public class UpdateDoctorProfile extends Activity implements View.OnClickListene
         String phone = etPhoneNumber.getText().toString();
         mPhoneNumber = !phone.isEmpty() ? phone : mPhoneNumber;
 
-        try {
-            Seed api = SeedApi.getAuthenticatedApi(mAccountManager.getCredential());
-            SeedRequest request = api.doctor().put(
-                    new MessagesDoctorPut()
-                            .setFirstName(mFirstName)
-                            .setLastName(mLastName)
-                            .setEmail(mAccountManager.getAccountName())
-                            .setPhone(mPhoneNumber)
-                            .setHospital(mHospital)
-            );
-            mApiThread.enqueueRequest(request, new ApiThread.ApiResultAction() {
-                @Override
-                public void onApiResult(Object result) {
-                    //ignore result
-                    gotoMainActivityDoctor();
-                }
+        if (mPhoneNumber.length() != 10)  {
 
-                @Override
-                public void onApiError(Throwable error) {
-
-                    Log.e(TAG, "FATAL ERROR: Api Returned error with message " + error.getMessage());
-                }
-            });
+            Toast.makeText(UpdateDoctorProfile.this, "Please provide an appropriate phone number (10 digits, only numbers)", Toast.LENGTH_SHORT).show();
         }
-        catch (IOException e) {
+        else  {
 
-            Log.e(TAG, "FATAL ERROR: Couldn't create API request");
-            notifyUiApiError();
+            try {
+                Seed api = SeedApi.getAuthenticatedApi(mAccountManager.getCredential());
+                SeedRequest request = api.doctor().put(
+                        new MessagesDoctorPut()
+                                .setFirstName(mFirstName)
+                                .setLastName(mLastName)
+                                .setEmail(mAccountManager.getAccountName())
+                                .setPhone(mPhoneNumber)
+                                .setHospital(mHospital)
+                );
+                mApiThread.enqueueRequest(request, new ApiThread.ApiResultAction() {
+                    @Override
+                    public void onApiResult(Object result) {
+                        //ignore result
+                        gotoMainActivityDoctor();
+                    }
+
+                    @Override
+                    public void onApiError(Throwable error) {
+
+                        Log.e(TAG, "FATAL ERROR: Api Returned error with message " + error.getMessage());
+                    }
+                });
+            }
+            catch (IOException e) {
+
+                Log.e(TAG, "FATAL ERROR: Couldn't create API request");
+                notifyUiApiError();
+            }
         }
     }
 
