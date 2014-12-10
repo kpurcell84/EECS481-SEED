@@ -1,0 +1,77 @@
+GAE Datastore Terminology:
+	Kind = Table
+	Entity = Row
+	Key = Primary Key
+	Property = Field
+
+#####################################
+
+Doctor (Kind)
+	Doctor (Entity)
+		email (Key)
+		first_name (Property)
+		last_name (Property)
+		phone (Property)
+		hospital (Property)
+	...
+
+Patient (Kind)
+	Patient (Entity)
+		email (Key)
+		doctor (ReferenceProperty)
+		first_name (Property)
+		last_name (Property)
+		phone (Property)
+		diagnosis (Property) - YES/NO/MAYBE
+		septic_risk (Property)
+		basis_pass (Property)
+	...
+
+PQuantData (Kind)
+	DataPoint (Entity)
+		patient (ReferenceProperty)
+		time_taken (Property)
+		blood_pressure (Property)
+		body_temp (Property)
+		gsr (Property)
+		skin_temp (Property)
+		air_temp (Property)
+		heart_rate (Property)
+		activity_type (Property) RUN/BIKE/WALK/STILL/REM/LIGHT/DEEP
+	...
+...
+
+PQualData (Kind)
+	DataPoints (Entity)
+		patient (ReferenceProperty)
+		time_taken (Property)
+		a1 (Property)
+		a2 (Property)
+		a3 (Property)
+		a4 (Property)
+		a5 (Property)
+		a6 (Property)
+		a7 (Property)
+		a8 (Property)
+		a9 (Property)
+		a10 (Property)
+	...
+...	
+
+Alert (Kind)
+	Alert (Entity)
+		patient (ReferenceProperty)
+		time_alerted (Property)
+		message (Property)
+		priority (Property)
+	...
+...
+
+WatsonQuestion (Kind)
+	QuestionPair (Entity)
+		question (Property)
+		answer (Property)
+		date_asked (Property)
+	...
+...
+

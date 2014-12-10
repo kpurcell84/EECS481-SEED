@@ -1,0 +1,30 @@
+application: umichseed
+version: 1
+runtime: python27
+threadsafe: true
+api_version: 1
+
+handlers:
+# Endpoints handler
+- url: /_ah/spi/.*
+  script: seed_api.APPLICATION
+- url: /cron/fetch
+  script: fetch.APPLICATION
+  login: admin
+- url: /cron/train
+  script: train.APPLICATION
+  login: admin
+- url: /test
+  script: test.APPLICATION
+
+libraries:
+- name: pycrypto
+  version: latest
+- name: endpoints
+  version: 1.0
+- name: numpy
+  version: latest
+
+
+builtins:
+- remote_api: on
