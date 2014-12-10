@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.0-rc4'
+        classpath 'com.android.tools.build:gradle:1.0.0'
     }
 }
 
@@ -12,18 +12,18 @@ apply plugin: 'com.android.application'
 
 android {
     signingConfigs {
-        debug {
+/*        debug {
             keyAlias 'SEED_System'
             keyPassword 'asdfgh'
             storeFile file('/Users/andylee/Documents/Android_Studio_Working_Folder/SEED_System_Export/Key.jks')
             storePassword 'asdfgh'
-        }
-//        debug {
-//            keyAlias 'test'
-//            keyPassword 'seedapp'
-//            storeFile file('C:/Users/Dominic/.android/debug.keystore.jks')
-//            storePassword 'seedapp'
-//       }
+        }*/
+        debug {
+            keyAlias 'test'
+            keyPassword 'seedapp'
+            storeFile file('C:/Users/Dominic/.android/debug.keystore.jks')
+            storePassword 'seedapp'
+       }
     }
 
     compileSdkVersion 19

@@ -36,7 +36,7 @@ import edu.umich.seedforandroid.patient.fragments.mysepsisnurse.raq.RaqAdapter;
 
 public class DoctorRecentlyAskedQuestions extends Fragment  {
 
-    private static final long NUM_QUESTIONS = 10;
+    private static final long NUM_QUESTIONS = 30;
 
     private ExpandableListView mExpandableListView;
     private RaqAdapter mAdapter;
